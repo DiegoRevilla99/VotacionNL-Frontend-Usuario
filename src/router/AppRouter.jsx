@@ -30,7 +30,7 @@ export const AppRouter = () => {
 			/>
 
 			<Route
-				path="/*"
+				path="/votacion/*"
 				element={
 					<PrivateRoutes>
 						<VotacionRoutes />

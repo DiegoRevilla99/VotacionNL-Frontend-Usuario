@@ -18,6 +18,9 @@ import { useNavigate } from "react-router-dom";
 
 const pages = ["Inicio", "Resultados", "Verificación", "Información"];
 const settings = ["Ingresar"];
+const settings2 = ["Cerrar sesión"];
+
+const logged = true;
 
 export const AppBarCustom = () => {
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -46,7 +49,8 @@ export const AppBarCustom = () => {
 
 	const goVotar = () => {
 		setAnchorElNav(null);
-		navigate("/pasosVerificacion");
+		if (logged) navigate("/votacion/inicio");
+		else navigate("/pasosVerificacion");
 	};
 
 	const goResultados = () => {
@@ -221,90 +225,105 @@ export const AppBarCustom = () => {
 						{/* ))} */}
 					</Box>
 
-					<Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
-						<IconButton
-							size="large"
-							aria-label="account of current user"
-							aria-controls="menu-appbar"
-							aria-haspopup="true"
-							onClick={handleOpenUserMenu}
-							color="black"
-						>
-							<LoginIcon />
-						</IconButton>
-						<Menu
-							sx={{ mt: "45px" }}
-							id="menu-appbar"
-							anchorEl={anchorElUser}
-							anchorOrigin={{
-								vertical: "top",
-								horizontal: "right",
-							}}
-							keepMounted
-							transformOrigin={{
-								vertical: "top",
-								horizontal: "right",
-							}}
-							open={Boolean(anchorElUser)}
-							onClose={handleCloseUserMenu}
-						>
-							{settings.map((setting) => (
-								<MenuItem key={setting} onClick={handleCloseUserMenu}>
-									<Typography textAlign="center">{setting}</Typography>
-								</MenuItem>
-							))}
-						</Menu>
-					</Box>
-
-					<Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
-						<Button
-							variant="contained"
-							size="large"
-							sx={{
-								boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-								transition: "all 0.5s ease",
-								backgroundColor: "#543884",
-								width: "100%",
-								// borderRadius: "2rem 2rem 2rem 2rem",
-								"&:hover": {
-									backgroundColor: "#7E328B !important",
-									transform: "translate(-5px, -5px)",
-									boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-								},
-							}}
-						>
-							Ingresar
-						</Button>
-					</Box>
-					{/* <Box sx={{ flexGrow: 0 }}>
-						<Tooltip title="Open settings">
-							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-								<Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+					{logged ? (
+						<></>
+					) : (
+						<Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+							<IconButton
+								size="large"
+								aria-label="account of current user"
+								aria-controls="menu-appbar"
+								aria-haspopup="true"
+								onClick={handleOpenUserMenu}
+								color="black"
+							>
+								<LoginIcon />
 							</IconButton>
-						</Tooltip>
-						<Menu
-							sx={{ mt: "45px" }}
-							id="menu-appbar"
-							anchorEl={anchorElUser}
-							anchorOrigin={{
-								vertical: "top",
-								horizontal: "right",
-							}}
-							keepMounted
-							transformOrigin={{
-								vertical: "top",
-								horizontal: "right",
-							}}
-							open={Boolean(anchorElUser)}
-							onClose={handleCloseUserMenu}
-						>
-							{settings.map((setting) => (
-								<MenuItem key={setting} onClick={handleCloseUserMenu}>
-									<Typography textAlign="center">{setting}</Typography>
-								</MenuItem>
-							))}
-						</Menu>
-					</Box> */}
+							<Menu
+								sx={{ mt: "45px" }}
+								id="menu-appbar"
+								anchorEl={anchorElUser}
+								anchorOrigin={{
+									vertical: "top",
+									horizontal: "right",
+								}}
+								keepMounted
+								transformOrigin={{
+									vertical: "top",
+									horizontal: "right",
+								}}
+								open={Boolean(anchorElUser)}
+								onClose={handleCloseUserMenu}
+							>
+								{settings.map((setting) => (
+									<MenuItem key={setting} onClick={handleCloseUserMenu}>
+										<Typography textAlign="center">{setting}</Typography>
+									</MenuItem>
+								))}
+							</Menu>
+						</Box>
+					)}
+
+					{logged ? (
+						<Box sx={{ flexGrow: 0 }}>
+							<Tooltip title="Open settings">
+								<IconButton onClick={handleOpenUserMenu}>
+									<Avatar alt="Jemy Sharp" src="/static/images/avatar/2.jpg" />
+									<Typography
+										variant="body1"
+										color="initial"
+										ml={2}
+										display={{ xs: "none", lg: "flex" }}
+									>
+										José Antonio Diego Revilla
+									</Typography>
+								</IconButton>
+							</Tooltip>
+							<Menu
+								sx={{ mt: "45px" }}
+								id="menu-appbar"
+								anchorEl={anchorElUser}
+								anchorOrigin={{
+									vertical: "top",
+									horizontal: "right",
+								}}
+								keepMounted
+								transformOrigin={{
+									vertical: "top",
+									horizontal: "right",
+								}}
+								open={Boolean(anchorElUser)}
+								onClose={handleCloseUserMenu}
+							>
+								{settings2.map((setting) => (
+									<MenuItem key={setting} onClick={handleCloseUserMenu}>
+										<Typography textAlign="center">{setting}</Typography>
+									</MenuItem>
+								))}
+							</Menu>
+						</Box>
+					) : (
+						<Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+							<Button
+								variant="contained"
+								size="large"
+								sx={{
+									boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+									transition: "all 0.5s ease",
+									backgroundColor: "#543884",
+									width: "100%",
+									// borderRadius: "2rem 2rem 2rem 2rem",
+									"&:hover": {
+										backgroundColor: "#7E328B !important",
+										transform: "translate(-5px, -5px)",
+										boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+									},
+								}}
+							>
+								Ingresar
+							</Button>
+						</Box>
+					)}
 				</Toolbar>
 				{/* </Container> */}
 			</Box>
