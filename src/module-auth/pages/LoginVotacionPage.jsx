@@ -128,7 +128,7 @@ export const LoginVotacionPage = () => {
 									<Box sx={{ flex: "1 1 auto" }} />
 
 									<Button color="base" variant="outlined" type="submit">
-										Confirmar
+										Ingresar
 									</Button>
 								</Box>
 							</form>

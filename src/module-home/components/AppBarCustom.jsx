@@ -20,7 +20,7 @@ const pages = ["Inicio", "Resultados", "Verificación", "Información"];
 const settings = ["Ingresar"];
 const settings2 = ["Cerrar sesión"];
 
-const logged = true;
+const logged = false;
 
 export const AppBarCustom = () => {
 	const [anchorElNav, setAnchorElNav] = React.useState(null);

@@ -1,7 +1,16 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import { ModalTokenVotacion } from "../components/ModalTokenVotacion";
 
 export const InicioVotante = () => {
+	const [statusModal, setStatusModal] = useState(false);
+
+	const handleCloseModal = () => setStatusModal(false);
+
+	const handleOpenModal = () => {
+		// toastOffOperation();
+		setStatusModal(true);
+	};
 	return (
 		<Box display="flex" height="75%" alignItems="center">
 			<Container
@@ -32,7 +41,7 @@ export const InicioVotante = () => {
 						variant="contained"
 						size="large"
 						color="darkButton"
-						// onClick={handleClick}
+						onClick={handleOpenModal}
 						sx={{
 							boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 							transition: "all 0.5s ease",
@@ -50,6 +59,7 @@ export const InicioVotante = () => {
 					</Button>
 				</Box>
 			</Container>
+			<ModalTokenVotacion statusModal={statusModal} handleCloseModal={handleCloseModal} />
 		</Box>
 	);
 };

@@ -12,7 +12,7 @@ const shadow = 5;
 const borde = "3rem";
 let contador = 4;
 const velocidad = 5000;
-const logged = true;
+const logged = false;
 
 export const HomePage = () => {
 	const [tick, setTick] = useState("circuloAuto0");

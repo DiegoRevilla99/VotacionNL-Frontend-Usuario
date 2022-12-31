@@ -1,8 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import { AppBarAuth } from "../../module-auth/components/AppBarAuth";
 import { AppBarCustom } from "../../module-home/components/AppBarCustom";
+import { AppBarVotacion } from "../components/AppBarVotacion";
+import { Boletas } from "../pages/Boletas";
 import { InicioVotante } from "../pages/InicioVotante";
 import { Prueba } from "../pages/Prueba";
+
+const statusVotante = "votando";
 
 export const VotacionRoutes = () => {
 	return (
@@ -19,11 +23,13 @@ export const VotacionRoutes = () => {
 							"repeating-radial-gradient( circle at 0 0, transparent 0, #fafaf7 120px ), repeating-linear-gradient( #efefef55, #efefef )",
 					}}
 				>
-					<AppBarCustom />
+					{statusVotante === "votando" ? <AppBarVotacion /> : <AppBarCustom />}
+
 					{/* <Topbar /> */}
 					<Routes>
 						<Route path="prueba" element={<Prueba />} />
 						<Route path="inicio" element={<InicioVotante />} />
+						<Route path="boletas" element={<Boletas />} />
 					</Routes>
 				</main>
 			</div>
