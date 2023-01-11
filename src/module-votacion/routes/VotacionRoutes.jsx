@@ -3,8 +3,12 @@ import { AppBarAuth } from "../../module-auth/components/AppBarAuth";
 import { AppBarCustom } from "../../module-home/components/AppBarCustom";
 import { AppBarVotacion } from "../components/AppBarVotacion";
 import { Boletas } from "../pages/Boletas";
+import { EditarBoleta } from "../pages/EditarBoleta";
+import { Folios } from "../pages/Folios";
 import { InicioVotante } from "../pages/InicioVotante";
 import { Prueba } from "../pages/Prueba";
+import { TiempoAgotado } from "../pages/TiempoAgotado";
+import { VotosRegistrados } from "../pages/VotosRegistrados";
 
 const statusVotante = "votando";
 
@@ -30,6 +34,10 @@ export const VotacionRoutes = () => {
 						<Route path="prueba" element={<Prueba />} />
 						<Route path="inicio" element={<InicioVotante />} />
 						<Route path="boletas" element={<Boletas />} />
+						<Route path="tiempoAgotado" element={<TiempoAgotado />} />
+						<Route path="votosRegistrados" element={<VotosRegistrados />} />
+						<Route path="folios" element={<Folios />} />
+						<Route path="editarBoleta/:noBoleta" element={<EditarBoleta />} />
 					</Routes>
 				</main>
 			</div>

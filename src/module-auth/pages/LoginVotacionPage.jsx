@@ -1,8 +1,18 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Container,
+	LinearProgress,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { Formik } from "formik";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string, ref } from "yup";
+import { onLoginWithEmailAndPassword } from "../../store/auth/authThunks";
 
 const validationSchema = object({
 	curp: string("").required("Este campo es requerido"),
@@ -11,27 +21,34 @@ const validationSchema = object({
 
 export const LoginVotacionPage = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { status } = useSelector((state) => state.auth);
 
-	const handleSubmit = () => {
+	const handleSubmit = (values) => {
 		// Todo: dispatch(iniciarSesionConEmail())
+		dispatch(
+			onLoginWithEmailAndPassword(values.curp, values.password, () =>
+				navigate("/votacion/inicio")
+			)
+		);
 		// **exito
-		navigate("/votacion/inicio");
 	};
+
 	return (
 		<Box display="flex" height="100%" alignItems="center">
-			<Container
-				maxWidth="sm"
-				sx={{
-					minHeight: "10rem",
-					height: "auto",
-					boxShadow: 1,
-					backgroundColor: "#323232",
-					borderRadius: { xs: "0.5rem", md: "1rem" },
-					p: "2rem",
-					// pl: "2rem",
-				}}
-			>
-				<Box>
+			<Container maxWidth="sm">
+				<Box
+					sx={{
+						minHeight: "10rem",
+						height: "auto",
+						boxShadow: 1,
+						backgroundColor: "#323232",
+						borderRadius: { xs: "0.5rem", md: "1rem" },
+						p: "2rem",
+						l: "0.5rem",
+						mr: "0.5rem",
+					}}
+				>
 					<Typography
 						variant="h5"
 						color="base.main"
@@ -49,8 +66,8 @@ export const LoginVotacionPage = () => {
 						}}
 						validationSchema={validationSchema}
 						onSubmit={(values) => {
-							console.log(values);
-							handleSubmit();
+							// console.log(values);
+							handleSubmit(values);
 						}}
 					>
 						{({ values, handleSubmit, errors, touched, handleChange }) => (
@@ -122,13 +139,40 @@ export const LoginVotacionPage = () => {
 										pt: 4,
 									}}
 								>
-									<Button color="error" variant="outlined">
-										Regresar
-									</Button>
+									{status === "checking" ? (
+										<></>
+									) : (
+										<Button
+											color="error"
+											variant="outlined"
+											disabled={status === "checking" ? true : false}
+										>
+											Regresar
+										</Button>
+									)}
+
 									<Box sx={{ flex: "1 1 auto" }} />
 
-									<Button color="base" variant="outlined" type="submit">
-										Ingresar
+									<Button
+										sx={{
+											"&.Mui-disabled": {
+												color: "#f8f7f3 !important",
+												border: "1px solid #f8f7f3 !important",
+											},
+										}}
+										color="baseButton"
+										variant="outlined"
+										type="submit"
+										disabled={status === "checking" ? true : false}
+										startIcon={
+											status === "checking" ? (
+												<CircularProgress color="base" />
+											) : (
+												""
+											)
+										}
+									>
+										{status === "checking" ? "Ingresando..." : "Ingresar"}
 									</Button>
 								</Box>
 							</form>

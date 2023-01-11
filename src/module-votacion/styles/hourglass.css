@@ -116,7 +116,7 @@
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg: #543884;
-        --fg: #543884;
+        --bg: #f8f7f3;
+        --fg: #f8f7f3;
     }
 }

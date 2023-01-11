@@ -7,14 +7,16 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import DomainVerificationIcon from "@mui/icons-material/DomainVerification";
 import InfoIcon from "@mui/icons-material/Info";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const shadow = 5;
 const borde = "3rem";
 let contador = 4;
 const velocidad = 5000;
-const logged = false;
+// const logged = true;
 
 export const HomePage = () => {
+	const { status: logged } = useSelector((state) => state.auth);
 	const [tick, setTick] = useState("circuloAuto0");
 	const navigate = useNavigate();
 
@@ -29,7 +31,7 @@ export const HomePage = () => {
 	}, []);
 
 	const goVotar = () => {
-		if (!logged) navigate("/pasosVerificacion");
+		if (logged !== "logged") navigate("/pasosVerificacion");
 		else navigate("/votacion/inicio");
 	};
 

@@ -15,17 +15,22 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { onLogout } from "../../store/auth/authSlice";
+import { onLogoutThunk } from "../../store/auth/authThunks";
 
 const pages = ["Inicio", "Resultados", "Verificación", "Información"];
 const settings = ["Ingresar"];
 const settings2 = ["Cerrar sesión"];
 
-const logged = false;
+// const logged = true;
 
 export const AppBarCustom = () => {
+	const { status: logged } = useSelector((state) => state.auth);
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleOpenNavMenu = (event) => {
 		setAnchorElNav(event.currentTarget);
@@ -42,6 +47,11 @@ export const AppBarCustom = () => {
 		setAnchorElUser(null);
 	};
 
+	const handleCerrarSesion = () => {
+		dispatch(onLogoutThunk(() => navigate("/home")));
+		setAnchorElUser(null);
+	};
+
 	const goInicio = (event) => {
 		setAnchorElNav(null);
 		navigate("/home");
@@ -49,7 +59,7 @@ export const AppBarCustom = () => {
 
 	const goVotar = () => {
 		setAnchorElNav(null);
-		if (logged) navigate("/votacion/inicio");
+		if (logged === "logged") navigate("/votacion/inicio");
 		else navigate("/pasosVerificacion");
 	};
 
@@ -71,6 +81,10 @@ export const AppBarCustom = () => {
 	const goAyuda = () => {
 		setAnchorElNav(null);
 		navigate("/ayuda");
+	};
+
+	const hanldeIngresar = () => {
+		navigate("/auth/login");
 	};
 
 	return (
@@ -225,7 +239,7 @@ export const AppBarCustom = () => {
 						{/* ))} */}
 					</Box>
 
-					{logged ? (
+					{logged === "logged" ? (
 						<></>
 					) : (
 						<Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
@@ -264,7 +278,7 @@ export const AppBarCustom = () => {
 						</Box>
 					)}
 
-					{logged ? (
+					{logged === "logged" ? (
 						<Box sx={{ flexGrow: 0 }}>
 							<Tooltip title="Open settings">
 								<IconButton onClick={handleOpenUserMenu}>
@@ -275,7 +289,7 @@ export const AppBarCustom = () => {
 										ml={2}
 										display={{ xs: "none", lg: "flex" }}
 									>
-										José Antonio Diego Revilla
+										José
 									</Typography>
 								</IconButton>
 							</Tooltip>
@@ -295,11 +309,11 @@ export const AppBarCustom = () => {
 								open={Boolean(anchorElUser)}
 								onClose={handleCloseUserMenu}
 							>
-								{settings2.map((setting) => (
-									<MenuItem key={setting} onClick={handleCloseUserMenu}>
-										<Typography textAlign="center">{setting}</Typography>
-									</MenuItem>
-								))}
+								{/* {settings2.map((setting) => ( */}
+								<MenuItem onClick={handleCerrarSesion}>
+									<Typography textAlign="center">Cerrar Sesión</Typography>
+								</MenuItem>
+								{/* ))} */}
 							</Menu>
 						</Box>
 					) : (
@@ -307,6 +321,7 @@ export const AppBarCustom = () => {
 							<Button
 								variant="contained"
 								size="large"
+								onClick={hanldeIngresar}
 								sx={{
 									boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 									transition: "all 0.5s ease",

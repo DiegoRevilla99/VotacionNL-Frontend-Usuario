@@ -15,17 +15,30 @@ export const InicioVotante = () => {
 		<Box display="flex" height="75%" alignItems="center">
 			<Container
 				maxWidth="md"
-				sx={{
-					minHeight: "10rem",
-					height: "auto",
-					boxShadow: 1,
-					backgroundColor: "white",
-					borderRadius: { xs: "0.5rem", md: "1rem" },
-					p: "2rem",
-					// pl: "2rem",
-				}}
+				// sx={{
+				// 	minHeight: "10rem",
+				// 	height: "auto",
+				// 	boxShadow: 1,
+				// 	backgroundColor: "white",
+				// 	borderRadius: { xs: "0.5rem", md: "1rem" },
+				// 	p: "2rem",
+				// 	// pl: "2rem",
+				// }}
 			>
-				<Box display="flex" flexDirection="column" alignItems="center">
+				<Box
+					display="flex"
+					flexDirection="column"
+					alignItems="center"
+					sx={{
+						minHeight: "10rem",
+						height: "auto",
+						boxShadow: 1,
+						backgroundColor: "white",
+						borderRadius: { xs: "0.5rem", md: "1rem" },
+						p: "2rem",
+						// pl: "2rem",
+					}}
+				>
 					<Typography
 						variant="h5"
 						color="#323232"

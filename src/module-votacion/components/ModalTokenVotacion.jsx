@@ -1,8 +1,18 @@
-import { Box, Button, Container, Modal, TextField, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Container,
+	Modal,
+	TextField,
+	Typography,
+} from "@mui/material";
 import { Formik } from "formik";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
+import { onComenzarVotacion } from "../../store/votante/votanteThunks";
 
 const style = {
 	position: "absolute",
@@ -26,6 +36,9 @@ const validationSchema = object({
 
 export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { status } = useSelector((state) => state.votante);
+
 	const onCancel = () => {
 		// setIsCerrada(false);
 		// setQuestionsSelectedNull();
@@ -33,7 +46,7 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 	};
 
 	const handleSubmit = (values) => {
-		navigate("/votacion/boletas");
+		dispatch(onComenzarVotacion(values, () => navigate("/votacion/boletas")));
 	};
 
 	return (
@@ -86,13 +99,35 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 											pt: 4,
 										}}
 									>
-										<Button color="error" variant="outlined">
+										<Button
+											color="error"
+											variant="outlined"
+											disabled={status === "checking" ? true : false}
+										>
 											Reenviar Token
 										</Button>
 										<Box sx={{ flex: "1 1 auto" }} />
 
-										<Button color="darkButton" variant="outlined" type="submit">
-											Ingresar
+										<Button
+											color="darkButton"
+											variant="outlined"
+											type="submit"
+											sx={{
+												"&.Mui-disabled": {
+													color: "#f8f7f3 !important",
+													border: "1px solid #f8f7f3 !important",
+												},
+											}}
+											disabled={status === "checking" ? true : false}
+											startIcon={
+												status === "checking" ? (
+													<CircularProgress color="darkButton" />
+												) : (
+													""
+												)
+											}
+										>
+											{status === "checking" ? "" : "Ingresar"}
 										</Button>
 									</Box>
 								</form>

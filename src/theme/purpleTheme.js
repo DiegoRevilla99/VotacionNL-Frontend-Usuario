@@ -13,6 +13,12 @@ export const purpleTheme = createTheme({
 			light: "blue",
 			contrastText: "#f8f7f3",
 		},
+		baseButton: {
+			main: "#f8f7f3",
+			dark: "#f8f7f3",
+			light: "#f8f7f3",
+			contrastText: "#f8f7f3",
+		},
 		primary: {
 			main: "#543884", //7e328b
 		},
@@ -21,6 +27,9 @@ export const purpleTheme = createTheme({
 		},
 		error: {
 			main: red.A700,
+		},
+		linearProgress: {
+			main: "#fed300",
 		},
 	},
 });

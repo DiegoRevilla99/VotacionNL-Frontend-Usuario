@@ -1,4 +1,14 @@
-import { AppBar, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import {
+	AppBar,
+	Avatar,
+	Button,
+	IconButton,
+	Menu,
+	MenuItem,
+	Toolbar,
+	Tooltip,
+	Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +16,19 @@ import "../styles/hourglass.css";
 
 import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useDispatch, useSelector } from "react-redux";
+import { onLogoutThunk } from "../../store/auth/authThunks";
 const pages = ["Inicio", "Resultados", "Verificación", "Información"];
 const settings = ["Ingresar"];
 const settings2 = ["Cerrar sesión"];
+const votando = false;
 
 export const AppBarVotacion = () => {
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
+	const { status } = useSelector((state) => state.votante);
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleOpenNavMenu = (event) => {
 		setAnchorElNav(event.currentTarget);
@@ -34,126 +49,351 @@ export const AppBarVotacion = () => {
 		setAnchorElNav(null);
 		navigate("/home");
 	};
+
+	const goVotar = () => {
+		setAnchorElNav(null);
+		if (logged === "logged") navigate("/votacion/inicio");
+		else navigate("/pasosVerificacion");
+	};
+
+	const goResultados = () => {
+		setAnchorElNav(null);
+		navigate("/resultados");
+	};
+
+	const goVerificacion = () => {
+		setAnchorElNav(null);
+		navigate("/verificacion");
+	};
+
+	const goInformacion = () => {
+		setAnchorElNav(null);
+		navigate("/informacion");
+	};
+
+	const goAyuda = () => {
+		setAnchorElNav(null);
+		navigate("/ayuda");
+	};
+
+	const handleCerrarSesion = () => {
+		dispatch(onLogoutThunk(() => navigate("/home")));
+		setAnchorElUser(null);
+	};
+
+	// aqui
 	return (
 		<AppBar
 			position="static"
 			sx={{
 				"&": {
-					backgroundColor: "transparent",
+					backgroundColor: "#323232",
 					boxShadow: 0,
-					paddingTop: "1rem",
 				},
 			}}
 		>
 			<Box pl={{ xs: "1rem", md: "6rem" }} pr={{ xs: "1rem", md: "6rem" }}>
 				<Toolbar disableGutters>
-					<Box sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}>
-						<img
-							alt="logo"
-							src="../../images/CEE600x321.png"
-							style={{
-								transition: "width 0.5s, height 0.5s",
-								width: "8rem",
-							}}
-						/>
+					<Box sx={{ flexGrow: 1, width: "100%" }} display="flex" justifyContent="left">
+						{status === "noVotando" && (
+							// <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
+							// 	<img
+							// 		alt="logo"
+							// 		src="../../images/CEE600x321.png"
+							// 		style={{
+							// 			transition: "width 0.5s, height 0.5s",
+							// 			width: "8rem",
+							// 		}}
+							// 	/>
+							// </Box>
+							<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+								<IconButton
+									size="large"
+									aria-label="account of current user"
+									aria-controls="menu-appbar"
+									aria-haspopup="true"
+									onClick={handleOpenNavMenu}
+									color="black"
+								>
+									<MenuIcon />
+								</IconButton>
+								<Menu
+									id="menu-appbar"
+									anchorEl={anchorElNav}
+									anchorOrigin={{
+										vertical: "bottom",
+										horizontal: "left",
+									}}
+									keepMounted
+									transformOrigin={{
+										vertical: "top",
+										horizontal: "left",
+									}}
+									open={Boolean(anchorElNav)}
+									onClose={handleCloseNavMenu}
+									sx={{
+										display: { xs: "block", md: "none" },
+										zIndex: 9999,
+									}}
+								>
+									{/* {pages.map((page) => ( */}
+									<MenuItem key={"inicio"} onClick={goInicio} color="black">
+										<Typography textAlign="center" sx={{ color: "black" }}>
+											Inicio
+										</Typography>
+									</MenuItem>
+									<MenuItem key={"votar"} onClick={goVotar} color="black">
+										<Typography textAlign="center" sx={{ color: "black" }}>
+											Votar
+										</Typography>
+									</MenuItem>
+									<MenuItem
+										key={"resultados"}
+										onClick={goResultados}
+										color="black"
+									>
+										<Typography textAlign="center" sx={{ color: "black" }}>
+											Resultados
+										</Typography>
+									</MenuItem>
+									<MenuItem
+										key={"verificacion"}
+										onClick={goVerificacion}
+										color="black"
+									>
+										<Typography textAlign="center" sx={{ color: "black" }}>
+											Verificacion
+										</Typography>
+									</MenuItem>
+									<MenuItem
+										key={"información"}
+										onClick={goInformacion}
+										color="black"
+									>
+										<Typography textAlign="center" sx={{ color: "black" }}>
+											Información
+										</Typography>
+									</MenuItem>
+									<MenuItem key={"ayuda"} onClick={goAyuda} color="black">
+										<Typography textAlign="center" sx={{ color: "black" }}>
+											Ayuda
+										</Typography>
+									</MenuItem>
+									{/* ))} */}
+								</Menu>
+							</Box>
+						)}
+
+						<Box sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}>
+							<img
+								alt="logo"
+								src="../../images/CEE600x321.png"
+								style={{
+									transition: "width 0.5s, height 0.5s",
+									width: "8rem",
+								}}
+							/>
+						</Box>
+
+						<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+							{status === "votando" && (
+								<>
+									<div className="hourglass"></div>
+									<Typography
+										pl="1rem"
+										display="flex"
+										variant="subtitle1"
+										color="base"
+										justifyContent="center"
+										alignContent="center"
+										alignItems="center"
+									>
+										15:60
+									</Typography>
+								</>
+							)}
+						</Box>
 					</Box>
 
-					<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-						{/* <IconButton
-							size="large"
-							aria-label="account of current user"
-							aria-controls="menu-appbar"
-							aria-haspopup="true"
-							onClick={handleOpenNavMenu}
-							color="black"
+					<Box sx={{ flexGrow: 1, width: "100%" }} display="flex" justifyContent="center">
+						{status === "votando" ? (
+							<Box sx={{ display: { xs: "flex", md: "none" }, mr: 0, flexGrow: 1 }}>
+								<img
+									alt="logo"
+									src="../../images/CEE600x321.png"
+									style={{
+										transition: "width 0.5s, height 0.5s",
+										width: "8rem",
+									}}
+								/>
+							</Box>
+						) : (
+							<>
+								<Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
+									<img
+										alt="logo"
+										src="../../images/CEE600x321.png"
+										style={{
+											transition: "width 0.5s, height 0.5s",
+											width: "8rem",
+										}}
+									/>
+								</Box>
+								<Box
+									sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+									alignItems={"center"}
+									justifyContent={"space-evenly"}
+								>
+									{/* {pages.map((page) => ( */}
+									<Button
+										key={"inicio"}
+										onClick={goInicio}
+										sx={{ my: 2, color: "base.main", display: "block" }}
+									>
+										Inicio
+									</Button>
+									<Button
+										key={"resultados"}
+										onClick={goResultados}
+										sx={{ my: 2, color: "base.main", display: "block" }}
+									>
+										Resultados
+									</Button>
+									<Button
+										key={"verificacion"}
+										onClick={goVerificacion}
+										sx={{ my: 2, color: "base.main", display: "block" }}
+									>
+										Verificacion
+									</Button>
+									<Button
+										key={"informacion"}
+										onClick={goInformacion}
+										sx={{ my: 2, color: "base.main", display: "block" }}
+									>
+										Información
+									</Button>
+									<Button
+										key={"ayuda"}
+										onClick={goAyuda}
+										sx={{ my: 2, color: "base.main", display: "block" }}
+									>
+										Ayuda
+									</Button>
+									{/* ))} */}
+								</Box>
+							</>
+						)}
+
+						<Box
+							sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+							alignItems={"center"}
+							justifyContent={"center"}
 						>
-							<MenuIcon />
-						</IconButton> */}
-						{/* <Box width="1rem" height="1rem"> */}
-						<div class="hourglass"></div>
-						<Typography
-							pl="1rem"
-							display="flex"
-							variant="subtitle1"
-							color="initial"
-							justifyContent="center"
-							alignContent="center"
-							alignItems="center"
-						>
-							15:60
-						</Typography>
-						{/* </Box> */}
-						{/* <Typography variant="caption" color="initial">
-							Tiempo
-						</Typography> */}
+							{status === "votando" && (
+								<>
+									<div className="hourglass"></div>
+									<Typography
+										pl="2rem"
+										display="flex"
+										variant="subtitle1"
+										color="base.main"
+										justifyContent="center"
+										alignContent="center"
+										alignItems="center"
+									>
+										15:60
+									</Typography>
+								</>
+							)}
+						</Box>
 					</Box>
 
-					<Box sx={{ display: { xs: "flex", md: "none" }, mr: 0, flexGrow: 1 }}>
-						<img
-							alt="logo"
-							src="../../images/CEE600x321.png"
-							style={{
-								transition: "width 0.5s, height 0.5s",
-								width: "8rem",
-							}}
-						/>
-					</Box>
-
-					<Box
-						sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
-						alignItems={"center"}
-						justifyContent={"center"}
-					>
-						<div class="hourglass"></div>
-						<Typography
-							pl="2rem"
-							display="flex"
-							variant="subtitle1"
-							color="initial"
-							justifyContent="center"
-							alignContent="center"
-							alignItems="center"
-						>
-							15:60
-						</Typography>
-					</Box>
-
-					<Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
+					{/* <Box sx={{ flexGrow: 0, display: { xs: "flex", md: "none" } }}>
 						<IconButton
 							size="large"
 							aria-label="account of current user"
 							aria-controls="menu-appbar"
 							aria-haspopup="true"
 							onClick={handleOpenUserMenu}
-							color="black"
+							color="base"
 						>
 							<LoginIcon />
 						</IconButton>
-						{/* <Typography variant="caption" color="initial">
+						<Typography variant="caption" color="initial">
 							Salir
-						</Typography> */}
+						</Typography>
+					</Box> */}
+
+					<Box sx={{ flexGrow: 1, width: "100%" }} display="flex" justifyContent="right">
+						{status === "votando" ? (
+							<></>
+						) : (
+							<Box sx={{ flexGrow: 0 }}>
+								<Tooltip title="Open settings">
+									<IconButton onClick={handleOpenUserMenu}>
+										<Avatar
+											alt="Jemy Sharp"
+											src="/static/images/avatar/2.jpg"
+										/>
+										<Typography
+											variant="body1"
+											color="base.main"
+											ml={2}
+											display={{ xs: "none", lg: "flex" }}
+										>
+											José
+										</Typography>
+									</IconButton>
+								</Tooltip>
+								<Menu
+									sx={{ mt: "45px" }}
+									id="menu-appbar"
+									anchorEl={anchorElUser}
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "right",
+									}}
+									keepMounted
+									transformOrigin={{
+										vertical: "top",
+										horizontal: "right",
+									}}
+									open={Boolean(anchorElUser)}
+									onClose={handleCloseUserMenu}
+								>
+									{/* {settings2.map((setting) => ( */}
+									<MenuItem onClick={handleCerrarSesion}>
+										<Typography textAlign="center">Cerrar sesión</Typography>
+									</MenuItem>
+									{/* // ))} */}
+								</Menu>
+							</Box>
+						)}
 					</Box>
 
-					<Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+					{/* <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
 						<Button
 							variant="contained"
 							size="large"
+							color="base"
 							sx={{
+								zIndex: 9999,
 								boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 								transition: "all 0.5s ease",
-								backgroundColor: "#543884",
+								// backgroundColor: "#543884",
 								width: "100%",
 								// borderRadius: "2rem 2rem 2rem 2rem",
 								"&:hover": {
-									backgroundColor: "#7E328B !important",
+									// backgroundColor: "#7E328B !important",
 									transform: "translate(-5px, -5px)",
 									boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
 								},
 							}}
 						>
-							Salir
+							Regresar
 						</Button>
-					</Box>
+					</Box> */}
 				</Toolbar>
 				{/* </Container> */}
 			</Box>

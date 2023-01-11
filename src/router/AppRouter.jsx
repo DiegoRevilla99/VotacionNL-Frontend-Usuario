@@ -1,14 +1,22 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { LoginVotacionPage } from "../module-auth/pages/LoginVotacionPage";
 import { AuthRoutes } from "../module-auth/routes/AuthRoutes";
 import { HomeRoutes } from "../module-home/routes/HomeRoutes";
 import { VotacionRoutes } from "../module-votacion/routes/votacionRoutes";
 import { CiudadanoRoutes } from "../routes/CiudadanoRoutes";
+import { onLogin } from "../store/auth/authSlice";
+import { AuthPublicRoutes } from "./AuthPublicRoutes";
 import { PrivateRoutes } from "./PrivateRoutes";
 import { PublicRoutes } from "./PublicRoutes";
 
 export const AppRouter = () => {
+	const { status } = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
+
+	// dispatch(onLogin({ uid: "DEFAULT", email: "DEAFAULT", displayName: "DEFAULT" }));
+
 	return (
 		<Routes>
 			<Route
@@ -23,22 +31,20 @@ export const AppRouter = () => {
 			<Route
 				path="/auth/*"
 				element={
-					<PublicRoutes>
+					<AuthPublicRoutes status={status}>
 						<AuthRoutes />
-					</PublicRoutes>
+					</AuthPublicRoutes>
 				}
 			/>
 
 			<Route
 				path="/votacion/*"
 				element={
-					<PrivateRoutes>
+					<PrivateRoutes status={status}>
 						<VotacionRoutes />
 					</PrivateRoutes>
 				}
 			/>
-
-			{/* <Route path="login" element={<LoginVotacionPage />} /> */}
 		</Routes>
 	);
 };
