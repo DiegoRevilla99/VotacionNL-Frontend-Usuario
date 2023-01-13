@@ -69,7 +69,7 @@ export const VerificacionPage = () => {
                         
                         sx={{ maxWidth: 350,
                             maxHeight: 400,
-                            boxShadow: 3,
+                            boxShadow: 4,
                             "&:hover": {
                                 boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
                                 transform: "translate(-3px, -3px)",
@@ -95,12 +95,9 @@ export const VerificacionPage = () => {
                             </CardActionArea>
                             <CardActions>
                             <Button 
-                                // size="small" color="primary"
                                 onClick={plantilla1}
                                 sx={{
 									backgroundColor: "#511079",
-									// borderRadius: "0px 25px 25px 25px",
-                                    // borderColor: "#7E328B",
 									color: "#fff",
 									fontSize: {
 										xl: "0.9rem",
@@ -109,16 +106,11 @@ export const VerificacionPage = () => {
 										xs: "0.9Srem",
 									},
 									textAlign: "center",
-									// width: { xl: 340, lg: 240, sm: "80%", xs: "80%" },
                                     width: "100%",
                                     height: "100%",
-									// height: { xl: 370, lg: 270, sm: "80%", xs: "80%" },
 									"&:hover": {
 										background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
                                         color: "#FFFFFF",
-										// boxShadow: "9px 10px 4px rgba(0, 0, 0, 0.37)",
-										// transform: "translate(-5px, -5px)",
-										// transition: "all 0.5s ease",
 									},
 								}}>
                                 Verificar individual
@@ -129,7 +121,7 @@ export const VerificacionPage = () => {
                         <Card 
                         sx={{ maxWidth: 350,
                             maxHeight: 400,
-                            boxShadow: 3,
+                            boxShadow: 4,
                             "&:hover": {
                                 boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
                                 transform: "translate(-3px, -3px)",
@@ -155,30 +147,22 @@ export const VerificacionPage = () => {
                             </CardActionArea>
                             <CardActions>
                             <Button 
-                                // size="small" color="primary"
                                 onClick={plantilla2}
                                 sx={{
 									backgroundColor: "#511079",
-									// borderRadius: "0px 25px 25px 25px",
-                                    // borderColor: "#7E328B",
 									color: "#fff",
 									fontSize: {
 										xl: "0.9rem",
 										lg: "0.9rem",
 										sm: "0.9rem",
-										xs: "0.9Srem",
+										xs: "0.9rem",
 									},
 									textAlign: "center",
-									// width: { xl: 340, lg: 240, sm: "80%", xs: "80%" },
                                     width: "100%",
                                     height: "100%",
-									// height: { xl: 370, lg: 270, sm: "80%", xs: "80%" },
 									"&:hover": {
 										background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
                                         color: "#FFFFFF",
-										// boxShadow: "9px 10px 4px rgba(0, 0, 0, 0.37)",
-										// transform: "translate(-5px, -5px)",
-										// transition: "all 0.5s ease",
 									},
 								}}>
                                 Verificar en grupo
