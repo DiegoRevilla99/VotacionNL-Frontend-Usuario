@@ -84,6 +84,7 @@ export const AppBarCustom = () => {
 	};
 
 	const hanldeIngresar = () => {
+		setAnchorElUser(null);
 		navigate("/auth/login");
 	};
 
@@ -269,11 +270,11 @@ export const AppBarCustom = () => {
 								open={Boolean(anchorElUser)}
 								onClose={handleCloseUserMenu}
 							>
-								{settings.map((setting) => (
-									<MenuItem key={setting} onClick={handleCloseUserMenu}>
-										<Typography textAlign="center">{setting}</Typography>
-									</MenuItem>
-								))}
+								{/* {settings.map((setting) => ( */}
+								<MenuItem onClick={hanldeIngresar}>
+									<Typography textAlign="center">Ingresar</Typography>
+								</MenuItem>
+								{/* ))} */}
 							</Menu>
 						</Box>
 					)}

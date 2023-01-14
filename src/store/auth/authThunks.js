@@ -1,3 +1,4 @@
+import { deleteToken, setToken } from "../../providers/Micro-Auth/configAuth";
 import { loginWithEmailAndPassword, logout } from "../../providers/Micro-Auth/providerAuth";
 import { onChecking, onError, onLogin, onLogout } from "./authSlice";
 
@@ -13,6 +14,7 @@ export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}
 		if (ok) {
 			console.log("TODO BIEN");
 			dispatch(onLogin({ accessToken, username, refreshToken, email }));
+			setToken(accessToken);
 			navigate();
 		} else {
 			dispatch(onError("Error de autenticación. Revisa tus credenciales"));
@@ -27,9 +29,9 @@ export const onLogoutThunk = (navigate = () => {}) => {
 		const { ok } = await logout();
 
 		if (ok) {
-			console.log("TODO BIEN logout");
-			dispatch(onLogout());
+			deleteToken();
 			navigate();
+			dispatch(onLogout());
 		} else {
 			dispatch(onError("Error"));
 		}

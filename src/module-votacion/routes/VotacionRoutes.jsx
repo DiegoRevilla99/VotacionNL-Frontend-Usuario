@@ -4,8 +4,10 @@ import { AppBarCustom } from "../../module-home/components/AppBarCustom";
 import { AppBarVotacion } from "../components/AppBarVotacion";
 import { Boletas } from "../pages/Boletas";
 import { EditarBoleta } from "../pages/EditarBoleta";
+import { FinalPapeletas } from "../pages/FinalPapeletas";
 import { Folios } from "../pages/Folios";
 import { InicioVotante } from "../pages/InicioVotante";
+import { Papeletas } from "../pages/Papeletas";
 import { Prueba } from "../pages/Prueba";
 import { TiempoAgotado } from "../pages/TiempoAgotado";
 import { VotosRegistrados } from "../pages/VotosRegistrados";
@@ -38,6 +40,8 @@ export const VotacionRoutes = () => {
 						<Route path="votosRegistrados" element={<VotosRegistrados />} />
 						<Route path="folios" element={<Folios />} />
 						<Route path="editarBoleta/:noBoleta" element={<EditarBoleta />} />
+						<Route path="papeletas" element={<Papeletas />} />
+						<Route path="finalPapeletas" element={<FinalPapeletas />} />
 					</Routes>
 				</main>
 			</div>
