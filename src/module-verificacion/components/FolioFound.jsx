@@ -43,36 +43,37 @@ export const FolioFound = () => {
                     alignItems="center"
                     >
 
-                    <Box>
+                    <Box 
+                    align="center">
 
 
 					<Typography
 						color="initial"
-						mb="1rem"
+						mb="0.5rem"
 						align="center"
 						sx={{
 							fontSize: {
-								xs: "2rem",
-                                sm: "2rem",
-								md: "2rem",
-								lg: "2rem",
-								xl: "2rem",
+								xs: "1rem",
+                                sm: "1rem",
+								md: "1rem",
+								lg: "1rem",
+								xl: "1rem",
 							},
 						}}
 					>
 						LA BOLETA ELECTORAL CON FOLIO:
                         </Typography>
                     <Typography
-                        color="initial"
+                        color="primary"
                         mb="1rem"
                         align="center"
                         sx={{
                             fontSize: {
-                                xs: "2rem",
-                                sm: "2rem",
-                                md: "2rem",
-                                lg: "2rem",
-                                xl: "2rem",
+                                xs: "1rem",
+                                sm: "1rem",
+                                md: "1rem",
+                                lg: "1rem",
+                                xl: "1rem",
                             },
                         }}
                     > 
@@ -80,47 +81,47 @@ export const FolioFound = () => {
                     </Typography>
                     <Typography
                         color="initial"
-                            mb="1rem"
+                            mb="0.5rem"
                             align="center"
                             sx={{
                                 fontSize: {
-                                    xs: "2rem",
-                                    sm: "2rem",
-                                    md: "2rem",
-                                    lg: "2rem",
-                                    xl: "2rem",
+                                    xs: "1rem",
+                                    sm: "1rem",
+                                    md: "1rem",
+                                    lg: "1rem",
+                                    xl: "1rem",
                                 },
                             }}
                         > 
                         PRESENTA LOS SIGUIENTES DATOS:
 					</Typography>
 					<Typography
-						color="initial"
-						mb="1rem"
+						color="primary"
+						mb="0.5rem"
 						align="center"
 						sx={{
 							fontSize: {
-								xs: "2rem",
-                                sm: "2rem",
-								md: "2rem",
-								lg: "2rem",
-								xl: "2rem",
+                                xs: "1rem",
+                                sm: "1rem",
+                                md: "1rem",
+                                lg: "1rem",
+                                xl: "1rem",
 							},
 						}}
 					>
 						FECHA DE EMISIÓN: 10/101/10
                         </Typography>
                     <Typography
-                        color="initial"
+                        color="primary"
                             mb="1rem"
                             align="center"
                             sx={{
                                 fontSize: {
-                                    xs: "2rem",
-                                    sm: "2rem",
-                                    md: "2rem",
-                                    lg: "2rem",
-                                    xl: "2rem",
+                                    xs: "1rem",
+                                    sm: "1rem",
+                                    md: "1rem",
+                                    lg: "1rem",
+                                    xl: "1rem",
                                 },
                             }}
                         > 
@@ -132,11 +133,11 @@ export const FolioFound = () => {
                             align="center"
                             sx={{
                                 fontSize: {
-                                    xs: "2rem",
-                                    sm: "2rem",
-                                    md: "2rem",
-                                    lg: "2rem",
-                                    xl: "2rem",
+                                    xs: "1rem",
+                                    sm: "1rem",
+                                    md: "1rem",
+                                    lg: "1rem",
+                                    xl: "1rem",
                                 },
                             }}
                         > 
@@ -149,15 +150,21 @@ export const FolioFound = () => {
                             backgroundColor: "#511079",
                             color: "#fff",
                             fontSize: {
-								xs: "2rem",
-                                sm: "2rem",
-								md: "2rem",
-								lg: "2rem",
-								xl: "2rem",
+                                xs: "1rem",
+                                sm: "1rem",
+                                md: "1rem",
+                                lg: "1rem",
+                                xl: "1rem",
                             },
                             textAlign: "center",
-                            width: "100%",
-                            height: "100%",
+                            width: {
+                                xs: "80%",
+                                sm: "70%",
+                                md: "60%",
+                                lg: "50%",
+                                xl: "50%",
+                            },
+                            // height: "10%",
                             "&:hover": {
                                 background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
                                 color: "#FFFFFF",
@@ -167,6 +174,7 @@ export const FolioFound = () => {
                         </Button>
                     </Box>
                     <Box>
+                        {/* INGRESAR LA BOLETA */}
                     <Typography
                         color="initial"
                             mb="1rem"
