@@ -1,4 +1,4 @@
-import { authAPI } from "./configAuth";
+import { authAPI, TOKEN_KEY } from "./configAuth";
 
 export const loginWithEmailAndPassword = async (email, password) => {
 	try {
@@ -20,12 +20,22 @@ export const loginWithEmailAndPassword = async (email, password) => {
 };
 export const logout = async (email, password) => {
 	try {
-		const { data } = await authAPI.post("api/auth/signout", {});
+		console.log("SESSION", sessionStorage.getItem(TOKEN_KEY));
+
+		const { data } = await authAPI.post(
+			"api/auth/signout",
+			{},
+			{
+				headers: {
+					Authorization: "Bearer " + sessionStorage.getItem(TOKEN_KEY),
+				},
+			}
+		);
 
 		console.log("DATA LOGOUT: ", data);
 		return { ok: true };
 	} catch (error) {
-		console.log(error.message);
+		console.log("ERROR", error);
 		return { ok: false };
 	}
 };

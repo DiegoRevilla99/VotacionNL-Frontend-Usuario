@@ -12,6 +12,19 @@ export const votanteSlice = createSlice({
 		},
 		votos: [],
 		candidaturaNoRegistrada: [],
+		consulta: {
+			nombre: "",
+			entidad: "",
+		},
+		papeletas: [],
+		papeletaActual: {
+			distritoElectoral: "",
+			municipio: "",
+			pregunta: {
+				descPregunta: "",
+			},
+		},
+		respuestasPapeletas: [],
 	},
 	reducers: {
 		onCheckingPeticion: (state) => {
@@ -50,6 +63,17 @@ export const votanteSlice = createSlice({
 		onAddCandidaturaNoRegistrada: (state, { payload }) => {
 			state.candidaturaNoRegistrada[payload.noBoleta - 1] = payload.candidaturaNoRegistrada;
 		},
+		onSetConsulta: (state, { payload }) => {
+			state.consulta.nombre = payload.nombreJornada;
+			state.consulta.entidad = payload.entidad;
+			state.papeletas = payload.papeletas;
+		},
+		onAddRespuesta: (state, { payload }) => {
+			state.respuestasPapeletas[payload.noPapeleta] = payload.respuesta;
+		},
+		onSetPapeletaActual: (state, { payload }) => {
+			state.papeletaActual = state.papeletas[payload];
+		},
 	},
 });
 
@@ -67,6 +91,9 @@ export const {
 	onSetBoletaActual,
 	onAddVoto,
 	onAddCandidaturaNoRegistrada,
+	onSetConsulta,
+	onAddRespuesta,
+	onSetPapeletaActual,
 } = votanteSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;
