@@ -99,7 +99,8 @@ export const IndividualPage = () => {
 											>
 											Regresar
 											</Button>
-											<Box sx={{ flex: '1 1 auto' }} />
+											<Box sx={{ flex: '1 1 auto' }} 
+											marginBottom={{xs: "1rem"}}/>
 
 											<Button 
 									type="submit"

@@ -70,7 +70,20 @@ export const Jornadas = () => {
 					</Typography>
                     <Box 
                     mt={1}
-                    ml={5} mr={5}
+                    ml={{											
+                        xs: 2,
+                        sm: 2,
+                        md: 4,
+                        lg: 4,
+                        xl: 4,
+                    }} 
+                    mr={{											
+                        xs: 2,
+                        sm: 2,
+                        md: 4,
+                        lg: 4,
+                        xl: 4,
+                    }} 
                     sx={{ 
                         display: 'flex', 
                         justifyContent:'flex-end' }}>
