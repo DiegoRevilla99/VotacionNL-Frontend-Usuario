@@ -30,7 +30,7 @@ function createData(name, calories, fat, carbs) {
 export const GroupPageLogged = () => {
 	const navigate = useNavigate();
 	const onCancel = () => {
-		navigate("/verificacion/visualizacion");
+		navigate("/verificacion/visualizacionnf/boletanf");
 	};
 	return (
 		<Box pt="3rem">
@@ -58,7 +58,7 @@ export const GroupPageLogged = () => {
 							},
 						}}
 					>
-						JORNADAS O CONSULTAS QUE SE ESTÉN LLEVANDO A CABO, SE PRESENTAN LAS SIGUIENTES BOLETAS Y SUS SENTIDOS
+						JORNADAS O CONSULTAS QUE SE ESTÉN LLEVANDO A CABO, SE PRESENTAN LOS SIGUIENTES FOLIOS Y SUS SENTIDOS
 					</Typography>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">

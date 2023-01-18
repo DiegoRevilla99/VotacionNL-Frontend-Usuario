@@ -16,7 +16,7 @@ export const VerificacionPage = () => {
 		navigate("/verificacion/individual");
 	};
 	const plantilla2 = () => {
-		navigate("/verificacion/grupo");
+		navigate("/verificacion/visualizacion");
 	};
 	return (
 		<Box pt="3rem">
@@ -37,9 +37,9 @@ export const VerificacionPage = () => {
 						align="center"
 						sx={{
 							fontSize: {
-								xs: "1.5rem",
-								sm: "1.3rem",
-								md: "1.3rem",
+								xs: "1.6rem",
+								sm: "1.7rem",
+								md: "1.8rem",
 								lg: "2rem",
 								xl: "2rem",
 							},
