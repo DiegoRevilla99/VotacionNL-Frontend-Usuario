@@ -3,7 +3,7 @@ import { Container } from "@mui/system";
 import { Formik } from "formik";
 import React from "react";
 import { object, string } from "yup";
-import { experimentalStyled as styled } from '@mui/material/styles';
+import { experimentalStyled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import BallotIcon from '@mui/icons-material/Ballot';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -11,6 +11,36 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+
+// ----------- Bradcrumbs ----------
+// import { experimentalStyled as styled } from '@mui/material/styles';
+import { emphasize, styled } from '@mui/material/styles';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Chip from '@mui/material/Chip';
+import HomeIcon from '@mui/icons-material/Home';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+const StyledBreadcrumb = styled(Chip)(({ theme }) => {
+    const backgroundColor =
+      theme.palette.mode === 'light'
+        ? theme.palette.grey[100]
+        : theme.palette.grey[800];
+    return {
+      backgroundColor,
+      height: theme.spacing(3),
+      color: theme.palette.text.primary,
+      fontWeight: theme.typography.fontWeightRegular,
+      '&:hover, &:focus': {
+        backgroundColor: emphasize(backgroundColor, 0.06),
+      },
+      '&:active': {
+        boxShadow: theme.shadows[1],
+        backgroundColor: emphasize(backgroundColor, 0.12),
+      },
+    };
+  }); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+  
+// ----------- Bradcrumbs ----------
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -50,10 +80,26 @@ export const JornadasNoFormales = () => {
 					p: "2rem",
 				}}
 			>
-				<Box 
-                // mr={100}
-                sx={{ width: "100%" }}
-                >
+
+                <Box 
+                sx={{ width: "100%" }}>
+                {/* Bradcrumbs */}
+                    <Box align="center" display="flex" justifyContent="center" mb={2}>
+                        <Breadcrumbs aria-label="breadcrumb">
+                            <StyledBreadcrumb
+                            component="a"
+                            href="/verificacion"
+                            label="Verificación"
+                            icon={<HomeIcon fontSize="small" />}
+                            />
+                            <StyledBreadcrumb 
+                            // component="a" 
+                            // href="#" 
+                            label="Jornadas" 
+                            />
+                        </Breadcrumbs>
+                        </Box>
+                {/* Bradcrumbs */}
 					<Typography
 						color="initial"
 						align="center"
