@@ -7,9 +7,9 @@ import { GroupPage } from "../../module-verificacion/pages/GroupPage";
 import { FolioFound } from "../../module-verificacion/components/FolioFound";
 import { GroupPageLogged } from "../../module-verificacion/pages/GroupPageLogged";
 import { Jornadas } from "../../module-verificacion/components/Jornadas";
-import { VisualizacionBoleta } from "../../module-verificacion/components/VisualizacionBoleta";
+import { VisualizacionBoleta } from "../../module-verificacion/pages/VisualizacionBoleta";
 import { JornadasNoFormales } from "../../module-verificacion/components/JornadasNoFormales";
-import { VisualizacionBoletaNoFormal } from "../../module-verificacion/components/VisualizacionBoletaNoFormal";
+import { VisualizacionBoletaNoFormal } from "../../module-verificacion/pages/VisualizacionBoletaNoFormal";
 export const HomeRoutes = () => {
 	return (
 		<Routes>

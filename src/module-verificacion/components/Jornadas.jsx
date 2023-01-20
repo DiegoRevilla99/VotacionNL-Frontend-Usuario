@@ -20,7 +20,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
 import HomeIcon from '@mui/icons-material/Home';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === 'light'
@@ -94,6 +94,7 @@ export const Jornadas = () => {
                             // component="a" 
                             // href="#" 
                             label="Jornadas" 
+                            icon={<AllInboxIcon fontSize="small" />}
                             />
                         </Breadcrumbs>
                         </Box>

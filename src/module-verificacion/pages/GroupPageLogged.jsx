@@ -12,6 +12,39 @@ import Paper from '@mui/material/Paper';
 import { useNavigate } from "react-router-dom";
 import ReplyIcon from '@mui/icons-material/Reply';
 
+
+// ----------- Bradcrumbs ----------
+// import { experimentalStyled as styled } from '@mui/material/styles';
+import { emphasize, styled } from '@mui/material/styles';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Chip from '@mui/material/Chip';
+import HomeIcon from '@mui/icons-material/Home';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
+import BallotIcon from '@mui/icons-material/Ballot';
+import Groups2Icon from '@mui/icons-material/Groups2';
+const StyledBreadcrumb = styled(Chip)(({ theme }) => {
+    const backgroundColor =
+      theme.palette.mode === 'light'
+        ? theme.palette.grey[100]
+        : theme.palette.grey[800];
+    return {
+      backgroundColor,
+      height: theme.spacing(3),
+      color: theme.palette.text.primary,
+      fontWeight: theme.typography.fontWeightRegular,
+      '&:hover, &:focus': {
+        backgroundColor: emphasize(backgroundColor, 0.06),
+      },
+      '&:active': {
+        boxShadow: theme.shadows[1],
+        backgroundColor: emphasize(backgroundColor, 0.12),
+      },
+    };
+  }); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+// ----------- Bradcrumbs ----------
+
+
 function createData(name, calories, fat, carbs) {
     return { name, calories, fat, carbs };
   }
@@ -44,7 +77,36 @@ export const GroupPageLogged = () => {
 					pl: "2rem",
 				}}
 			>
-				<Box sx={{ width: "100%" }}>
+												<Box 
+                sx={{ width: "100%" }}>
+                {/* Bradcrumbs */}
+                    <Box align="center" display="flex" justifyContent="center" mb={2}>
+					<Breadcrumbs aria-label="breadcrumb">
+                            <StyledBreadcrumb
+                            component="a"
+                            href="/verificacion"
+                            label="Verificación"
+                            icon={<HomeIcon fontSize="small" />}
+                            />
+                            <StyledBreadcrumb 
+                            component="a"
+                            href="/verificacion/visualizacionnf"
+                            icon={<AllInboxIcon fontSize="small" />}
+                            label="Jornadas" 
+                            />
+							<StyledBreadcrumb 
+                            component="a"
+                            href="/verificacion/visualizacionnf/boletanf"
+                            icon={<BallotIcon fontSize="small" />}
+                            label="Boletas" 
+                            />
+                            <StyledBreadcrumb
+                            label="Folios"
+                            icon={<Groups2Icon fontSize="small" />}
+                            />
+                        </Breadcrumbs>
+                        </Box>
+                {/* Bradcrumbs */}
 					<Typography
 						color="initial"
 						mb="1rem"
@@ -87,35 +149,6 @@ export const GroupPageLogged = () => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box pt="2rem"
-                                align="right">
-									<Button 
-									onClick={onCancel}
-									startIcon={<ReplyIcon />}
-									sx={{
-										backgroundColor: "#511079",
-										// borderRadius: "15px 15px 15px 15px",
-										color: "#fff",
-										fontSize: {
-											xl: "0.9rem",
-											lg: "0.9rem",
-											sm: "0.9rem",
-											xs: "0.9Srem",
-										},
-										textAlign: "center",
-										width: "13rem",
-										height: "2.8rem",
-										"&:hover": {
-											background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
-											color: "#FFFFFF",
-											boxShadow: "9px 10px 4px rgba(0, 0, 0, 0.37)",
-											transform: "translate(-2px, -2px)",
-											transition: "all 0.5s ease",
-										},
-									}}>
-									Regresar
-									</Button>
-              </Box>
 				</Box>
 			</Container>
 		</Box>

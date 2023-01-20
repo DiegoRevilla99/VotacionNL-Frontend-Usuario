@@ -8,12 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Container } from "@mui/system";
 import { useState, useEffect } from "react";
 import { GeneralTable } from "../components/GeneralTable";
 //   import { useJornadaStore } from "../hooks/useJornadaStore";
 import { Stack } from "@mui/system";
 import TableViewIcon from '@mui/icons-material/TableView';
-import SettingsIcon from "@mui/icons-material/Settings";
 import { useDispatch } from "react-redux";
 //   import {
 //     onDeleteJornada,
@@ -21,7 +21,36 @@ import { useDispatch } from "react-redux";
 //     // onGetJornadasFormales,
 //   } from "../../store/module-preparacion/jornada/ThunksJornada";
 //   import { onSetJornadaSelected } from "../../store/module-preparacion/jornada/SliceJornada";
-import ReplyIcon from '@mui/icons-material/Reply';
+
+// ----------- Bradcrumbs ----------
+// import { experimentalStyled as styled } from '@mui/material/styles';
+import { emphasize, styled } from '@mui/material/styles';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Chip from '@mui/material/Chip';
+import HomeIcon from '@mui/icons-material/Home';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
+import BallotIcon from '@mui/icons-material/Ballot';
+const StyledBreadcrumb = styled(Chip)(({ theme }) => {
+  const backgroundColor =
+    theme.palette.mode === 'light'
+      ? theme.palette.grey[100]
+      : theme.palette.grey[800];
+  return {
+    backgroundColor,
+    height: theme.spacing(3),
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
+    '&:hover, &:focus': {
+      backgroundColor: emphasize(backgroundColor, 0.06),
+    },
+    '&:active': {
+      boxShadow: theme.shadows[1],
+      backgroundColor: emphasize(backgroundColor, 0.12),
+    },
+  };
+}); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+// ----------- Bradcrumbs ----------
 
 export const VisualizacionBoletaNoFormal = () => {
   const navigate = useNavigate();
@@ -91,46 +120,85 @@ export const VisualizacionBoletaNoFormal = () => {
     );
   else
     return (
-      <Grid
-        container
-        sx={{
-          height: "100%",
-          width: "100%",
-          overflowY: "auto",
-        }}
+      
+      <Box pt="3rem">
+      <Container
+      maxWidth="lg"
+          sx={{
+              boxShadow: 1,
+              backgroundColor: "white",
+              borderRadius: { xs: "1rem", md: "2rem" },
+              p: "2rem",
+              pl: "2rem",
+          }}
       >
-        <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
-          <Box
-            sx={{
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              m: "2rem",
-              mt: "1rem",
-            }}
-          >
-
-            <Box
-              sx={{
-                boxShadow: 1,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                backgroundColor: "white",
-                mt: "2rem",
-                borderRadius: "2rem",
-                p: "2rem",
-                pt: "1rem",
-              }}
-            >
-              <Typography variant="h5" color="initial" mb="1rem">
-                Boletas registradas no formales
-              </Typography>
+     <Grid
+         container
+       sx={{
+         height: "100%",
+         width: "100%",
+         overflowY: "auto",
+       }}
+     >
+         <Box sx={{ width: "100%" }}>
+                 {/* Bradcrumbs */}
+                 <Box align="center" display="flex" justifyContent="center" mb={2}>
+                     <Breadcrumbs aria-label="breadcrumb">
+                         <StyledBreadcrumb
+                         component="a"
+                         href="/verificacion"
+                         label="Verificación"
+                         icon={<HomeIcon fontSize="small" />}
+                         />
+                         <StyledBreadcrumb 
+                         component="a"
+                         href="/verificacion/visualizacionnf"
+                         icon={<AllInboxIcon fontSize="small" />}
+                         label="Jornadas" 
+                         />
+                         <StyledBreadcrumb
+                         label="Boletas"
+                         icon={<BallotIcon fontSize="small" />}
+                         />
+                     </Breadcrumbs>
+                     </Box>
+             {/* Bradcrumbs */}
+       <Typography
+         color="initial"
+         mb="1rem"
+         align="center"
+         sx={{
+           fontSize: {
+             xs: "1.3rem",
+             sm: "1.4rem",
+             md: "1.6rem",
+             lg: "1.8rem",
+             xl: "1.8rem",
+           },
+         }}
+       >
+         A CONTINUACIÓN SE MUESTRAN LAS BOLETAS DE LA JORNADA + NOMBRE DE LA JORNADA
+       </Typography>
+       <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
+              <Box
+                sx={{
+                  boxShadow: 1,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  backgroundColor: "white",
+                  borderRadius: "2rem",
+                  p: "2rem",
+                }}
+              >
+                <Typography variant="h5" color="initial" mb={2}>
+                  Boletas registradas
+                </Typography>
               <Divider />
               <Box
-                mt={"1rem"}
                 sx={{
-                  height: "100%",
+                  height: "25rem",
+                  width: "100%",
                   display: "flex",
                   flexDirection: "column",
                 }}
@@ -144,40 +212,13 @@ export const VisualizacionBoletaNoFormal = () => {
                   columns={columns}
                   idName={"id"}
                 />
+                </Box>
               </Box>
-              <Box pt="2rem"
-                                align="right">
-									<Button 
-									onClick={() => navigate("/verificacion/visualizacion")}
-									startIcon={<ReplyIcon />}
-									sx={{
-										backgroundColor: "#511079",
-										// borderRadius: "15px 15px 15px 15px",
-										color: "#fff",
-										fontSize: {
-											xl: "0.9rem",
-											lg: "0.9rem",
-											sm: "0.9rem",
-											xs: "0.9Srem",
-										},
-										textAlign: "center",
-										width: "13rem",
-										height: "2.8rem",
-										"&:hover": {
-											background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
-											color: "#FFFFFF",
-											boxShadow: "9px 10px 4px rgba(0, 0, 0, 0.37)",
-											transform: "translate(-2px, -2px)",
-											transition: "all 0.5s ease",
-										},
-									}}>
-									Regresar
-									</Button>
-              </Box>
-            </Box>
+          </Grid>
           </Box>
         </Grid>
-      </Grid>
+    </Container>
+	</Box>
     );
 };
   const rows = [
