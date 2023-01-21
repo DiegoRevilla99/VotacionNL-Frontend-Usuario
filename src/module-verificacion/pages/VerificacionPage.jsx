@@ -19,7 +19,7 @@ export const VerificacionPage = () => {
 		navigate("/verificacion/visualizacion");
 	};
 	return (
-		<Box pt="3rem">
+		<Box pt="1.5rem">
 			<Container
 				maxWidth="lg"
 				sx={{
@@ -66,9 +66,22 @@ export const VerificacionPage = () => {
                     alignItems="center"
                     >	
                         <Card 
-                        
-                        sx={{ maxWidth: 350,
-                            maxHeight: 400,
+                        onClick={plantilla1}
+                        sx={{ 
+                            maxWidth: {
+                                xl: 350,
+                                lg: 350,
+                                md: 350,
+                                sm: 350,
+                                xs: 400,
+                            },
+                            maxHeight: {
+                                xl: 400,
+                                lg: 400,
+                                md: 400,
+                                sm: 400,
+                                xs: 415,
+                            },
                             boxShadow: 4,
                             "&:hover": {
                                 boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
@@ -89,38 +102,51 @@ export const VerificacionPage = () => {
                                         VERIFICAR VOTO INDIVIDUAL
                                     </Typography>
                                     <Typography variant="body1" color="text.primary">
-                                        ¿Desea verificar el sentido de su propio voto?
+                                        ¿Desea verificar el sentido de tu propio voto?
                                     </Typography>
                                 </CardContent>
                             </CardActionArea>
                             <CardActions>
-                            <Button 
-                                onClick={plantilla1}
-                                sx={{
-									backgroundColor: "#511079",
-									color: "#fff",
-									fontSize: {
-										xl: "0.9rem",
-										lg: "0.9rem",
-										sm: "0.9rem",
-										xs: "0.9Srem",
-									},
-									textAlign: "center",
-                                    width: "100%",
-                                    height: "100%",
-									"&:hover": {
-										background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
-                                        color: "#FFFFFF",
-									},
-								}}>
-                                Verificar individual
+                                <Button 
+                                    onClick={plantilla1}
+                                    sx={{
+                                        backgroundColor: "#511079",
+                                        color: "#fff",
+                                        fontSize: {
+                                            xl: "0.9rem",
+                                            lg: "0.9rem",
+                                            sm: "0.9rem",
+                                            xs: "0.9rem",
+                                        },
+                                        textAlign: "center",
+                                        width: "100%",
+                                        height: "100%",
+                                        "&:hover": {
+                                            background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
+                                            color: "#FFFFFF",
+                                        },
+                                    }}>
+                                    Verificar voto
                                 </Button>
                             </CardActions>
                         </Card>
 
                         <Card 
-                        sx={{ maxWidth: 350,
-                            maxHeight: 400,
+                        onClick={plantilla2}
+                        sx={{ maxWidth: {
+                            xl: 350,
+                            lg: 350,
+                            md: 350,
+                            sm: 350, 
+                            xs: 350,
+                        },
+                            maxHeight: {
+                                xl: 400,
+                                lg: 400,
+                                md: 400,
+                                sm: 400,
+                                xs: 415,
+                            },
                             boxShadow: 4,
                             "&:hover": {
                                 boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",

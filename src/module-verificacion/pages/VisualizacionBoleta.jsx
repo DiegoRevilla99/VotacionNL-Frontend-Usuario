@@ -5,12 +5,16 @@ import {
     Grid,
     IconButton,
     LinearProgress,
+    TextField,
+    Paper,
     Typography,
   } from "@mui/material";
   import { useNavigate } from "react-router-dom";
   import { Container } from "@mui/system";
   import { useState, useEffect } from "react";
-  import { GeneralTable } from "../components/GeneralTable";
+  import Card from '@mui/material/Card';
+  import CardActions from '@mui/material/CardActions';
+  import CardContent from '@mui/material/CardContent';
   //   import { useJornadaStore } from "../hooks/useJornadaStore";
   import { Stack } from "@mui/system";
   import TableViewIcon from '@mui/icons-material/TableView';
@@ -21,7 +25,10 @@ import {
   //     // onGetJornadasFormales,
   //   } from "../../store/module-preparacion/jornada/ThunksJornada";
   //   import { onSetJornadaSelected } from "../../store/module-preparacion/jornada/SliceJornada";
-  
+  import SearchIcon from '@mui/icons-material/Search';
+  import InputAdornment from '@mui/material/InputAdornment';
+  import { experimentalStyled } from '@mui/material/styles';
+
   // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
 import { emphasize, styled } from '@mui/material/styles';
@@ -31,6 +38,14 @@ import HomeIcon from '@mui/icons-material/Home';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AllInboxIcon from '@mui/icons-material/AllInbox';
 import BallotIcon from '@mui/icons-material/Ballot';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+const Item = experimentalStyled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === 'light'
@@ -53,64 +68,10 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 // ----------- Bradcrumbs ----------
   export const VisualizacionBoleta = () => {
     const navigate = useNavigate();
-  
-    // ToDo:AQUI OBTENGAN LAS VARIABLES STATUS Y DATA DE SUS ESTADOS GLOBALES
-    // const { jornadasData, status } = useJornadaStore();
-    // const { jornadasData, status } = useJornadaStore();
-  
-    // const dispatch = useDispatch();
-    const columns = [
-      {
-        field: "lastName",
-        headerName: "Título de la boleta",
-        flex: 10,
-      },
-      {
-        field: "Acciones",
-        headerName: "Acciones",
-        flex: 3,
-        sortable: false,
-        disableColumnMenu: true,
-        renderCell: (params) => {
-          return (
-            <Stack spacing={2} direction="row">
-              <Button
-                variant="outlined"
-                startIcon={<TableViewIcon />}
-                // onClick={() => handleEdit(params.id, params.row.nombreJornada)}
-                onClick={() => navigate("/verificacion/visualizacion/boleta/group")}
-              >
-                Ver
-              </Button>
-            </Stack>
-          );
-        },
-      },
-    ];
-  
-    // USEEFFECT QUE PUEDES USAR PARA HACER UN GET DE LAS JORNADAS AL RENDERIZAR LA PAGINA
-    // useEffect(() => {
-    //   // if (jornadasData.length === 0) dispatch(onGetjornadas());
-    //   if (jornadasData.length === 0) dispatch(onGetjornadas());
-    // }, []);
-  
-    // // METODO PARA BORRAR UN REGISTRO
-    // const handleDelete = (id) => {
-    //   dispatch(onDeleteJornada(id));
-    // };
-  
-    // // MÉTODO PARA EDITAR UN REGISTRO
-    // const handleEdit = (id, title) => {
-    //   dispatch(onSetJornadaSelected({ id, title, boletas: [] }));
-    //   navigate("/preparacion/jornada/" + id);
-    // };
-  
-    // MÉTODO PARA IR A LA PAGINA DE CONFIGURACIÓN DEL REGISTRO
-    // const handleConfig = (id) => {
-    //   navigate("/preparacion/jornada/config/" + id);
-      // dispatch(onGetConfig(id));
-    // };
-  
+  	const plantilla1 = () => {
+      navigate("/verificacion/visualizacion/boleta/group");
+    };
+    const [searchJornada, setSearchJornada] = useState('');
     if (status === "checking")
       return (
         <Box sx={{ width: "100%" }}>
@@ -119,7 +80,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
       );
     else
       return (
-         <Box pt="3rem">
+        <Box pt="1.5rem">
          <Container
          maxWidth="lg"
              sx={{
@@ -127,7 +88,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                  backgroundColor: "white",
                  borderRadius: { xs: "1rem", md: "2rem" },
                  p: "2rem",
-                 pl: "2rem",
+                //  pl: "2rem",
              }}
          >
         <Grid
@@ -139,81 +100,127 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
           }}
         >
             <Box sx={{ width: "100%" }}>
-                    {/* Bradcrumbs */}
-                    <Box align="center" display="flex" justifyContent="center" mb={2}>
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <StyledBreadcrumb
-                            component="a"
-                            href="/verificacion"
-                            label="Verificación"
-                            icon={<HomeIcon fontSize="small" />}
-                            />
-                            <StyledBreadcrumb 
-                            component="a"
-                            href="/verificacion/visualizacion"
-                            icon={<AllInboxIcon fontSize="small" />}
-                            label="Jornadas" 
-                            />
-                            <StyledBreadcrumb
-                            label="Boletas"
-                            icon={<BallotIcon fontSize="small" />}
-                            />
-                        </Breadcrumbs>
-                        </Box>
-                {/* Bradcrumbs */}
-					<Typography
-						color="initial"
-						mb="1rem"
-						align="center"
-						sx={{
-							fontSize: {
-								xs: "1.3rem",
-								sm: "1.4rem",
-								md: "1.6rem",
-								lg: "1.8rem",
-								xl: "1.8rem",
-							},
-						}}
-					>
-						A CONTINUACIÓN SE MUESTRAN LAS BOLETAS DE LA JORNADA + NOMBRE DE LA JORNADA
-					</Typography>
-
-          <Grid item xs={12} sx={{ display: "flex", flexDirection: "column" }}>
-              <Box
-                sx={{
-                  boxShadow: 1,
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  backgroundColor: "white",
-                  borderRadius: "2rem",
-                  p: "2rem",
-                }}
-              >
-                <Typography variant="h5" color="initial" mb={2}>
-                  Boletas registradas
-                </Typography>
-                <Divider />
-                <Box
-                  
-                  sx={{
-                    height: "25rem",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  {/* TABLA GENERAL, TIENEN QUE PASARLE LA DATA DE LOS REGISTROS Y EL ID DE 
-                                  CADA REGISTRO SE DEBE LLAMAR "idJornada" o si el id de cada registro 
-                                  tiene otro nombre, cambien el atributo idName al nombre que quieran */}
-                  <GeneralTable
-                  // data = {jornadasData}
-                    data={rows}
-                    columns={columns}
-                    idName={"id"}
-                  />
+              {/* Bradcrumbs */}
+              <Box align="center" display="flex" justifyContent="center" mb={2}>
+                  <Breadcrumbs aria-label="breadcrumb" maxItems={2}>
+                      <StyledBreadcrumb
+                      component="a"
+                      href="/verificacion"
+                      label="Verificación"
+                      icon={<HomeIcon fontSize="small" />}
+                      />
+                      <StyledBreadcrumb 
+                      component="a"
+                      href="/verificacion/visualizacion"
+                      icon={<AllInboxIcon fontSize="small" />}
+                      label="Jornadas" 
+                      />
+                      <StyledBreadcrumb
+                      label="Boletas"
+                      icon={<BallotIcon fontSize="small" />}
+                      />
+                  </Breadcrumbs>
                 </Box>
+          {/* Bradcrumbs */}
+            <Typography
+              color="initial"
+              mb="1rem"
+              align="center"
+              sx={{
+                fontSize: {
+                  xs: "1.3rem",
+                  sm: "1.4rem",
+                  md: "1.6rem",
+                  lg: "1.8rem",
+                  xl: "1.8rem",
+                },
+              }}
+            >
+              A continuación se muestran las boletas de la jornadas *name jornada*
+            </Typography>
+            <Box 
+              ml={{											
+                  xs: 2,
+                  sm: 2,
+                  md: 4,
+                  lg: 4,
+                  xl: 4,
+              }} 
+              mr={{											
+                  xs: 2,
+                  sm: 2,
+                  md: 4,
+                  lg: 4,
+                  xl: 4,
+              }} 
+              sx={{ 
+                  display: 'flex', 
+                  justifyContent:'flex-end' }}>
+                  <TextField
+                      id="input-with-icon-textfield"
+                      label="Ingrese el nombre de la boleta a buscar"
+                      sx={{ width: {
+                          xs: "100%",
+                          sm: "100%",
+                          md: "50%",
+                          lg: "40%",
+                          xl: "40%",
+                      } }}
+                      size="normal"
+                      placeholder="Ejemplo: Jornada..."
+                      onChange={(e) => setSearchJornada(e.target.value)}
+                      InputProps={{
+                          endAdornment: (
+                          <InputAdornment position="end">
+                              <SearchIcon/>
+                          </InputAdornment>
+                      ),
+                      }}
+                      variant="standard"
+                  />
               </Box>
-          </Grid>
+              <Box ml={1} mr={1} mt={4} mb={1}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
+                    || jornada.lastName.toUpperCase().includes(searchJornada)
+                    ).map((jornada) => (
+                    <Grid item xs={4} sm={4} md={6} key={jornada.id}>
+                        <Card 
+                        sx={{ minWidth: 247 }} 
+                        onClick={plantilla1}
+                        style={{ 
+                          // border: "1px solid #D0D0D0", 
+                          // background: "#373637"
+                          backgroundColor: "#EEEBDF",
+                      }} >
+                          <CardContent>
+                            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                              Boleta {jornada.id}
+                            </Typography>
+                            <Typography variant="h5" component="div">
+                              {jornada.lastName}
+                            </Typography>
+                          </CardContent>
+                          <CardActions>
+                            <Button 
+                            onClick={plantilla1}
+                            sx={{ 
+                              // color: "#373637", 
+                              color: "f0b91a8a",
+                              // background: "#ffe8c6",
+                              "&:hover": {
+                                // background: "linear-gradient(45deg, #f0b91a8a 30%, #f0b91a8a 90%)",
+                                // color: "#FFFFFF",
+                              }, }}
+                            size="large" 
+                            endIcon = {<ArrowOutwardIcon/>} >Detalles</Button>
+                          </CardActions>
+                        </Card>
+
+                            </Grid>
+                            ))}
+                        </Grid>
+                </Box>
           </Box>
         </Grid>
     </Container>

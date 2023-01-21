@@ -66,7 +66,7 @@ export const GroupPageLogged = () => {
 		navigate("/verificacion/visualizacionnf/boletanf");
 	};
 	return (
-		<Box pt="3rem">
+		<Box pt="1.5rem">
 			<Container
 				maxWidth="lg"
 				sx={{

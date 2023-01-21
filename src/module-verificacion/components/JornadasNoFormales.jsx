@@ -70,7 +70,7 @@ export const JornadasNoFormales = () => {
     const [searchJornada, setSearchJornada] = useState('');
 	return (
         // En este Box esta el espacio entre el AppBar y el contenido
-		<Box pt="3rem"> 
+		<Box pt="1.5rem">
 			<Container
 				// maxWidth="lg"
 				sx={{

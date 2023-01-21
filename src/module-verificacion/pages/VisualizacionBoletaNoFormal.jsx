@@ -121,7 +121,7 @@ export const VisualizacionBoletaNoFormal = () => {
   else
     return (
       
-      <Box pt="3rem">
+      <Box pt="1.5rem">
       <Container
       maxWidth="lg"
           sx={{

@@ -8,7 +8,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = object({
-	// folio: string("").required("Este campo es requerido"),
+	folio: string("").required("Este campo es requerido").matches(/^[a-zA-Z0-9-]+$/, "Solo se permiten números, letras y guiones")
 });
 
 export const IndividualPage = () => {
@@ -22,7 +22,7 @@ export const IndividualPage = () => {
 	};
 
 	return (
-		<Box pt="3rem">
+		<Box pt="1.5rem">
 			<Container
 				maxWidth="lg"
 				sx={{

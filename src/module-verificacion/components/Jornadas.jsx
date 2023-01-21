@@ -1,4 +1,4 @@
-import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typography, Step, StepLabel, Input } from "@mui/material";
+import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typography, Card, CardContent } from "@mui/material";
 import { Container } from "@mui/system";
 import { Formik } from "formik";
 import React from "react";
@@ -11,7 +11,6 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
 
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
@@ -69,7 +68,7 @@ export const Jornadas = () => {
 	};
     const [searchJornada, setSearchJornada] = useState('');
 	return (
-		<Box pt="3rem">
+		<Box pt="1.5rem">
 			<Container
 				maxWidth="lg"
 				sx={{
@@ -155,36 +154,29 @@ export const Jornadas = () => {
                             variant="standard"
                         />
                     </Box>
-                    <Box ml={5} mr={5} mt={4}>
-                        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                            {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
-                            || jornada.lastName.toUpperCase().includes(searchJornada)
-                            ).map((jornada) => (
-                            <Grid item xs={4} sm={4} md={4} key={jornada.id}>
-                                <Item
-                                style={{ 
-                                    // border: "1px solid #D0D0D0", 
-                                    background: "#373736"
-                                }} 
-                                >
-                                <Typography
-                                    color="white"
-                                    mb="1rem"
-                                    align="center"
-                                    sx={{
-                                        fontSize: {
-                                            xs: "1.1rem",
-                                            sm: "1.2rem",
-                                            md: "1.3rem",
-                                            lg: "1.5rem",
-                                            xl: "1.5rem",
-                                        },
-                                    }}
-                                >
-                                    {jornada.lastName}	
-                                </Typography>
+                    <Box ml={1} mr={1} mt={4} mb={1} align="center" display="flex" justifyContent="center">
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
+                    || jornada.lastName.toUpperCase().includes(searchJornada)
+                    ).map((jornada) => (
+                    <Grid item xs={4} sm={4} md={4} key={jornada.id}>
+                        <Card 
+                        sx={{ minWidth: 247 }} 
+                        onClick={plantilla1}
+                        style={{ 
+                          // border: "1px solid #D0D0D0", 
+                          // background: "#373637"
+                          backgroundColor: "#373736",
+                      }} >
+                          <CardContent>
 
-                                <Button 
+                            <Typography variant="h5" component="div" color="white">
+                            {jornada.lastName}	
+                            </Typography>
+                          </CardContent>
+                          <CardActions >
+                            <Box  align="center" display="flex" justifyContent="center" width="100%" mb={1}>
+                            <Button 
                                 onClick={plantilla1}
                                 startIcon = {<BallotIcon />}
                                 sx={{
@@ -194,10 +186,16 @@ export const Jornadas = () => {
 										xl: "0.9rem",
 										lg: "0.9rem",
 										sm: "0.9rem",
-										xs: "0.9Srem",
+										xs: "0.9rem",
 									},
 									textAlign: "center",
-                                    width: "70%",
+                                    width: {
+                                        xs: "90%",
+                                        sm: "85%",
+                                        md: "85%",
+                                        lg: "70%",
+                                        xl: "70%",
+                                    },
 									"&:hover": {
 										background: "linear-gradient(45deg, #fecd0d 30%, #f0b91a 90%)",
                                         color: "#FFFFFF",
@@ -205,14 +203,19 @@ export const Jornadas = () => {
 								}}>
                                 Verificar boletas
                                 </Button>
-                                </Item>
+                                </Box>
+                          
+                          </CardActions>
+                        </Card>
 
                             </Grid>
                             ))}
                         </Grid>
-                    </Box>
+                </Box>
+                    
 				</Box>
 			</Container>
 		</Box>
 	);
 };
+
