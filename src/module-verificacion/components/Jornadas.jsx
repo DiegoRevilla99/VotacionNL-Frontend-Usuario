@@ -1,25 +1,21 @@
-import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typography, Card, CardContent } from "@mui/material";
-import { Container } from "@mui/system";
-import { Formik } from "formik";
-import React from "react";
-import { object, string } from "yup";
-import { experimentalStyled } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
 import BallotIcon from '@mui/icons-material/Ballot';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Button, Card, CardActions, CardContent, TextField, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import { experimentalStyled } from '@mui/material/styles';
+import { Container } from "@mui/system";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import { emphasize, styled } from '@mui/material/styles';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
+import HomeIcon from '@mui/icons-material/Home';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
-import HomeIcon from '@mui/icons-material/Home';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
+import { emphasize, styled } from '@mui/material/styles';
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === 'light'
@@ -68,19 +64,23 @@ export const Jornadas = () => {
 	};
     const [searchJornada, setSearchJornada] = useState('');
 	return (
-		<Box pt="1.5rem">
+		<Box pt="1.5rem"     
+        sx={{						
+            height: "auto",
+            flexGrow: 1,
+            overflowY: { sx: "none", md: "auto" },
+          }}>
 			<Container
-				maxWidth="lg"
+				maxWidth="md"
 				sx={{
 					boxShadow: 1,
 					backgroundColor: "white",
 					borderRadius: { xs: "1rem", md: "2rem" },
-					p: "2rem",
+                    overflowY: "auto",
+					p: "2rem",    
 				}}
 			>
-				<Box 
-                sx={{ width: "100%" }}>
-                {/* Bradcrumbs */}
+                {/* start Bradcrumbs */}
                     <Box align="center" display="flex" justifyContent="center" mb={2}>
                         <Breadcrumbs aria-label="breadcrumb">
                             <StyledBreadcrumb
@@ -90,14 +90,12 @@ export const Jornadas = () => {
                             icon={<HomeIcon fontSize="small" />}
                             />
                             <StyledBreadcrumb 
-                            // component="a" 
-                            // href="#" 
                             label="Jornadas" 
                             icon={<AllInboxIcon fontSize="small" />}
                             />
                         </Breadcrumbs>
                         </Box>
-                {/* Bradcrumbs */}
+                {/* end Bradcrumbs */}
 					<Typography
 						color="initial"
 						align="center"
@@ -111,7 +109,7 @@ export const Jornadas = () => {
 							},
 						}}
 					>
-						A CONTINUACIÓN SE MUESTRAN LAS JORNADAS DE VOTACIÓN
+                        A continuación se muestran las jornadas
 					</Typography>
                     <Box 
                     ml={{											
@@ -138,8 +136,8 @@ export const Jornadas = () => {
                                 xs: "100%",
                                 sm: "100%",
                                 md: "50%",
-                                lg: "40%",
-                                xl: "40%",
+                                lg: "45%",
+                                xl: "45%",
                             } }}
                             size="normal"
                             placeholder="Ejemplo: Jornada..."
@@ -170,7 +168,7 @@ export const Jornadas = () => {
                       }} >
                           <CardContent>
 
-                            <Typography variant="h5" component="div" color="white">
+                            <Typography variant="h6" component="div" color="white">
                             {jornada.lastName}	
                             </Typography>
                           </CardContent>
@@ -197,18 +195,19 @@ export const Jornadas = () => {
                                         xl: "#fff",
                                     },
 									fontSize: {
-										xl: "0.9rem",
-										lg: "0.9rem",
-										sm: "0.9rem",
-										xs: "0.9rem",
+                                        xs: "1rem",
+                                        sm: "1rem",
+                                        md: "1rem",
+                                        lg: "0.9rem",
+                                        xl: "0.95rem",
 									},
 									textAlign: "center",
                                     width: {
                                         xs: "90%",
                                         sm: "85%",
                                         md: "85%",
-                                        lg: "70%",
-                                        xl: "70%",
+                                        lg: "80%",
+                                        xl: "87%",
                                     },
 									"&:hover": {
 										background: "linear-gradient(45deg, #fecd0d 30%, #f0b91a 90%)",
@@ -226,8 +225,6 @@ export const Jornadas = () => {
                             ))}
                         </Grid>
                 </Box>
-                    
-				</Box>
 			</Container>
 		</Box>
 	);

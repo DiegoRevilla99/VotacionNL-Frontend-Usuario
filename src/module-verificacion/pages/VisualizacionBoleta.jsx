@@ -1,24 +1,14 @@
 import {
-    Box,
-    Button,
-    Divider,
-    Grid,
-    IconButton,
-    LinearProgress,
-    TextField,
-    Paper,
-    Typography,
-  } from "@mui/material";
-  import { useNavigate } from "react-router-dom";
-  import { Container } from "@mui/system";
-  import { useState, useEffect } from "react";
-  import Card from '@mui/material/Card';
-  import CardActions from '@mui/material/CardActions';
-  import CardContent from '@mui/material/CardContent';
+  Box,
+  Button, Grid, LinearProgress, Paper, TextField, Typography
+} from "@mui/material";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import { Container } from "@mui/system";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
   //   import { useJornadaStore } from "../hooks/useJornadaStore";
-  import { Stack } from "@mui/system";
-  import TableViewIcon from '@mui/icons-material/TableView';
-  import { useDispatch } from "react-redux";
   //   import {
   //     onDeleteJornada,
   //     onGetjornadas,
@@ -26,19 +16,18 @@ import {
   //   } from "../../store/module-preparacion/jornada/ThunksJornada";
   //   import { onSetJornadaSelected } from "../../store/module-preparacion/jornada/SliceJornada";
   import SearchIcon from '@mui/icons-material/Search';
-  import InputAdornment from '@mui/material/InputAdornment';
-  import { experimentalStyled } from '@mui/material/styles';
+import InputAdornment from '@mui/material/InputAdornment';
+import { experimentalStyled } from '@mui/material/styles';
 
   // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import { emphasize, styled } from '@mui/material/styles';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import BallotIcon from '@mui/icons-material/Ballot';
+import HomeIcon from '@mui/icons-material/Home';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
-import HomeIcon from '@mui/icons-material/Home';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
-import BallotIcon from '@mui/icons-material/Ballot';
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { emphasize, styled } from '@mui/material/styles';
 const Item = experimentalStyled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -80,26 +69,22 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
       );
     else
       return (
-        <Box pt="1.5rem">
-         <Container
-         maxWidth="lg"
-             sx={{
-                 boxShadow: 1,
-                 backgroundColor: "white",
-                 borderRadius: { xs: "1rem", md: "2rem" },
-                 p: "2rem",
-                //  pl: "2rem",
-             }}
-         >
-        <Grid
-            container
+        <Box pt="1.5rem"     
+          sx={{						
+              height: "auto",
+              flexGrow: 1,
+              overflowY: { sx: "none", md: "auto" },
+            }}>
+        <Container
+          maxWidth="md"
           sx={{
-            height: "100%",
-            width: "100%",
-            overflowY: "auto",
+            boxShadow: 1,
+            backgroundColor: "white",
+            borderRadius: { xs: "1rem", md: "2rem" },
+                      overflowY: "auto",
+            p: "2rem",    
           }}
         >
-            <Box sx={{ width: "100%" }}>
               {/* Bradcrumbs */}
               <Box align="center" display="flex" justifyContent="center" mb={2}>
                   <Breadcrumbs aria-label="breadcrumb" maxItems={2}>
@@ -199,7 +184,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                             <Typography sx={{ fontSize: 14 }} color="text" gutterBottom>
                               Boleta {jornada.id}
                             </Typography>
-                            <Typography variant="h5" component="div">
+                            <Typography variant="h6" component="div">
                               {jornada.lastName}
                             </Typography>
                           </CardContent>
@@ -223,8 +208,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                             ))}
                         </Grid>
                 </Box>
-          </Box>
-        </Grid>
+                
     </Container>
 	</Box>
       );

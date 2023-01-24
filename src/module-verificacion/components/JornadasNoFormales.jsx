@@ -1,25 +1,20 @@
-import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typography, Step, StepLabel, Input } from "@mui/material";
-import { Container } from "@mui/system";
-import { Formik } from "formik";
-import React from "react";
-import { object, string } from "yup";
-import { experimentalStyled } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
 import BallotIcon from '@mui/icons-material/Ballot';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, Button, Card, CardActions, CardContent, TextField, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+import { Container } from "@mui/system";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import { emphasize, styled } from '@mui/material/styles';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
+import HomeIcon from '@mui/icons-material/Home';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
-import HomeIcon from '@mui/icons-material/Home';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
+import { emphasize, styled } from '@mui/material/styles';
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === 'light'
@@ -70,19 +65,23 @@ export const JornadasNoFormales = () => {
     const [searchJornada, setSearchJornada] = useState('');
 	return (
         // En este Box esta el espacio entre el AppBar y el contenido
-		<Box pt="1.5rem">
+		<Box pt="1.5rem"     
+        sx={{						
+            height: "auto",
+            flexGrow: 1,
+            overflowY: { sx: "none", md: "auto" },
+          }}>
 			<Container
-				// maxWidth="lg"
+				// maxWidth="md"
+                maxWidth="md"
 				sx={{
 					boxShadow: 1,
 					backgroundColor: "white",
 					borderRadius: { xs: "1rem", md: "2rem" },
-					p: "2rem",
+                    overflowY: "auto",
+					p: "2rem",    
 				}}
 			>
-
-                <Box 
-                sx={{ width: "100%" }}>
                 {/* Bradcrumbs */}
                     <Box align="center" display="flex" justifyContent="center" mb={2}>
                         <Breadcrumbs aria-label="breadcrumb">
@@ -93,8 +92,6 @@ export const JornadasNoFormales = () => {
                             icon={<HomeIcon fontSize="small" />}
                             />
                             <StyledBreadcrumb 
-                            // component="a" 
-                            // href="#" 
                             icon={<AllInboxIcon fontSize="small" />}
                             label="Jornadas" 
                             />
@@ -114,7 +111,7 @@ export const JornadasNoFormales = () => {
 							},
 						}}
 					>
-						A CONTINUACIÓN SE MUESTRAN LAS JORNADAS NO FORMALES DE VOTACIÓN
+                        A continuación se muestran las jornadas no formales de votación activa
 					</Typography>
                     <Box 
                     mt={1}
@@ -142,8 +139,8 @@ export const JornadasNoFormales = () => {
                                 xs: "100%",
                                 sm: "100%",
                                 md: "50%",
-                                lg: "40%",
-                                xl: "40%",
+                                lg: "45%",
+                                xl: "45%",
                             } }}
                             size="normal"
                             placeholder="Ejemplo: Jornada..."
@@ -158,49 +155,63 @@ export const JornadasNoFormales = () => {
                             variant="standard"
                         />
                     </Box>
-                    <Box mt={4} ml={5} mr={5}>
-                        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                            {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
-                            || jornada.lastName.toUpperCase().includes(searchJornada)
-                            ).map((jornada) => (
-                            <Grid item xs={4} sm={4} md={4} key={jornada.id}>
-                                <Item
-                                style={{ 
-                                    // border: "1px solid #D0D0D0", 
-                                    background: "#373736"
-                                }} 
-                                >
-                                <Typography
-                                    color="white"
-                                    mb="1rem"
-                                    align="center"
-                                    sx={{
-                                        fontSize: {
-                                            xs: "1.1rem",
-                                            sm: "1.2rem",
-                                            md: "1.3rem",
-                                            lg: "1.5rem",
-                                            xl: "1.5rem",
-                                        },
-                                    }}
-                                >
-                                    {jornada.lastName}	
-                                </Typography>
+                <Box ml={1} mr={1} mt={4} mb={1} align="center" display="flex" justifyContent="center">
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
+                    || jornada.lastName.toUpperCase().includes(searchJornada)
+                    ).map((jornada) => (
+                    <Grid item xs={4} sm={4} md={4} key={jornada.id}>
+                        <Card 
+                        sx={{ minWidth: 247 }} 
+                        onClick={plantilla1}
+                        style={{ 
+                          // border: "1px solid #D0D0D0", 
+                          // background: "#373637"
+                          backgroundColor: "#373736",
+                      }} >
+                          <CardContent>
 
-                                <Button 
+                            <Typography variant="h6" component="div" color="white">
+                            {jornada.lastName}	
+                            </Typography>
+                          </CardContent>
+                          <CardActions >
+                            <Box  align="center" display="flex" justifyContent="center" width="100%" mb={1}>
+                            <Button 
                                 onClick={plantilla1}
                                 startIcon = {<BallotIcon />}
                                 sx={{
-									backgroundColor: "#eba302",
-									color: "#fff",
-									fontSize: {
-										xl: "0.9rem",
-										lg: "0.9rem",
-										sm: "0.9rem",
-										xs: "0.9Srem",
+									// backgroundColor: "#eba302",
+                                    backgroundColor: {
+                                        xs: "#373736",
+                                        sm: "#373736",
+                                        md: "#eba302",
+                                        lg: "#eba302",
+                                        xl: "#eba302",
+                                    },
+									// color: "#fff",
+                                    color:{
+                                        xs: "#f0b91a",
+                                        sm: "#f0b91a",
+                                        md: "#fff",
+                                        lg: "#fff",
+                                        xl: "#fff",
+                                    },
+                                    fontSize: {
+                                        xs: "1rem",
+                                        sm: "1rem",
+                                        md: "1rem",
+                                        lg: "0.9rem",
+                                        xl: "0.95rem",
 									},
 									textAlign: "center",
-                                    width: "70%",
+                                    width: {
+                                        xs: "90%",
+                                        sm: "85%",
+                                        md: "85%",
+                                        lg: "80%",
+                                        xl: "87%",
+                                    },
 									"&:hover": {
 										background: "linear-gradient(45deg, #fecd0d 30%, #f0b91a 90%)",
                                         color: "#FFFFFF",
@@ -208,13 +219,15 @@ export const JornadasNoFormales = () => {
 								}}>
                                 Verificar boletas
                                 </Button>
-                                </Item>
+                                </Box>
+                          
+                          </CardActions>
+                        </Card>
 
                             </Grid>
                             ))}
                         </Grid>
-                    </Box>
-				</Box>
+                </Box>
 			</Container>
 		</Box>
 	);
