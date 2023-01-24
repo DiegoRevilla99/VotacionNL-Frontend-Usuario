@@ -191,10 +191,12 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                         style={{ 
                           // border: "1px solid #D0D0D0", 
                           // background: "#373637"
-                          backgroundColor: "#EEEBDF",
+                          // backgroundColor: "#783A9C",
+                          backgroundColor: "#5438849e",
+                          color: "#FFFFFF",
                       }} >
                           <CardContent>
-                            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                            <Typography sx={{ fontSize: 14 }} color="text" gutterBottom>
                               Boleta {jornada.id}
                             </Typography>
                             <Typography variant="h5" component="div">
@@ -205,8 +207,8 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                             <Button 
                             onClick={plantilla1}
                             sx={{ 
-                              // color: "#373637", 
-                              color: "f0b91a8a",
+                              color: "#364691", 
+                              // color: "433A9C",543884
                               // background: "#ffe8c6",
                               "&:hover": {
                                 // background: "linear-gradient(45deg, #f0b91a8a 30%, #f0b91a8a 90%)",

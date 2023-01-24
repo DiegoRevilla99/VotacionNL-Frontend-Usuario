@@ -180,8 +180,22 @@ export const Jornadas = () => {
                                 onClick={plantilla1}
                                 startIcon = {<BallotIcon />}
                                 sx={{
-									backgroundColor: "#eba302",
-									color: "#fff",
+									// backgroundColor: "#eba302",
+                                    backgroundColor: {
+                                        xs: "#373736",
+                                        sm: "#373736",
+                                        md: "#eba302",
+                                        lg: "#eba302",
+                                        xl: "#eba302",
+                                    },
+									// color: "#fff",
+                                    color:{
+                                        xs: "#f0b91a",
+                                        sm: "#f0b91a",
+                                        md: "#fff",
+                                        lg: "#fff",
+                                        xl: "#fff",
+                                    },
 									fontSize: {
 										xl: "0.9rem",
 										lg: "0.9rem",

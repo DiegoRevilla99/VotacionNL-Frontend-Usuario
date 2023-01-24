@@ -184,11 +184,11 @@ export const GroupPage = () => {
                                 <Item
                                 style={{ 
                                     // border: "1px solid #D0D0D0", 
-                                    background: "#EEEEE9"
+                                    background: "#7e328b80"
                                 }} 
                                 >
                                 <Typography
-                                    color="#373736"
+                                    color="#EEEBDF"
                                     // color="#FAFAF9"
                                     // align="left"
                                     sx={{
@@ -204,7 +204,7 @@ export const GroupPage = () => {
                                   Folio: {jornada.folio}	 
                                 </Typography>
                                 <Typography
-                                    color="#373736"
+                                    color="#EEEBDF"
                                     // align="left"
                                     // mb="1rem"
                                     // align="center"
