@@ -1,13 +1,10 @@
-import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typography } from "@mui/material";
-import { Container } from "@mui/system";
-import { Formik } from "formik";
-import React from "react";
-import { object, string } from "yup";
+import { Box, Button, CardActionArea, CardActions, Typography } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Stack from '@mui/material/Stack';
-import shadows from "@mui/material/styles/shadows";
+import { Container } from "@mui/system";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 export const VerificacionPage = () => {
@@ -93,7 +90,7 @@ export const VerificacionPage = () => {
                             <CardActionArea>
                                 <CardMedia
                                 component="img"
-                                height="210"
+                                height="240"
                                 image="https://cdn.pixabay.com/photo/2016/11/14/17/39/person-1824144_960_720.png"
                                 alt="Team"
                                 />
@@ -102,7 +99,7 @@ export const VerificacionPage = () => {
                                         VERIFICAR VOTO INDIVIDUAL
                                     </Typography>
                                     <Typography variant="body1" color="text.primary">
-                                        ¿Desea verificar el sentido de tu propio voto?
+                                        Verificar el sentido de mi propio voto
                                     </Typography>
                                 </CardContent>
                             </CardActionArea>
@@ -167,7 +164,7 @@ export const VerificacionPage = () => {
                                         VERIFICAR TODOS LOS VOTOS
                                     </Typography>
                                     <Typography variant="body1" color="text.primary">
-                                        ¿Desea verificar el sentido de los votos de todas las personas participantes?
+                                        Verificar el sentido de todos los votos de las personas participantes
                                     </Typography>
                                 </CardContent>
                             </CardActionArea>

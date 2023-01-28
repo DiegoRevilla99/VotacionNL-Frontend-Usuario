@@ -1,11 +1,11 @@
-import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typography } from "@mui/material";
+import ReplyIcon from '@mui/icons-material/Reply';
+import SendIcon from '@mui/icons-material/Send';
+import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { Formik } from "formik";
 import React from "react";
-import { object, string } from "yup";
-import SendIcon from '@mui/icons-material/Send';
-import ReplyIcon from '@mui/icons-material/Reply';
 import { useNavigate } from "react-router-dom";
+import { object, string } from "yup";
 
 const validationSchema = object({
 	folio: string("").required("Este campo es requerido").matches(/^[a-zA-Z0-9-]+$/, "Solo se permiten números, letras y guiones")
@@ -13,7 +13,17 @@ const validationSchema = object({
 
 export const IndividualPage = () => {
 	const navigate = useNavigate();
+	// const dispatch = useDispatch();
+	// const { status } = useSelector((state) => state.verificacion);
+	
 	const onSubmit = (values) => {
+		// Todo: dispatch(iniciarSesionConEmail())
+		// dispatch(
+		// 	onLoginWithEmailAndPassword(values.curp, values.password, () =>
+		// 		navigate("/votacion/inicio")
+		// 	)
+		// );
+		// **exito
 		console.log(values);
 		navigate("/verificacion/individual/FoundFolio");
 	};
@@ -85,24 +95,31 @@ export const IndividualPage = () => {
 											}, 
 										pt: 2 }}
 									>
-											<Button
-											onClick={onCancel}
-											startIcon={<ReplyIcon size="large" fontSize="inherit"/>}
-											color="inherit"
-											sx={{ mr: 1,
-												fontSize: {
-													xl: "1rem",
-													lg: "1rem",
-													sm: "1rem",
-													xs: "1rem",
-												}, }}
-											>
-											Regresar
-											</Button>
-											<Box sx={{ flex: '1 1 auto' }} 
-											marginBottom={{xs: "1rem"}}/>
-
-											<Button 
+								<Button
+									onClick={onCancel}
+									startIcon={<ReplyIcon size="large" fontSize="inherit"/>}
+									color="inherit"
+									sx={{ mr: 1,
+										fontSize: {
+											xl: "1rem",
+											lg: "1rem",
+											sm: "1rem",
+											xs: "1rem",
+										}, }}
+									>
+									Regresar
+								</Button>
+								<Box sx={{ flex: '1 1 auto' }} 
+									marginBottom={{xs: "1rem"}}/>
+									<Button 
+									disabled={status === "checking" ? true : false}
+									startIcon={
+										status === "checking" ? (
+											<CircularProgress color="base" />
+										) : (
+											""
+										)
+									}
 									type="submit"
 									endIcon={<SendIcon size="large" fontSize="inherit"/>}
 									sx={{
@@ -133,8 +150,6 @@ export const IndividualPage = () => {
 									}}>
 									Solicita tu verificación
 									</Button>
-											
-
 								</Box>
 							</form>
 						)}

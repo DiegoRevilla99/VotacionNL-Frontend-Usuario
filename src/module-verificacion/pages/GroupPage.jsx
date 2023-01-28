@@ -1,5 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Container, TextField, Typography } from "@mui/material";
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import { experimentalStyled } from '@mui/material/styles';
@@ -9,7 +9,6 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { Container } from "@mui/system";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // ----------- Bradcrumbs ----------
@@ -80,14 +79,12 @@ export const GroupPage = () => {
 		navigate("/verificacion/visualizacion/boleta");
 	};
 	return (
-		<Box pt="1.5rem" 
-    align="center" display="flex" justifyContent="center" 
-    sx={{						
-      height: "auto",
-      flexGrow: 1,
-      overflowY: { sx: "none", md: "auto" },
-    }}
-      >
+		<Box pt="1.5rem" align="center" display="flex" justifyContent="center"  
+        sx={{						
+            height: "auto",
+            flexGrow: 1,
+            overflowY: "auto",
+          }}>
 			<Container
 				maxWidth="md"
 				sx={{
@@ -98,6 +95,7 @@ export const GroupPage = () => {
 					p: "2rem",    
 				}}
 			>
+
         {/* Bradcrumbs */}
             <Box align="center" display="flex" justifyContent="center" mb={2}>
               <Breadcrumbs aria-label="breadcrumb" maxItems={2}>
@@ -143,87 +141,89 @@ export const GroupPage = () => {
                        Folios y sus sentidos de acuerdo a la boleta *name de la boleta*
 					</Typography>
           <Box 
-                     ml={{											
-                      xs: 2,
-                      sm: 2,
-                      md: 4,
-                      lg: 4,
-                      xl: 4,
-                  }} 
-                  mr={{											
-                      xs: 2,
-                      sm: 2,
-                      md: 10,
-                      lg: 10,
-                      xl: 10,
-                  }} 
-                  mb={3}
-                    sx={{ 
-                        display: 'flex', 
-                        justifyContent:'flex-end' }}>
-                        <TextField
-                            id="input-with-icon-textfield"
-                            label="Ingrese el nombre o folio"
-                            sx={{ width: {
-                                xs: "100%",
-                                sm: "100%",
-                                md: "50%",
-                                lg: "40%",
-                                xl: "40%",
-                            } }}
-                            size="normal"
-                            placeholder="Ejemplo: Jornada..."
-                            onChange={(e) => setSearchJornada(e.target.value)}
-                            InputProps={{
-                                endAdornment: (
-                                <InputAdornment position="end">
-                                    <SearchIcon/>
-                                </InputAdornment>
-                            ),
-                            }}
-                            variant="standard"
-                        />
-                    </Box>
-                    <Box 
+            ml={{											
+              xs: 2,
+              sm: 2,
+              md: 4,
+              lg: 4,
+              xl: 4,
+            }} 
+            mr={{											
+              xs: 2,
+              sm: 2,
+              md: 10,
+              lg: 10,
+              xl: 10,
+            }} 
+            mb={3}
+            sx={{ 
+                display: 'flex', 
+                justifyContent:'flex-end' }}>
+                  <TextField
+                      id="input-with-icon-textfield"
+                      label="Ingrese el nombre o folio"
                       sx={{ width: {
-                                xl: "70%",
-                                lg: "70%",
-                                md: "70%",
-                                sm: "85%",
-                                xs: "100%",
-							            },
-                          boxShadow: 5,
-                          }}>
-          <TableContainer component={Paper} >
-            <Table aria-label="simple table">
-              <TableHead style={{background: "#783a9cad", color: "white"}}>
-                <TableRow >
-                  <TableCell 
-                  align="center" 
-                  style={{color: "#EEEBDF", 
-                    fontSize: "1.2rem",
-                                }} >FOLIOS</TableCell>
-                  <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
-                                }}>SENTIDOS</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody style={{background: "#d0afd3db"}}>
-              {rows.filter((jornada) => jornada.folio.toLowerCase().includes(searchJornada)
-                            || jornada.folio.toUpperCase().includes(searchJornada)
-                            || jornada.sentido.toLowerCase().includes(searchJornada)
-                            || jornada.sentido.toUpperCase().includes(searchJornada)
-                            ).map((jornada) => (
-                  <TableRow 
-                    key={jornada.folio}
-                  > 
-                    <TableCell  style={{ width: "30%", color:"BLACK", fontSize:"1.05rem"}}>
-                    {jornada.folio}</TableCell>
-                    <TableCell style={{ width: "60%", color:"BLACK", fontSize:"1.05rem"}}>{jornada.sentido}</TableCell>
+                          xs: "100%",
+                          sm: "100%",
+                          md: "50%",
+                          lg: "40%",
+                          xl: "40%",
+                      } }}
+                      size="normal"
+                      placeholder="Ejemplo: Jornada..."
+                      onChange={(e) => setSearchJornada(e.target.value)}
+                      InputProps={{
+                          endAdornment: (
+                          <InputAdornment position="end">
+                              <SearchIcon/>
+                          </InputAdornment>
+                      ),
+                      }}
+                      variant="standard"
+                  />
+              </Box>
+          <Box 
+          mb={3}
+            sx={{ 
+              width: {
+                xl: "70%",
+                lg: "70%",
+                md: "70%",
+                sm: "85%",
+                xs: "100%",
+                },
+                boxShadow: 5,
+                }}>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead style={{background: "#783a9cad", color: "white"}}>
+                  <TableRow >
+                    <TableCell 
+                    align="center" 
+                    style={{color: "#EEEBDF", 
+                      fontSize: "1.2rem",
+                                  }} >FOLIOS</TableCell>
+                    <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
+                                  }}>SENTIDOS</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody style={{background: "#d0afd3db"}}>
+                {rows.filter((jornada) => jornada.folio.toLowerCase().includes(searchJornada)
+                              || jornada.folio.toUpperCase().includes(searchJornada)
+                              || jornada.sentido.toLowerCase().includes(searchJornada)
+                              || jornada.sentido.toUpperCase().includes(searchJornada)
+                              ).map((jornada) => (
+                    <TableRow 
+                      key={jornada.folio}
+                    > 
+                      <TableCell  style={{ width: "30%", color:"BLACK", fontSize:"1.05rem"}}>
+                      {jornada.folio}</TableCell>
+                      <TableCell style={{ width: "60%", color:"BLACK", fontSize:"1.05rem"}}>{jornada.sentido}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Box>
 			</Container>
 		</Box>

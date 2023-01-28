@@ -1,16 +1,10 @@
 import {
-    verificacionRespuesta, verificarFolio
-} from 'providers/Micro-Verificacion/providerVerificacion';
+    getVerificacionRespuesta, getVerificacionRespuestaFormal, verificacionRespuesta, verificarFolio
+} from '../../../providers/Micro-Verificacion/providerVerificacion';
 import {
-    onError,
-    // onCheckingPeticion,
-    // onOkPeticion,
-    // onFailPeticion,
-    // onOffPeticion,
-    // onCheckingVerificacion,
-    // onVerificando,
-    onNoVerificando
-} from 'store/auth/verificacion/verificacionSlice';
+    onCheckingPeticion, onError,
+    onFillBoletas, onNoVerificando, onOkPeticion
+} from './verificacionSlice';
 
 export const onVerficacionVoto = (values, navigate = () => {}) => {
     return async (dispatch) => {
@@ -39,4 +33,42 @@ export const onVerficacionRespuesta = (values, navigate = () => {}) => {
         }
     };
 }
-
+    // SOLO OIBTENEMOS UN CANDIDATO
+export const onGetVerificacionRespuestaFormal = (uid) => {
+    return async (dispatch) => {
+        dispatch(onCheckingPeticion());
+        const { ok, data } = await getVerificacionRespuestaFormal(uid);
+        if (ok) {
+            dispatch(onFillBoletas(data));
+            dispatch(onOkPeticion());
+        } else {
+            dispatch(onError("Error"));
+        }
+    };
+}
+    // OIBTENEMOS un/dos/tres CANDIDATO
+export const onGetVerificacionRespuesta = (uid) => {
+    return async (dispatch) => {
+        dispatch(onCheckingPeticion());
+        const { ok, data } = await getVerificacionRespuesta(uid);
+        if (ok) {
+            dispatch(onFillBoletas(data));
+            dispatch(onOkPeticion());
+        } else {
+            dispatch(onError("Error"));
+        }
+    };
+}
+    // Obtenemos todos los sentidos con sus folios
+export const onGetVerificacionBoletas = (uid) => {
+    return async (dispatch) => {
+        dispatch(onCheckingPeticion());
+        const { ok, data } = await getVerificacionRespuesta(uid);
+        if (ok) {
+            dispatch(onFillBoletas(data));
+            dispatch(onOkPeticion());
+        } else {
+            dispatch(onError("Error"));
+        }
+    };
+}
