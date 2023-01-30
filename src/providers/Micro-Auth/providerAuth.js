@@ -1,4 +1,4 @@
-import { authAPI, TOKEN_KEY } from "./configAuth";
+import { authAPI, TOKEN_KEY, REFRESH_TOKEN_KEY } from "./configAuth";
 
 export const loginWithEmailAndPassword = async (email, password) => {
 	try {
@@ -36,6 +36,19 @@ export const logout = async (email, password) => {
 		return { ok: true };
 	} catch (error) {
 		console.log("ERROR", error);
+		return { ok: false };
+	}
+};
+export const refreshToken = async (refreshToken) => {
+	try {
+		const { data } = await authAPI.post("api/auth/refreshtoken", {
+			refreshToken: sessionStorage.getItem(REFRESH_TOKEN_KEY),
+		});
+
+		console.log("DATA REFRESH: ", data);
+		return { ok: true, refreshResponse: data.refreshResponse, user: data.user };
+	} catch (error) {
+		console.log("ERROR REFRESH", error);
 		return { ok: false };
 	}
 };

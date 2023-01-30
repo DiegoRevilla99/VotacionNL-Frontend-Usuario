@@ -33,6 +33,13 @@ export const authSlice = createSlice({
 			state.status = "notLogged";
 			state.errorMessage = payload;
 		},
+		onRefres: (state, { payload }) => {
+			state.status = "logged";
+			state.accessToken = payload.accessToken;
+			state.refreshToken = payload.refreshToken;
+			state.username = payload.username;
+			state.email = payload.email;
+		},
 	},
 });
 

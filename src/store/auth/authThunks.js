@@ -1,5 +1,9 @@
-import { deleteToken, setToken } from "../../providers/Micro-Auth/configAuth";
-import { loginWithEmailAndPassword, logout } from "../../providers/Micro-Auth/providerAuth";
+import { deleteToken, setRefreshToken, setToken } from "../../providers/Micro-Auth/configAuth";
+import {
+	loginWithEmailAndPassword,
+	logout,
+	refreshToken,
+} from "../../providers/Micro-Auth/providerAuth";
 import { onChecking, onError, onLogin, onLogout } from "./authSlice";
 
 export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}) => {
@@ -15,6 +19,7 @@ export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}
 			console.log("TODO BIEN");
 			dispatch(onLogin({ accessToken, username, refreshToken, email }));
 			setToken(accessToken);
+			setRefreshToken(refreshToken);
 			navigate();
 		} else {
 			dispatch(onError("Error de autenticación. Revisa tus credenciales"));
@@ -32,6 +37,29 @@ export const onLogoutThunk = (navigate = () => {}) => {
 			deleteToken();
 			navigate();
 			dispatch(onLogout());
+		} else {
+			dispatch(onError("Error"));
+		}
+	};
+};
+
+export const onRefreshSession = () => {
+	return async (dispatch) => {
+		dispatch(onChecking());
+
+		const { ok, refreshResponse, user } = await refreshToken();
+
+		if (ok) {
+			dispatch(
+				onLogin({
+					accessToken: refreshResponse.accessToken,
+					username: user.curp,
+					refreshToken: refreshResponse.refreshToken,
+					email: user.email,
+				})
+			);
+			setToken(refreshResponse.accessToken);
+			setRefreshToken(refreshResponse.refreshToken);
 		} else {
 			dispatch(onError("Error"));
 		}

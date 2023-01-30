@@ -3,7 +3,9 @@ import { Container } from "@mui/system";
 import { Formik } from "formik";
 import React from "react";
 import { object, string } from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { onLoginWithEmailAndPassword } from "../../store/auth/authThunks";
 
 const steps = ["PASO 1: Establece tu contraseña", "PASO 2: Ingresa al módulo de votación"];
 
@@ -15,6 +17,8 @@ const validationSchema = object({
 export const PasosPage = () => {
 	const [activeStep, setActiveStep] = React.useState(0);
 	const [skipped, setSkipped] = React.useState(new Set());
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const isStepOptional = (step) => {
 		return step === 1;
@@ -40,7 +44,11 @@ export const PasosPage = () => {
 	};
 
 	const handleSubmit = (values) => {
-		console.log(values);
+		dispatch(
+			onLoginWithEmailAndPassword(values.curp, values.contrasenia, () =>
+				navigate("/votacion/inicio")
+			)
+		);
 	};
 
 	return (

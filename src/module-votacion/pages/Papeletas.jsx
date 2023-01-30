@@ -43,7 +43,7 @@ export const Papeletas = () => {
 		dispatch(onAddRespuesta({ respuesta, noPapeleta }));
 		if (noPapeleta + 1 === papeletas.length) {
 			dispatch(
-				onEmitirRespuestaConsulta("valor", () => navigate("/votacion/finalPapeletas"))
+				onEmitirRespuestaConsulta("valor", () => navigate("/votacion/respuestasPapeletas"))
 			);
 		} else {
 			setRespuesta("");

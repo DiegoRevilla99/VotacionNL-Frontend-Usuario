@@ -35,6 +35,10 @@ export const HomePage = () => {
 		else navigate("/votacion/inicio");
 	};
 
+	const goVerificar = () => {
+		navigate("/verificacion");
+	};
+
 	return (
 		<Box
 			display={"flex"}
@@ -304,6 +308,7 @@ export const HomePage = () => {
 
 				<Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
 					<Box
+						onClick={goVerificar}
 						boxShadow={shadow}
 						display="flex"
 						flexDirection={"column"}
