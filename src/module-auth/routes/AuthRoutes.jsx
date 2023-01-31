@@ -24,7 +24,10 @@ export const AuthRoutes = () => {
 					{/* <Topbar /> */}
 					<Routes>
 						<Route path="login" element={<LoginVotacionPage />} />
-						<Route path="establecerPassword" element={<EstablecerContrasenia />} />
+						<Route
+							path="establecerPassword/:token"
+							element={<EstablecerContrasenia />}
+						/>
 						<Route path="success" element={<SuccessPage />} />
 					</Routes>
 				</main>
