@@ -7,13 +7,12 @@ import "./index.css";
 import { store } from "./store/store";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-	<React.StrictMode>
-		{/* <BrowserRouter> */}
-		<HashRouter>
-			<Provider store={store}>
-				<App />
-			</Provider>
-		</HashRouter>
-		{/* </BrowserRouter> */}
-	</React.StrictMode>
+	// <React.StrictMode>
+	<HashRouter>
+		<Provider store={store}>
+			<App />
+		</Provider>
+	</HashRouter>
+
+	// </React.StrictMode>
 );

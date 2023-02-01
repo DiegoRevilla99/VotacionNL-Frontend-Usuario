@@ -10,11 +10,6 @@ export const useCheckAuth = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const timeout = (ms) => {
-		dispatch(onChecking());
-		return new Promise((resolve) => setTimeout(resolve, ms));
-	};
-
 	useEffect(() => {
 		async function cargaUsuario() {
 			if (!getToken()) {

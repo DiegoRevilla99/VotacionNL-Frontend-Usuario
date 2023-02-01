@@ -16,6 +16,7 @@ import { PublicRoutes } from "./PublicRoutes";
 export const AppRouter = () => {
 	// initAxiosInterceptors();
 	// const { status } = useSelector((state) => state.auth);
+
 	const { status } = useCheckAuth();
 
 	const location = useLocation();

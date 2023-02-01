@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { Button, Container, TextField } from "@mui/material";
 import { Formik } from "formik";
 import { object, string, ref } from "yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { onGetDataVotantePassword, onRegistrarUsuario } from "../../store/auth/authThunks";
+import { useDispatch, useSelector } from "react-redux";
 
 const validationSchema = object({
 	password: string("")
@@ -18,12 +20,20 @@ const validationSchema = object({
 
 export const EstablecerContrasenia = () => {
 	const navigate = useNavigate();
+	const params = useParams();
+	const dispatch = useDispatch();
+	const { curp, email } = useSelector((state) => state.auth);
 
-	const handleSubmit = () => {
-		// Todo: dispatch(savePassword())
-		// **exito
-		navigate("/auth/success");
+	const handleSubmit = (values) => {
+		console.log("ME ENVIOOOOOOOOOOO", values.password);
+		dispatch(onRegistrarUsuario(values.password, email, curp, () => navigate("/auth/success")));
 	};
+
+	useEffect(() => {
+		console.log("ME CARGO");
+		if (curp === "") dispatch(onGetDataVotantePassword(params.token));
+	}, []);
+
 	return (
 		<Box display="flex" height="100%" alignItems="center">
 			<Container
@@ -48,6 +58,16 @@ export const EstablecerContrasenia = () => {
 					>
 						Establecer contarseña
 					</Typography>
+					<Typography
+						variant="caption"
+						color="#f0f0f0"
+						display="flex"
+						justifyContent="center"
+						mb="2rem"
+					>
+						La contraseña debe contener mínimo 6 caracteres, una mayúscula, una
+						minúscula, un numero y un simbolo ($%&/?...)
+					</Typography>
 					<Formik
 						initialValues={{
 							password: "",
@@ -56,7 +76,7 @@ export const EstablecerContrasenia = () => {
 						validationSchema={validationSchema}
 						onSubmit={(values) => {
 							console.log(values);
-							handleSubmit();
+							handleSubmit(values);
 						}}
 					>
 						{({ values, handleSubmit, errors, touched, handleChange }) => (

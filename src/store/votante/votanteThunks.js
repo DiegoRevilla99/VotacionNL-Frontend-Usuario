@@ -1,3 +1,4 @@
+import { getDataVotantePassword } from "../../providers/Micro-Token/providerToken";
 import {
 	comenzarVotacion,
 	emitirRespuestaConsulta,
@@ -5,6 +6,7 @@ import {
 	getBoletasDeVotante,
 	getConsultasDeVotante,
 } from "../../providers/Micro-Votos/providerVotos";
+import { onChecking } from "../auth/authSlice";
 import {
 	onCheckingVotante,
 	onError,

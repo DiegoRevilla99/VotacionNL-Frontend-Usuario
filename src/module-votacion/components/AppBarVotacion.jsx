@@ -342,7 +342,7 @@ export const AppBarVotacion = () => {
 											ml={2}
 											display={{ xs: "none", lg: "flex" }}
 										>
-											José
+											{/* José */}
 										</Typography>
 									</IconButton>
 								</Tooltip>
