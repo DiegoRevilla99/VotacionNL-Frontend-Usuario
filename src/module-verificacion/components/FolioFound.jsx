@@ -2,16 +2,24 @@ import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typograp
 import { Container } from "@mui/system";
 import { Formik } from "formik";
 import React from "react";
+import PreviewIcon from '@mui/icons-material/Preview';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { useNavigate } from "react-router-dom";
-
+import { ModalBoleta } from "./ModalBoleta";
+import { useState } from "react";
 export const FolioFound = () => {
 	const navigate = useNavigate();
 	const plantilla2 = () => {
 		navigate("/verificacion/individual");
 	};
+    const [statusModal, setStatusModal] = useState(false);
+    const handleCloseModal = () => setStatusModal(false);
+    const handleOpenModal = () => {
+        // toastOffOperation();
+        setStatusModal(true);
+        };
 	return (
-		<Box pt="3rem">
+		<Box pt="1.5rem">
 			<Container
 				maxWidth="lg"
 				sx={{
@@ -23,26 +31,6 @@ export const FolioFound = () => {
 				}}
 			>
 				<Box sx={{ width: "100%" }}>
-
-                    <Stack                    
-                    direction={{
-                        xl: "row",
-                        lg: "row",
-                        md: "row",
-                        sm: "column",
-                        xs: "column",
-                    }}
-                    spacing={{
-                        xl: 10,
-                        lg: 10,
-                        md: 7,
-                        sm: 4,
-                        xs: 4,
-                    }}
-                    justifyContent="center"
-                    alignItems="center"
-                    >
-
                     <Box 
                     align="center">
 
@@ -141,11 +129,13 @@ export const FolioFound = () => {
                                 },
                             }}
                         > 
-                        EL SENTIDO DEL VOTO SE ENCUENTRA REFLEJADO EN LA SIGUIENTE BOLETA:
+                        EL SENTIDO DEL VOTO SE ENCUENTRA REFLEJADO EN EL SIGUIENTE BOTÓN:
 					</Typography>
+                    <Box
+                    mb={2}>
                     <Button 
-                        startIcon={<PersonSearchIcon size="Large"/>}
-                        onClick={plantilla2}
+                        startIcon={<PreviewIcon size="Large"/>}
+                        onClick={handleOpenModal}
                         sx={{
                             backgroundColor: "#511079",
                             color: "#fff",
@@ -170,35 +160,44 @@ export const FolioFound = () => {
                                 color: "#FFFFFF",
                             },
                         }}>
-                        Ingresar otro folio
+                        MOSTRAR BOLETA
                         </Button>
                     </Box>
                     <Box>
-                        {/* INGRESAR LA BOLETA */}
-                    <Typography
-                        color="initial"
-                            mb="1rem"
-                            align="center"
-                            sx={{
-                                fontSize: {
-                                    xs: "2rem",
-                                    sm: "2rem",
-                                    md: "2rem",
-                                    lg: "2rem",
-                                    xl: "2rem",
-                                },
-                            }}
-                        > 
-                        BOLETA:
-					</Typography>
-
-
-
+                        <Button 
+                        startIcon={<PersonSearchIcon size="Large"/>}
+                        onClick={plantilla2}
+                        sx={{
+                            // backgroundColor: "#511079",
+                            // color: "#fff",
+                            fontSize: {
+                                xs: "1rem",
+                                sm: "1rem",
+                                md: "1rem",
+                                lg: "1rem",
+                                xl: "1rem",
+                            },
+                            textAlign: "center",
+                            width: {
+                                xs: "80%",
+                                sm: "70%",
+                                md: "60%",
+                                lg: "50%",
+                                xl: "50%",
+                            },
+                            // height: "10%",
+                            "&:hover": {
+                                // background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
+                                // color: "#FFFFFF",
+                            },
+                        }}>
+                        Ingresar otro folio
+                        </Button>
                         </Box>
-                    </Stack>
-
+                    </Box>
 				</Box>
 			</Container>
+            <ModalBoleta statusModal={statusModal} handleToggleModal={handleCloseModal} />
 		</Box>
 	);
 };
