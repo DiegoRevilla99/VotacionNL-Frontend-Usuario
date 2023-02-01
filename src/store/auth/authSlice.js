@@ -28,7 +28,7 @@ export const authSlice = createSlice({
 			state.accessToken = "";
 			state.refreshToken = "";
 			state.username = "";
-			// state.email = "";
+			state.email = "";
 		},
 		onError: (state, { payload }) => {
 			state.status = "notLogged";
@@ -41,18 +41,10 @@ export const authSlice = createSlice({
 			state.username = payload.username;
 			state.email = payload.email;
 		},
-		onSaveEmailCurp: (state, { payload }) => {
-			state.email = payload.email;
-			state.curp = payload.curp;
-		},
-		onNothing: (state) => {
-			state.status = "notLogged";
-		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { onChecking, onLogin, onLogout, onError, onSaveEmailCurp, onNothing } =
-	authSlice.actions;
+export const { onChecking, onLogin, onLogout, onError } = authSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

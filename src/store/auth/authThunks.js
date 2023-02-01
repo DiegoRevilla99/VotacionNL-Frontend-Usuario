@@ -4,11 +4,8 @@ import {
 	logout,
 	refreshToken,
 } from "../../providers/Micro-Auth/providerAuth";
-import {
-	getDataVotantePassword,
-	registrarUsuario,
-} from "../../providers/Micro-Token/providerToken";
-import { onChecking, onError, onLogin, onLogout, onNothing, onSaveEmailCurp } from "./authSlice";
+
+import { onChecking, onError, onLogin, onLogout } from "./authSlice";
 
 export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}) => {
 	return async (dispatch) => {
@@ -64,40 +61,6 @@ export const onRefreshSession = () => {
 			);
 			setToken(refreshResponse.accessToken);
 			setRefreshToken(refreshResponse.refreshToken);
-		} else {
-			dispatch(onError("Error"));
-		}
-	};
-};
-
-export const onGetDataVotantePassword = (token) => {
-	return async (dispatch) => {
-		dispatch(onChecking());
-
-		const { ok, data } = await getDataVotantePassword(token);
-
-		console.log("DATAAAAAAAA", data);
-		if (ok) {
-			dispatch(onNothing());
-			dispatch(onSaveEmailCurp(data));
-		} else {
-			dispatch(onError("Error"));
-		}
-	};
-};
-
-export const onRegistrarUsuario = (password, email, curp, navigate = () => {}) => {
-	return async (dispatch) => {
-		dispatch(onChecking());
-
-		const { ok } = await registrarUsuario(password, email, curp);
-
-		console.log("ok", ok);
-
-		if (ok) {
-			console.log("PETICION BIEN HECHA");
-			dispatch(onNothing());
-			navigate();
 		} else {
 			dispatch(onError("Error"));
 		}

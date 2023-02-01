@@ -4,8 +4,9 @@ import { tokenApi } from "./configToken";
 export const getDataVotantePassword = async (token) => {
 	try {
 		const { data } = await tokenApi.get(`email/validation/verification/${token}`);
+		// await timeout(1000);
 
-		console.log("DATA USER: ", data);
+		console.log("DATA USER: ");
 		return { ok: true, data: data };
 	} catch (error) {
 		console.log("ERROR DATA USER", error);
