@@ -5,6 +5,7 @@ import { LoginVotacionPage } from "../module-auth/pages/LoginVotacionPage";
 import { AuthRoutes } from "../module-auth/routes/AuthRoutes";
 import { useCheckAuth } from "../module-home/hooks/useCheckAuth";
 import { HomeRoutes } from "../module-home/routes/HomeRoutes";
+import { CheckingPage } from "../module-votacion/pages/CheckingPage";
 import { VotacionRoutes } from "../module-votacion/routes/votacionRoutes";
 import { initAxiosInterceptors } from "../providers/Micro-Auth/configAuth";
 import { CiudadanoRoutes } from "../routes/CiudadanoRoutes";
@@ -24,7 +25,7 @@ export const AppRouter = () => {
 	sessionStorage.setItem("Location", location.pathname);
 
 	if (status === "checking") {
-		return "CARGANDOOOOOOOOOOOOOOO";
+		return <CheckingPage />;
 	} else
 		return (
 			<Routes>

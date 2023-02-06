@@ -1,61 +1,186 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { PhotoCamera } from "@mui/icons-material";
+import {
+	Box,
+	Button,
+	CircularProgress,
+	Container,
+	FormControl,
+	Grid,
+	IconButton,
+	InputLabel,
+	OutlinedInput,
+	TextField,
+	Typography,
+} from "@mui/material";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import Cropper from "cropperjs";
+import "cropperjs/dist/cropper.css";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { onComenzarConsulta } from "../../store/votante/votanteThunks";
+import { onComenzarConsulta, onGetStatusValidacion } from "../../store/votante/votanteThunks";
+import { ModalRecortarFoto } from "../components/ModalRecortarFoto";
 import { ModalTokenVotacion } from "../components/ModalTokenVotacion";
+import { ModalVerificarCuenta } from "../components/ModalVerificarCuenta";
+
+let cropper = null;
+const tieneJornadaFormal = false;
+const tieneJornadaNoFormal = true;
+const tieneConsultaCiudadana = true;
 
 export const InicioVotante = () => {
+	const { verificado, statusPeticion } = useSelector((state) => state.votante);
+	const { username } = useSelector((state) => state.auth);
 	const [statusModal, setStatusModal] = useState(false);
+	const [statusModalVerificar, setStatusModalVerificar] = useState(false);
+	const [statusModalRecorte, setStatusModalRecorte] = useState(false);
+
+	const [refVisible, setRefVisible] = useState(false);
+	const [cropperObject, setCropper] = useState(null);
+	const [imagenes, setImagenes] = useState({
+		credFrontal: {
+			name: "",
+		},
+		credTrasera: {
+			name: "",
+		},
+		selfie: {
+			name: "",
+		},
+		credFrontalCrop: null,
+		credTraseraCrop: null,
+		selfieCrop: null,
+		current: "",
+	});
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const refImagen = useRef(null);
+
+	useEffect(() => {
+		if (username !== "") dispatch(onGetStatusValidacion(username));
+	}, [username]);
+
+	useEffect(() => {
+		if (imagenes.current === "") return;
+		if (imagenes.current !== "") setStatusModalRecorte(true);
+	}, [imagenes.current]);
+
+	useEffect(() => {
+		if (!refVisible) return;
+		console.log("LO QUE LLEGA", imagenes);
+		if (imagenes.current === "credFrontal" && imagenes.credFrontal.name === "") {
+			setImagenes({ ...imagenes, current: "" });
+			return;
+		}
+		if (imagenes.current === "credTrasera" && imagenes.credTrasera.name === "") {
+			setImagenes({ ...imagenes, current: "" });
+			return;
+		}
+		if (imagenes.current === "selfie" && imagenes.selfie.name === "") {
+			setImagenes({ ...imagenes, current: "" });
+			return;
+		}
+
+		let imgURL = null;
+		if (imagenes.current === "credFrontal") imgURL = URL.createObjectURL(imagenes.credFrontal);
+		else if (imagenes.current === "credTrasera")
+			imgURL = URL.createObjectURL(imagenes.credTrasera);
+		else imgURL = URL.createObjectURL(imagenes.selfie);
+
+		let image = refImagen.current;
+		image.src = imgURL;
+
+		const proporcion =
+			imagenes.current === "credFrontal" || imagenes.current === "credTrasera" ? 16 / 9 : 1;
+
+		setCropper(
+			new Cropper(image, {
+				aspectRatio: proporcion,
+				preview: ".img-sample",
+				zoomable: true,
+				viewMode: 1,
+				responsive: false,
+				dragMode: "move",
+				ready() {
+					document.querySelector(".cropper-container").style.width = "100%";
+					document.querySelector(".cropper-container").style.height = "100%";
+				},
+			})
+		);
+	}, [refVisible]);
+
+	const handleCrop = () => {
+		let canva = cropperObject.getCroppedCanvas();
+		console.log(canva);
+		let file = null;
+
+		canva.toBlob((blob) => {
+			file = new File([blob], `fileName${Math.floor(Math.random() * (90000 - 1) + 1)}.jpeg`, {
+				type: "image/jpeg",
+			});
+			if (imagenes.current === "credFrontal")
+				setImagenes({ ...imagenes, credFrontalCrop: file, current: "" });
+			else if (imagenes.current === "credTrasera")
+				setImagenes({ ...imagenes, credTraseraCrop: file, current: "" });
+			else setImagenes({ ...imagenes, selfieCrop: file, current: "" });
+		}, "image/jpeg");
+
+		let image = refImagen.current;
+		image.src = "";
+
+		setCropper(null);
+	};
 
 	const handleCloseModal = () => setStatusModal(false);
+	const handleOpenModal = () => setStatusModal(true);
+	const handleCloseModalVerificar = () => setStatusModalVerificar(false);
+	const handleOpenModalVerificar = () => setStatusModalVerificar(true);
+	const handleCloseModalRecorte = () => {
+		if (imagenes.current === "credFrontal" && imagenes.credFrontalCrop === null)
+			setImagenes({ ...imagenes, current: "", credFrontal: { name: "" } });
+		else if (imagenes.current === "credTrasera" && imagenes.credTraseraCrop === null)
+			setImagenes({ ...imagenes, current: "", credTrasera: { name: "" } });
+		else if (imagenes.current === "selfie" && imagenes.credSelfieCrop === null)
+			setImagenes({ ...imagenes, current: "", selfie: { name: "" } });
 
-	const handleOpenModal = () => {
-		// toastOffOperation();
-		setStatusModal(true);
+		setStatusModalRecorte(false);
+	};
+	const handleOpenModalRecorte = () => {
+		// setImagenes({ ...imagenes, current: "" });
+		setStatusModalRecorte(true);
 	};
 
 	const handleConsultaCiudadana = () => {
 		dispatch(onComenzarConsulta("", navigate("/votacion/papeletas")));
 	};
 	return (
-		<Box display="flex" height="75%" alignItems="center">
-			<Container
-				maxWidth="lg"
-				// sx={{
-				// 	minHeight: "10rem",
-				// 	height: "auto",
-				// 	boxShadow: 1,
-				// 	backgroundColor: "white",
-				// 	borderRadius: { xs: "0.5rem", md: "1rem" },
-				// 	p: "2rem",
-				// 	// pl: "2rem",
-				// }}
-			>
-				<Grid
-					container
-					display="flex"
-					spacing={5}
-					// flexDirection="row"
-					// alignItems="center"
-					// justifyContent="center"
-				>
-					<Grid item xs={6}>
-						{/* 1 */}
-					</Grid>
-					<Grid item xs={6}>
-						{/* 2 */}
-					</Grid>
-					<Grid item xs={6}>
+		<Box display="flex" height="100%" sx={{ overflowY: "auto" }}>
+			<Container maxWidth="lg" sx={{ height: "100%" }}>
+				<ModalVerificarCuenta
+					statusModalVerificar={statusModalVerificar}
+					handleCloseModalVerificar={handleCloseModalVerificar}
+					imagenes={imagenes}
+					setImagenes={setImagenes}
+				/>
+				<ModalRecortarFoto
+					statusModalRecorte={statusModalRecorte}
+					handleCloseModalRecorte={handleCloseModalRecorte}
+					imagenes={imagenes}
+					setImagenes={setImagenes}
+					refImagen={refImagen}
+					setRefVisible={setRefVisible}
+					handleCrop={handleCrop}
+				/>
+				<Grid container display="flex" spacing={5} height="100%" pt={5}>
+					<Grid item xs={12}>
 						<Box
 							display="flex"
 							flexDirection="column"
 							alignItems="center"
+							justifyContent="center"
 							sx={{
 								minHeight: "10rem",
-								height: "auto",
+								height: "100%",
 								boxShadow: 1,
 								backgroundColor: "white",
 								borderRadius: { xs: "0.5rem", md: "1rem" },
@@ -63,84 +188,554 @@ export const InicioVotante = () => {
 								// pl: "2rem",
 							}}
 						>
-							<Typography
-								variant="h5"
-								color="#323232"
-								display="flex"
-								justifyContent="center"
-								align="justify"
-								mb="2rem"
-							>
-								Comenzar proceso de votación
-							</Typography>
-							<Button
-								variant="contained"
-								size="large"
-								color="darkButton"
-								onClick={handleOpenModal}
+							{statusPeticion === "checking" ? (
+								<>
+									<Typography
+										variant="h5"
+										color="#323232"
+										display="flex"
+										justifyContent="center"
+										align="justify"
+										mb="2rem"
+									>
+										Verificando cuenta...
+									</Typography>
+									<Box sx={{ display: "flex" }}>
+										<CircularProgress />
+									</Box>
+								</>
+							) : (
+								<>
+									<Typography
+										variant="h5"
+										color="#323232"
+										display="flex"
+										justifyContent="center"
+										align="justify"
+										mb="2rem"
+									>
+										{verificado
+											? "Tu cuenta está verificada correctamente"
+											: "Verificación de cuenta"}
+									</Typography>
+									{verificado ? (
+										<TaskAltIcon
+											sx={{ fontSize: 60, color: "#388452" }}
+											// color="primary"
+										/>
+									) : (
+										<Button
+											variant="contained"
+											size="large"
+											color="darkButton"
+											onClick={handleOpenModalVerificar}
+											sx={{
+												boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+												transition: "all 0.5s ease",
+												// backgroundColor: "#543884",
+												width: { xs: "100%", md: "30%" },
+												// borderRadius: "2rem 2rem 2rem 2rem",
+												"&:hover": {
+													// backgroundColor: "#7E328B !important",
+													transform: "translate(-5px, -5px)",
+													boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+												},
+											}}
+										>
+											VERIFICAR MI CUENTA
+										</Button>
+									)}
+								</>
+							)}
+						</Box>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<Box width="100%" height="100%" position="relative">
+							<Box
+								height="auto"
+								zIndex={9999}
+								position="absolute"
+								width="100%"
+								px={2}
+								py={1}
 								sx={{
-									boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-									transition: "all 0.5s ease",
-									// backgroundColor: "#543884",
-									width: { xs: "100%", md: "30%" },
-									// borderRadius: "2rem 2rem 2rem 2rem",
-									"&:hover": {
-										// backgroundColor: "#7E328B !important",
-										transform: "translate(-5px, -5px)",
-										boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-									},
+									backgroundColor: "#323232",
+									borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
+									borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
 								}}
 							>
-								COMENZAR VOTACIÓN
-							</Button>
+								<Typography
+									variant="body"
+									color="#fed300"
+									display="flex"
+									justifyContent="center"
+									align="justify"
+									fontWeight="bold"
+								>
+									JORNADAS FORMALES
+								</Typography>
+							</Box>
+							{verificado && tieneJornadaFormal ? (
+								<Box
+									display="flex"
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									sx={{
+										minHeight: "10rem",
+										height: "100%",
+										boxShadow: 1,
+										backgroundColor: "white",
+										borderRadius: { xs: "0.5rem", md: "1rem" },
+										p: "2rem",
+										// pl: "2rem",
+									}}
+								>
+									<Typography
+										variant="h6"
+										color="#323232"
+										display="flex"
+										justifyContent="center"
+										align="center"
+										mb="2rem"
+									>
+										Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+									</Typography>
+									<Button
+										variant="contained"
+										size="large"
+										color="darkButton"
+										onClick={handleOpenModal}
+										sx={{
+											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+											transition: "all 0.5s ease",
+											// backgroundColor: "#543884",
+											width: { xs: "100%", md: "50%" },
+											// borderRadius: "2rem 2rem 2rem 2rem",
+											"&:hover": {
+												// backgroundColor: "#7E328B !important",
+												transform: "translate(-5px, -5px)",
+												boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+											},
+										}}
+									>
+										COMENZAR VOTACIÓN
+									</Button>
+								</Box>
+							) : (
+								<Box width="100%" height="100%" position="relative">
+									<Box
+										display="flex"
+										flexDirection="column"
+										alignItems="center"
+										justifyContent="center"
+										height="100%"
+										width="100%"
+										zIndex={10}
+										position="absolute"
+										sx={{
+											background: "rgba(120, 120, 120, 0.75 )",
+											borderRadius: { xs: "0.5rem", md: "1rem" },
+											backdropFilter: "blur( 10px )",
+											WebkitBackdropFilter: "blur( 10px )",
+											border: "1px solid rgba( 255, 255, 255, 0.18 )",
+											p: "2rem",
+										}}
+									>
+										<Box
+											p={2}
+											mt={4}
+											border="1px solid #f8f7f3"
+											borderRadius="2rem"
+										>
+											<Typography
+												variant="body1"
+												color="#f8f7f3"
+												display="flex"
+												justifyContent="center"
+												align="center"
+											>
+												{verificado
+													? "No tienes ninguna jornada formal por contestar"
+													: "Verifica tu cuenta para poder ver si tienes una jornada formal pendiente por contestar"}
+											</Typography>
+										</Box>
+									</Box>
+									<Box
+										display="flex"
+										flexDirection="column"
+										alignItems="center"
+										justifyContent="center"
+										// zIndex={1}
+										// position="absolute"
+										sx={{
+											minHeight: "10rem",
+											height: "100%",
+											boxShadow: 1,
+											backgroundColor: "white",
+											borderRadius: { xs: "0.5rem", md: "1rem" },
+											p: "2rem",
+											// pl: "2rem",
+										}}
+									>
+										<Typography
+											variant="h6"
+											color="#323232"
+											display="flex"
+											justifyContent="center"
+											align="center"
+											mb="2rem"
+										>
+											Jornada electoral de Nuevo León 2023
+										</Typography>
+										<Button
+											variant="contained"
+											size="large"
+											color="darkButton"
+											onClick={handleOpenModal}
+											sx={{
+												boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+												transition: "all 0.5s ease",
+												// backgroundColor: "#543884",
+												width: { xs: "100%", md: "50%" },
+												// borderRadius: "2rem 2rem 2rem 2rem",
+												"&:hover": {
+													// backgroundColor: "#7E328B !important",
+													transform: "translate(-5px, -5px)",
+													boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+												},
+											}}
+										>
+											Comenzar Votación
+										</Button>
+									</Box>
+								</Box>
+							)}
+						</Box>
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<Box width="100%" height="100%" position="relative">
+							<Box
+								height="auto"
+								zIndex={9999}
+								position="absolute"
+								width="100%"
+								px={2}
+								py={1}
+								sx={{
+									backgroundColor: "#323232",
+									borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
+									borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
+								}}
+							>
+								<Typography
+									variant="body"
+									color="#fed300"
+									display="flex"
+									justifyContent="center"
+									align="justify"
+									fontWeight="bold"
+								>
+									JORNADAS NO FORMALES
+								</Typography>
+							</Box>
+							{tieneJornadaNoFormal ? (
+								<Box
+									display="flex"
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									sx={{
+										minHeight: "10rem",
+										height: "100%",
+										boxShadow: 1,
+										backgroundColor: "white",
+										borderRadius: { xs: "0.5rem", md: "1rem" },
+										p: "2rem",
+										// pl: "2rem",
+									}}
+								>
+									<Typography
+										variant="h6"
+										color="#323232"
+										display="flex"
+										justifyContent="center"
+										align="center"
+										mb="2rem"
+									>
+										Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+									</Typography>
+									<Button
+										variant="contained"
+										size="large"
+										color="darkButton"
+										onClick={handleOpenModal}
+										sx={{
+											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+											transition: "all 0.5s ease",
+											// backgroundColor: "#543884",
+											width: { xs: "100%", md: "50%" },
+											// borderRadius: "2rem 2rem 2rem 2rem",
+											"&:hover": {
+												// backgroundColor: "#7E328B !important",
+												transform: "translate(-5px, -5px)",
+												boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+											},
+										}}
+									>
+										COMENZAR VOTACIÓN
+									</Button>
+								</Box>
+							) : (
+								<Box width="100%" height="100%" position="relative">
+									<Box
+										display="flex"
+										flexDirection="column"
+										alignItems="center"
+										justifyContent="center"
+										height="100%"
+										width="100%"
+										zIndex={10}
+										position="absolute"
+										p="2rem"
+										sx={{
+											background: "rgba(120, 120, 120, 0.75 )",
+											borderRadius: { xs: "0.5rem", md: "1rem" },
+											backdropFilter: "blur( 10px )",
+											WebkitBackdropFilter: "blur( 10px )",
+											border: "1px solid rgba( 255, 255, 255, 0.18 )",
+										}}
+									>
+										<Box
+											p={2}
+											mt={4}
+											border="1px solid #f8f7f3"
+											borderRadius="2rem"
+										>
+											<Typography
+												variant="body1"
+												color="#f8f7f3"
+												display="flex"
+												justifyContent="center"
+												align="center"
+											>
+												No tienes ninguna jornada no formal por contestar
+											</Typography>
+										</Box>
+									</Box>
+									<Box
+										display="flex"
+										flexDirection="column"
+										alignItems="center"
+										justifyContent="center"
+										// zIndex={1}
+										// position="absolute"
+										sx={{
+											minHeight: "10rem",
+											height: "100%",
+											boxShadow: 1,
+											backgroundColor: "white",
+											borderRadius: { xs: "0.5rem", md: "1rem" },
+											p: "2rem",
+											// pl: "2rem",
+										}}
+									>
+										<Typography
+											variant="h6"
+											color="#323232"
+											display="flex"
+											justifyContent="center"
+											align="center"
+											mb="2rem"
+										>
+											Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+										</Typography>
+										<Button
+											variant="contained"
+											size="large"
+											color="darkButton"
+											onClick={handleOpenModal}
+											sx={{
+												boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+												transition: "all 0.5s ease",
+												// backgroundColor: "#543884",
+												width: { xs: "100%", md: "50%" },
+												// borderRadius: "2rem 2rem 2rem 2rem",
+												"&:hover": {
+													// backgroundColor: "#7E328B !important",
+													transform: "translate(-5px, -5px)",
+													boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+												},
+											}}
+										>
+											Comenzar Votación
+										</Button>
+									</Box>
+								</Box>
+							)}
 						</Box>
 					</Grid>
 
-					<Grid item xs={6}>
-						<Box
-							display="flex"
-							flexDirection="column"
-							alignItems="center"
-							sx={{
-								minHeight: "10rem",
-								height: "auto",
-								boxShadow: 1,
-								backgroundColor: "white",
-								borderRadius: { xs: "0.5rem", md: "1rem" },
-								p: "2rem",
-								// pl: "2rem",
-							}}
-						>
-							<Typography
-								variant="h5"
-								color="#323232"
-								display="flex"
-								justifyContent="center"
-								align="justify"
-								mb="2rem"
-							>
-								Comenzar consulta ciudadana
-							</Typography>
-							<Button
-								variant="contained"
-								size="large"
-								color="darkButton"
-								onClick={handleConsultaCiudadana}
+					<Grid item xs={12} md={4}>
+						<Box width="100%" height="100%" position="relative">
+							<Box
+								height="auto"
+								zIndex={9999}
+								position="absolute"
+								width="100%"
+								px={2}
+								py={1}
 								sx={{
-									boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-									transition: "all 0.5s ease",
-									// backgroundColor: "#543884",
-									width: { xs: "100%", md: "30%" },
-									// borderRadius: "2rem 2rem 2rem 2rem",
-									"&:hover": {
-										// backgroundColor: "#7E328B !important",
-										transform: "translate(-5px, -5px)",
-										boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-									},
+									backgroundColor: "#323232",
+									borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
+									borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
 								}}
 							>
-								COMENZAR CONSULTA
-							</Button>
+								<Typography
+									variant="body"
+									color="#fed300"
+									display="flex"
+									justifyContent="center"
+									align="justify"
+									fontWeight="bold"
+								>
+									CONSULTAS CIUDADANAS
+								</Typography>
+							</Box>
+							{tieneConsultaCiudadana ? (
+								<Box
+									display="flex"
+									flexDirection="column"
+									alignItems="center"
+									justifyContent="center"
+									sx={{
+										minHeight: "10rem",
+										height: "100%",
+										boxShadow: 1,
+										backgroundColor: "white",
+										borderRadius: { xs: "0.5rem", md: "1rem" },
+										p: "2rem",
+										// pl: "2rem",
+									}}
+								>
+									<Typography
+										variant="h6"
+										color="#323232"
+										display="flex"
+										justifyContent="center"
+										align="center"
+										mb="2rem"
+									>
+										Consulta Ciudadana Nuevo León 2023
+									</Typography>
+									<Button
+										variant="contained"
+										size="large"
+										color="darkButton"
+										onClick={handleConsultaCiudadana}
+										sx={{
+											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+											transition: "all 0.5s ease",
+											// backgroundColor: "#543884",
+											width: { xs: "100%", md: "50%" },
+											// borderRadius: "2rem 2rem 2rem 2rem",
+											"&:hover": {
+												// backgroundColor: "#7E328B !important",
+												transform: "translate(-5px, -5px)",
+												boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+											},
+										}}
+									>
+										COMENZAR CONSULTA
+									</Button>
+								</Box>
+							) : (
+								<Box width="100%" height="100%" position="relative">
+									<Box
+										display="flex"
+										flexDirection="column"
+										alignItems="center"
+										justifyContent="center"
+										height="100%"
+										width="100%"
+										zIndex={10}
+										position="absolute"
+										p="2rem"
+										sx={{
+											background: "rgba(120, 120, 120, 0.75 )",
+											borderRadius: { xs: "0.5rem", md: "1rem" },
+											backdropFilter: "blur( 10px )",
+											WebkitBackdropFilter: "blur( 10px )",
+											border: "1px solid rgba( 255, 255, 255, 0.18 )",
+										}}
+									>
+										<Box
+											p={2}
+											mt={4}
+											border="1px solid #f8f7f3"
+											borderRadius="2rem"
+										>
+											<Typography
+												variant="body1"
+												color="#f8f7f3"
+												display="flex"
+												justifyContent="center"
+												align="center"
+											>
+												No tienes ninguna consulta ciudadana por contestar
+											</Typography>
+										</Box>
+									</Box>
+									<Box
+										display="flex"
+										flexDirection="column"
+										alignItems="center"
+										justifyContent="center"
+										// zIndex={1}
+										// position="absolute"
+										sx={{
+											minHeight: "10rem",
+											height: "100%",
+											boxShadow: 1,
+											backgroundColor: "white",
+											borderRadius: { xs: "0.5rem", md: "1rem" },
+											p: "2rem",
+											// pl: "2rem",
+										}}
+									>
+										<Typography
+											variant="h6"
+											color="#323232"
+											display="flex"
+											justifyContent="center"
+											align="center"
+											mb="2rem"
+										>
+											Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+										</Typography>
+										<Button
+											variant="contained"
+											size="large"
+											color="darkButton"
+											onClick={handleOpenModal}
+											sx={{
+												boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+												transition: "all 0.5s ease",
+												// backgroundColor: "#543884",
+												width: { xs: "100%", md: "50%" },
+												// borderRadius: "2rem 2rem 2rem 2rem",
+												"&:hover": {
+													// backgroundColor: "#7E328B !important",
+													transform: "translate(-5px, -5px)",
+													boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+												},
+											}}
+										>
+											Comenzar Votación
+										</Button>
+									</Box>
+								</Box>
+							)}
 						</Box>
 					</Grid>
 				</Grid>

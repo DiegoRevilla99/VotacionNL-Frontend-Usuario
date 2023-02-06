@@ -25,6 +25,7 @@ export const votanteSlice = createSlice({
 			},
 		},
 		respuestasPapeletas: [],
+		verificado: false,
 	},
 	reducers: {
 		onCheckingPeticion: (state) => {
@@ -49,6 +50,7 @@ export const votanteSlice = createSlice({
 			state.status = "noVotando";
 		},
 		onError: (state, { payload }) => {
+			state.statusPeticion = "off";
 			state.errorMessage = payload;
 		},
 		onFillBoletas: (state, { payload }) => {
@@ -74,6 +76,10 @@ export const votanteSlice = createSlice({
 		onSetPapeletaActual: (state, { payload }) => {
 			state.papeletaActual = state.papeletas[payload];
 		},
+		onSetVerificado: (state, { payload }) => {
+			console.log("ENTRA");
+			state.verificado = payload;
+		},
 	},
 });
 
@@ -94,6 +100,7 @@ export const {
 	onSetConsulta,
 	onAddRespuesta,
 	onSetPapeletaActual,
+	onSetVerificado,
 } = votanteSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

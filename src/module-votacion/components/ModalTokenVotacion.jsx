@@ -55,6 +55,7 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 			onClose={onCancel}
 			aria-labelledby="modal-modal-title"
 			aria-describedby="modal-modal-description"
+			sx={{ zIndex: 9999 }}
 		>
 			<Container maxWidth="sm" sx={style}>
 				<Box sx={{ overflowY: "auto", height: "100%" }}>
