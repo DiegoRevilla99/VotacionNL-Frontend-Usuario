@@ -1,7 +1,15 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const Folios = () => {
+	const { folios } = useSelector((state) => state.votante);
+	const navigate = useNavigate();
+
+	const handleRegresar = () => {
+		navigate("/votacion/inicio");
+	};
 	return (
 		<Box
 			display={"flex"}
@@ -93,69 +101,55 @@ export const Folios = () => {
 								su emisión. Estos folios solo se mostrarán por esta única ocación,
 								por eso es importante que los guarde de manera adecuada.
 							</Typography>
-							<Typography color="base.main" align="center" mb="1rem" variant="h6">
-								Eleccion para gobernador:
-							</Typography>
-							<Typography
-								color="#323232"
-								align="center"
-								mb="1rem"
-								sx={{
-									fontSize: {
-										xs: "1rem",
-										md: "1.3rem",
-									},
-									backgroundColor: "base.main",
-									p: "1rem",
-									borderRadius: "1rem",
-								}}
-								// variant="h6"
-							>
-								JE22-ORD-GHR4SZ
-							</Typography>
-							<Typography color="base.main" align="center" mb="1rem" variant="h6">
-								Eleccion para comité:
-							</Typography>
-							<Typography
-								color="#323232"
-								align="center"
-								mb="1rem"
-								sx={{
-									fontSize: {
-										xs: "1rem",
-										md: "1.3rem",
-									},
-									backgroundColor: "base.main",
-									p: "1rem",
-									borderRadius: "1rem",
-								}}
-								// variant="h6"
-							>
-								JE22-ORD-GHA74G
-							</Typography>
-							<Typography color="base.main" align="center" mb="1rem" variant="h6">
-								Eleccion para senadurías:
-							</Typography>
-							{/* <Box p="1rem" bgcolor="base.main" display="flex"> */}
-							<Typography
-								color="#323232"
-								align="center"
-								mb="1rem"
-								sx={{
-									fontSize: {
-										xs: "1rem",
-										md: "1.3rem",
-									},
-									backgroundColor: "base.main",
-									p: "1rem",
-									borderRadius: "1rem",
-								}}
-								// variant="h6"
-							>
-								JE22-ORD-JDLF87
-							</Typography>
-							{/* </Box> */}
+							{folios.map((folio, index) => (
+								<React.Fragment key={folio.folioBoleta}>
+									<Typography
+										color="base.main"
+										align="center"
+										mb="1rem"
+										variant="h6"
+									>
+										{folio.nombreEleccion}
+									</Typography>
+									<Typography
+										color="#323232"
+										align="center"
+										mb="1rem"
+										sx={{
+											fontSize: {
+												xs: "1rem",
+												md: "1.3rem",
+											},
+											backgroundColor: "base.main",
+											p: "1rem",
+											borderRadius: "1rem",
+										}}
+										// variant="h6"
+									>
+										{folio.folioBoleta}
+									</Typography>
+								</React.Fragment>
+							))}
 						</Box>
+					</Box>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "row",
+							pt: 2,
+						}}
+					>
+						{/* <Button color="base">Regresar</Button> */}
+						<Box sx={{ flex: "1 1 auto" }} />
+
+						<Button
+							color="darkButton"
+							type="submit"
+							variant="contained"
+							onClick={handleRegresar}
+						>
+							Regresar
+						</Button>
 					</Box>
 				</Box>
 			</Container>

@@ -1,7 +1,19 @@
-export const emitirVoto = async () => {
+import { tokenSmsApi } from "../Micro-Token/configToken";
+import { votosAPI } from "./configVotos";
+
+export const emitirVoto = async (values) => {
 	try {
-		await timeout(500);
-		return { ok: true };
+		let folios = [];
+		for (const voto of values) {
+			const { data } = await votosAPI.post("votos_seguros/registrar/boleta", voto);
+			const { boletaModel } = data;
+			const { folioBoleta, nombreEleccion } = boletaModel;
+			folios.push({ folioBoleta, nombreEleccion });
+		}
+
+		console.log("FOLIOS", folios);
+
+		return { ok: true, data: folios };
 	} catch (error) {
 		return { ok: false };
 	}
@@ -16,10 +28,11 @@ export const emitirRespuestaConsulta = async () => {
 	}
 };
 
-export const comenzarVotacion = async () => {
+export const comenzarVotacion = async (token, curp) => {
 	try {
-		await timeout(500);
-		return { ok: true };
+		const { data } = await tokenSmsApi.get(`sms/validation/${token}/verification/${curp}`);
+		console.log("RESPUESTA GET TOKEN", data);
+		return { ok: true, data: data.data || "No verificado" };
 	} catch (error) {
 		return { ok: false };
 	}
@@ -31,6 +44,7 @@ export const getBoletasDeVotante = async (uid) => {
 		const boletas = [
 			{
 				encabezado: "Elecciones de gobernador del estado de Nuevo León 2023",
+				jornadaElectoral: "Jornada 1",
 				entidad: "Nuevo León",
 				distritoElectoral: 23,
 				municipio: "Municipio 1",
@@ -42,38 +56,49 @@ export const getBoletasDeVotante = async (uid) => {
 				candidatos: [
 					{
 						id: 1,
+						nombrePartido: "PRI",
 						nombre: "Juan Manuel Hernandez Perez ",
 						nombreSuplente: "Default1",
+						clavePartido: "BIUB",
 						logo: "logo1",
 					},
 					{
 						id: 2,
+						nombrePartido: "PAN",
 						nombre: "José Antonio Diego Revilla",
 						nombreSuplente: "Default1",
+						clavePartido: "AHDU",
 						logo: "logo2",
 					},
 					{
 						id: 3,
+						nombrePartido: "PRD",
 						nombre: "Melvin Paul González Pascual",
 						nombreSuplente: "Default1",
+						clavePartido: "ASDA",
 						logo: "logo3",
 					},
 					{
 						id: 4,
+						nombrePartido: "PARTIDO VERDE",
 						nombre: "Kevin Edilberto Chávez Sanchez",
 						nombreSuplente: "Default1",
+						clavePartido: "AHSU",
 						logo: "logo4",
 					},
 					{
 						id: 5,
+						nombrePartido: "MORENA",
 						nombre: "Laura Yessenia Sánchez Martínez",
 						nombreSuplente: "Default1",
+						clavePartido: "AUDH",
 						logo: "logo5",
 					},
 				],
 			},
 			{
 				encabezado: "Elecciones del comité del estado de Nuevo León 2023",
+				jornadaElectoral: "Jornada 2",
 				entidad: "Nuevo León",
 				distritoElectoral: 23,
 				municipio: "Municipio 1",
@@ -84,48 +109,76 @@ export const getBoletasDeVotante = async (uid) => {
 				candidatos: [
 					{
 						id: 1,
+						nombrePartido: "PRI",
 						nombre: "Pedro Manuel Hernandez Perez ",
 						nombreSuplente: "Default1",
+						clavePartido: "DHFY",
 						logo: "logo1",
 					},
 					{
 						id: 2,
+						nombrePartido: "PAN",
 						nombre: "Ivan Antonio Diego Revilla",
 						nombreSuplente: "Default1",
+						clavePartido: "UDYF",
 						logo: "logo2",
 					},
 					{
 						id: 3,
+						nombrePartido: "PRD",
 						nombre: "Mauricio Paul González Pascual",
 						nombreSuplente: "Default1",
+						clavePartido: "IGUE",
 						logo: "logo3",
 					},
 					{
 						id: 4,
+						nombrePartido: "PARTIDO VERDE",
 						nombre: "Josué Edilberto Chávez Sanchez",
 						nombreSuplente: "Default1",
+						clavePartido: "SYRV",
 						logo: "logo4",
 					},
 					{
 						id: 5,
+						nombrePartido: "MORENA",
 						nombre: "Ana María Sánchez Martínez",
 						nombreSuplente: "Default1",
+						clavePartido: "FURB",
 						logo: "logo5",
 					},
-					{ id: 6, nombre: "Ana", nombreSuplente: "Default1", logo: "logo6" },
+					{
+						id: 6,
+						nombrePartido: "PSD",
+						nombre: "Ana Sofía",
+						nombreSuplente: "Default1",
+						clavePartido: "ASDM",
+						logo: "logo6",
+					},
 					{
 						id: 7,
+						nombrePartido: "MOVIMIENTO CIUDADANO",
 						nombre: "Kevin Edilberto Chávez Sanchez",
 						nombreSuplente: "Default1",
+						clavePartido: "UFBT",
 						logo: "logo4",
 					},
 					{
 						id: 8,
+						nombrePartido: "FUERZA POR MÉXICO",
 						nombre: "Laura Yessenia Sánchez Martínez",
 						nombreSuplente: "Default1",
+						clavePartido: "AOQP",
 						logo: "logo5",
 					},
-					{ id: 9, nombre: "Ana", nombreSuplente: "Default1", logo: "logo6" },
+					{
+						id: 9,
+						nombrePartido: "PT",
+						nombre: "Ana María",
+						nombreSuplente: "Default1",
+						clavePartido: "SEHS",
+						logo: "logo6",
+					},
 				],
 			},
 		];

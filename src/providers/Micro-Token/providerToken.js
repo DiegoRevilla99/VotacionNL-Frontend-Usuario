@@ -1,5 +1,5 @@
 import { authAPI } from "../Micro-Auth/configAuth";
-import { tokenApi } from "./configToken";
+import { tokenApi, tokenSmsApi } from "./configToken";
 
 export const getDataVotantePassword = async (token) => {
 	try {
@@ -29,6 +29,21 @@ export const registrarUsuario = async (password, email, curp) => {
 		return { ok: true };
 	} catch (error) {
 		console.log("ERROR DATA USER", error);
+		return { ok: false };
+	}
+};
+
+export const enviartTokenSms = async (curp) => {
+	try {
+		const response = await tokenSmsApi.post(`sms/validation/sendtoken/${curp}`, {
+			telefono: "9512406578",
+		});
+		// await timeout(1000);
+
+		console.log("POST TOKEN", response);
+		return { ok: true };
+	} catch (error) {
+		console.log("ERROR POST ENVIO TOKEN SMS", error);
 		return { ok: false };
 	}
 };

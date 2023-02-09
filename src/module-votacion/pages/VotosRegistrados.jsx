@@ -17,7 +17,35 @@ export const VotosRegistrados = () => {
 
 	const onSubmit = () => {
 		setModalStatus(true);
-		dispatch(onEmitirVoto("valor", () => navigate("/votacion/folios")));
+		console.log("votos", votos);
+		console.log("boletas", boletas);
+
+		const votosObject = votos.map((boleta, indexBoleta) => {
+			const boletaCurrent = boletas[indexBoleta];
+			const partidos = boleta.map((idPartido) => {
+				const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+				// return boletaCurrent.candidatos[index];
+				return {
+					idSeleccion: boletaCurrent.candidatos[index].id,
+					clavePartido: boletaCurrent.candidatos[index].clavePartido,
+					nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
+					nombreCandidato: boletaCurrent.candidatos[index].nombre,
+				};
+			});
+			return {
+				boletaModel: {
+					nombreEleccion: boletaCurrent.encabezado,
+					municipio: boletaCurrent.municipio,
+					distrito: boletaCurrent.distritoElectoral,
+					jornadaElectoral: boletaCurrent.jornadaElectoral,
+				},
+				partidos: partidos,
+			};
+		});
+
+		console.log("votosObject", votosObject);
+
+		dispatch(onEmitirVoto(votosObject, () => navigate("/votacion/folios")));
 	};
 
 	return (

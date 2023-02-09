@@ -226,6 +226,9 @@ export const Boletas = () => {
 												<TarjetaRepresentante
 													id={representante.id}
 													nombre={representante.nombre}
+													nombrePartido={representante.nombrePartido}
+													clavePartido={representante.clavePartido}
+													nombreSuplente={representante.nombreSuplente}
 													logo={representante.logo}
 													seleccionados={seleccionados}
 													setSeleccionados={setSeleccionados}

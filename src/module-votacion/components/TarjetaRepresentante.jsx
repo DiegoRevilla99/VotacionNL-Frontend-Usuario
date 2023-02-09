@@ -4,6 +4,9 @@ import { Box, Card, CardContent, Grid } from "@mui/material";
 
 export const TarjetaRepresentante = ({
 	id,
+	clavePartido,
+	nombrePartido,
+	nombreSuplente,
 	nombre,
 	logo,
 	setSeleccionados,
@@ -99,7 +102,7 @@ export const TarjetaRepresentante = ({
 								gutterBottom
 								align="center"
 							>
-								Partido Morena
+								{nombrePartido}
 							</Typography>
 							<Typography
 								sx={{ fontSize: { xs: 7, md: 11 }, userSelect: "none" }}
@@ -133,7 +136,7 @@ export const TarjetaRepresentante = ({
 								color="text.secondary"
 								align="center"
 							>
-								{nombre}
+								{nombreSuplente}
 							</Typography>
 						</Box>
 					</Grid>

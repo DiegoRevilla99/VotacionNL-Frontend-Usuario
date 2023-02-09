@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 // import "cropperjs/src/css/cropper.css";
 import "cropperjs/dist/cropper.css";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
 import React from "react";
 
 const style = {
@@ -36,6 +38,8 @@ export const ModalRecortarFoto = ({
 	refImagen,
 	setRefVisible,
 	handleCrop,
+	rotateLeft,
+	rotateRight,
 }) => {
 	return (
 		<Modal
@@ -68,20 +72,17 @@ export const ModalRecortarFoto = ({
 							Verificar mi cuenta
 						</Typography>
 					</Box>
-					<Grid container height="90%">
+					<Grid container height="100%">
 						<Grid item xs={12}>
-							<Box
-								height="100%"
-								// p={2}
-								bgcolor="#323232"
-								// sx={{ borderRadius: "2rem" }}
-							>
-								{/* <div > */}
+							<Box height="100%" bgcolor="#323232" overflow="hidden">
+								{/* <div> */}
 								<img
 									src=""
 									style={{
 										display: "block",
+										width: "auto",
 										maxWidth: "100%",
+										height: "auto",
 										// maxHeight: "100%",
 									}}
 									className="img-cropper"
@@ -94,30 +95,49 @@ export const ModalRecortarFoto = ({
 								{/* </div> */}
 							</Box>
 						</Grid>
+						{/* <Grid item xs={12}></Grid> */}
 					</Grid>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "row",
+							width: "100%",
+							pt: 1,
+						}}
+						justifyContent="space-evenly"
+					>
+						<Button
+							variant="contained"
+							sx={{ backgroundColor: "#3f51b5" }}
+							onClick={rotateLeft}
+						>
+							<RotateLeftIcon color="white" />
+						</Button>
+
+						<Button
+							variant="contained"
+							sx={{ backgroundColor: "#3f51b5" }}
+							onClick={rotateRight}
+						>
+							<RotateRightIcon color="white" />
+						</Button>
+					</Box>
 					<Box
 						// height="10%"
 						sx={{
 							display: "flex",
 							flexDirection: "row",
-							pt: 4,
+							// pt: 4,
 							width: "100%",
 						}}
 					>
-						<Button color="error" variant="outlined">
+						<Button color="error" variant="outlined" onClick={handleCloseModalRecorte}>
 							Regresar
 						</Button>
 
 						<Box sx={{ flex: "1 1 auto" }} />
 
 						<Button
-							// sx={{
-							// 	"&.Mui-disabled": {
-							// 		color: "#f8f7f3 !important",
-							// 		border: "1px solid #f8f7f3 !important",
-							// 	},
-							// }}
-							// color="baseButton"
 							variant="contained"
 							// type="submit"
 							onClick={() => {

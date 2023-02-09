@@ -1,17 +1,24 @@
 import {
+	Alert,
 	Box,
 	Button,
 	CircularProgress,
 	Container,
+	Grid,
 	Modal,
 	TextField,
 	Typography,
 } from "@mui/material";
 import { Formik } from "formik";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTimer } from "react-timer-hook";
 import { object, string } from "yup";
+import {
+	onSetTokenSmsEnviadoFalse,
+	onSetTokenSmsEnviadoTrue,
+} from "../../store/votante/votanteSlice";
 import { onComenzarVotacion } from "../../store/votante/votanteThunks";
 
 const style = {
@@ -34,10 +41,18 @@ const validationSchema = object({
 		.required("Este campo es requerido"),
 });
 
+const tiempo = 65;
+
 export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
+	let time = new Date();
+	time.setSeconds(time.getSeconds() + tiempo);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { status } = useSelector((state) => state.votante);
+	const { status, errorMessage, tokenSmsEnviado } = useSelector((state) => state.votante);
+	const { username } = useSelector((state) => state.auth);
+	const { seconds, minutes, isRunning, start, restart } = useTimer({
+		expiryTimestamp: time,
+	});
 
 	const onCancel = () => {
 		// setIsCerrada(false);
@@ -45,9 +60,30 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 		handleCloseModal();
 	};
 
-	const handleSubmit = (values) => {
-		dispatch(onComenzarVotacion(values, () => navigate("/votacion/boletas")));
+	const reenviarToken = () => {
+		// dispatch(reenviarToken())
+		console.log("TOKEN REENVIADO");
+		dispatch(onSetTokenSmsEnviadoTrue());
+		const time1 = new Date();
+		time1.setSeconds(time1.getSeconds() + tiempo);
+		restart(time1);
 	};
+
+	const handleSubmit = (values) => {
+		dispatch(onComenzarVotacion(values.token, username, () => navigate("/votacion/boletas")));
+	};
+
+	useEffect(() => {
+		if (tokenSmsEnviado) {
+			start();
+		}
+	}, [tokenSmsEnviado]);
+
+	useEffect(() => {
+		if (!isRunning) {
+			dispatch(onSetTokenSmsEnviadoFalse());
+		}
+	}, [isRunning]);
 
 	return (
 		<Modal
@@ -65,7 +101,7 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 					<Box m={"2rem"}>
 						<Typography variant="subtitle2" align="justify">
 							El token de verificación es una pequeña secuencia de numeros que ha sido
-							enviada a tu correo electrónico. Para poder ingresar al módulo de
+							enviada a como mensaje a tu teléfono. Para poder ingresar al módulo de
 							votación, deberás copiar el token de verificación en el siguiente campo
 						</Typography>
 
@@ -93,44 +129,63 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 										helperText={touched.token && errors.token}
 										sx={{ marginTop: "2rem" }}
 									/>
-									<Box
-										sx={{
-											display: "flex",
-											flexDirection: "row",
-											pt: 4,
-										}}
-									>
-										<Button
-											color="error"
-											variant="outlined"
-											disabled={status === "checking" ? true : false}
-										>
-											Reenviar Token
-										</Button>
-										<Box sx={{ flex: "1 1 auto" }} />
+									{errorMessage === "El token es incorrecto o ha caducado." ? (
+										<Box pt={2}>
+											<Alert severity="error">
+												El token es incorrecto o ha caducado.
+											</Alert>
+										</Box>
+									) : (
+										<></>
+									)}
 
-										<Button
-											color="darkButton"
-											variant="outlined"
-											type="submit"
-											sx={{
-												"&.Mui-disabled": {
-													color: "#f8f7f3 !important",
-													border: "1px solid #f8f7f3 !important",
-												},
-											}}
-											disabled={status === "checking" ? true : false}
-											startIcon={
-												status === "checking" ? (
-													<CircularProgress color="darkButton" />
-												) : (
-													""
-												)
-											}
-										>
-											{status === "checking" ? "" : "Ingresar"}
-										</Button>
-									</Box>
+									<Grid container pt={4}>
+										<Grid item xs={12} md={5} pb={{ xs: "2rem", md: "0" }}>
+											<Button
+												color="darkButton"
+												variant="outlined"
+												type="submit"
+												fullWidth
+												sx={{
+													"&.Mui-disabled": {
+														color: "#f8f7f3 !important",
+														border: "1px solid #f8f7f3 !important",
+														flexGrow: "1",
+													},
+												}}
+												disabled={status === "checking" ? true : false}
+												startIcon={
+													status === "checking" ? (
+														<CircularProgress color="darkButton" />
+													) : (
+														""
+													)
+												}
+											>
+												{status === "checking" ? "" : "Ingresar"}
+											</Button>
+										</Grid>
+										<Grid item xs={12} md={2}></Grid>
+
+										<Grid item xs={12} md={5}>
+											<Button
+												fullWidth
+												color="error"
+												variant="outlined"
+												disabled={
+													status === "checking" || isRunning
+														? true
+														: false
+												}
+												sx={{ flexGrow: "1" }}
+												onClick={reenviarToken}
+											>
+												{`Reenviar Token`}
+												{isRunning ? `(${minutes}:${seconds})` : ""}
+											</Button>
+										</Grid>
+									</Grid>
+									{/* </Box> */}
 								</form>
 							)}
 						</Formik>

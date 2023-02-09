@@ -1,6 +1,11 @@
 import { votanteAPI } from "./votanteConfig";
 
-export const guardarLinkVotante = async ({ curp, linkCredFrontalCrop, linkCredTraseraCrop }) => {
+export const guardarLinkVotante = async ({
+	curp,
+	linkCredSelfieCrop,
+	linkCredFrontalCrop,
+	linkCredTraseraCrop,
+}) => {
 	console.log("CURP", curp);
 	try {
 		const response1 = await votanteAPI.put(`credencial/votante/fotoFrente/${curp}`, {
@@ -8,6 +13,9 @@ export const guardarLinkVotante = async ({ curp, linkCredFrontalCrop, linkCredTr
 		});
 		const response2 = await votanteAPI.put(`credencial/votante/fotoReverso/${curp}`, {
 			fotoReverso: linkCredTraseraCrop,
+		});
+		const response3 = await votanteAPI.put(`votante/selfie/${curp}`, {
+			foto: linkCredSelfieCrop,
 		});
 
 		return {
@@ -48,4 +56,92 @@ export const getStatusValidacion = async (curp) => {
 	} catch (error) {
 		return { ok: false };
 	}
+};
+
+export const getProcesosDelVotante = async (curp) => {
+	try {
+		// const { data } = await votanteAPI.get(`status/${curp}`);
+
+		await timeout(5000);
+
+		const endpoint = {
+			jornadaFormal:
+				// null,
+				{
+					//SI EL VOTANTE YA HIZO SU VOTO, ESTE CAMPO DEBE SER NULL
+					votanteTieneJornadaRelacionada: true,
+					votantePuedeRealizarLaVotacion: true,
+					idJornada: "JO-H1-82",
+					nombreJornada: "Jornada Formal 1",
+					configuracionDeJornada: {
+						fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
+						fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
+						tiempoParaContestarBoletas: "30:00",
+						tiempoExtra: "10:00",
+					},
+				},
+			jornadaNoFormal: {
+				votanteTieneJornadaRelacionada: true,
+				votantePuedeRealizarLaVotacion: true,
+				nombreJornada: "Jornada Formal 1",
+				configuracionDeJornada: {
+					fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
+					fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
+					tiempoParaContestarBoletas: "30:00",
+					tiempoExtra: "10:00",
+				},
+			},
+			consultaCiudadana: null,
+		};
+
+		return {
+			ok: true,
+			data: endpoint,
+		};
+	} catch (error) {
+		return { ok: false };
+	}
+};
+
+const timeout = (ms) => {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+const endpoint = {
+	jornadaFormal: {
+		//SI EL VOTANTE YA HIZO SU VOTO, ESTE CAMPO DEBE SER NULL
+		votanteTieneJornadaRelacionada: true,
+		votantePuedeRealizarLaVotacion: true,
+		idJornada: "JO-H1-82",
+		nombreJornada: "Jornada Formal 1",
+		configuracionDeJornada: {
+			fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
+			fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
+			tiempoParaContestarBoletas: "30:00",
+			tiempoExtra: "10:00",
+		},
+	},
+	jornadaNoFormal: {
+		votanteTieneJornadaRelacionada: true,
+		votantePuedeRealizarLaVotacion: true,
+		nombreJornada: "Jornada Formal 1",
+		configuracionDeJornada: {
+			fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
+			fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
+			tiempoParaContestarBoletas: "30:00",
+			tiempoExtra: "10:00",
+		},
+	},
+	consultaCiudadana: {
+		votanteTieneConsultaRelacionada: true,
+		votantePuedeRealizarLaConsulta: true,
+		idConsulta: "CO-H1-32",
+		nombreConsulta: "Consulta 1",
+		configuracionDeConsulta: {
+			fechaYHoraDeInicioDeConsulta: "1997-07-16T19:20:30.45+01:00",
+			fechaYHoraDeFinDeConsulta: "1997-09-16T19:20:30.45+01:00",
+			tiempoParaContestarPapeletas: "30:00",
+			tiempoExtra: "10:00",
+		},
+	},
 };

@@ -6,11 +6,17 @@ export const votanteSlice = createSlice({
 		status: "noVotando", //noVotando, votando, checking
 		errorMessage: "",
 		statusPeticion: "off", //checking, ok, fail, off
+		statusVerificacion: "off", //checking, ok, fail, off
+		statusJornadas: "off",
+		jornadaFormal: null,
+		jornadaNoFormal: null,
+		consultaCiudadana: null,
 		boletas: [],
 		boletaActual: {
 			candidatos: [],
 		},
 		votos: [],
+		folios: [],
 		candidaturaNoRegistrada: [],
 		consulta: {
 			nombre: "",
@@ -26,8 +32,28 @@ export const votanteSlice = createSlice({
 		},
 		respuestasPapeletas: [],
 		verificado: false,
+		selfieVerificada: false,
+		tokenSmsEnviado: false,
 	},
 	reducers: {
+		onCheckingJornadas: (state) => {
+			state.statusJornadas = "checking";
+		},
+		onOkJornadas: (state) => {
+			state.statusJornadas = "ok";
+		},
+		onFailJornadas: (state) => {
+			state.statusJornadas = "fail";
+		},
+		onOffJornadas: (state) => {
+			state.statusJornadas = "off";
+		},
+		onSetTokenSmsEnviadoTrue: (state) => {
+			state.tokenSmsEnviado = true;
+		},
+		onSetTokenSmsEnviadoFalse: (state) => {
+			state.tokenSmsEnviado = false;
+		},
 		onCheckingPeticion: (state) => {
 			state.statusPeticion = "checking";
 		},
@@ -40,6 +66,18 @@ export const votanteSlice = createSlice({
 		onOffPeticion: (state) => {
 			state.statusPeticion = "off";
 		},
+		onCheckingVerificacion: (state) => {
+			state.statusVerificacion = "checking";
+		},
+		onOkStatusVerificacion: (state) => {
+			state.statusVerificacion = "ok";
+		},
+		onFailStatusVerificacion: (state) => {
+			state.statusVerificacion = "fail";
+		},
+		onOffStatusVerificacion: (state) => {
+			state.statusVerificacion = "off";
+		},
 		onCheckingVotante: (state) => {
 			state.status = "checking";
 		},
@@ -50,7 +88,7 @@ export const votanteSlice = createSlice({
 			state.status = "noVotando";
 		},
 		onError: (state, { payload }) => {
-			state.statusPeticion = "off";
+			state.statusPeticion = "fail";
 			state.errorMessage = payload;
 		},
 		onFillBoletas: (state, { payload }) => {
@@ -77,8 +115,22 @@ export const votanteSlice = createSlice({
 			state.papeletaActual = state.papeletas[payload];
 		},
 		onSetVerificado: (state, { payload }) => {
-			console.log("ENTRA");
 			state.verificado = payload;
+		},
+		onSetSelfieVerificada: (state, { payload }) => {
+			state.selfieVerificada = payload;
+		},
+		onFillFolios: (state, { payload }) => {
+			state.folios = payload;
+		},
+		onFillJornadaFormal: (state, { payload }) => {
+			state.jornadaFormal = payload;
+		},
+		onFillJornadaNoFormal: (state, { payload }) => {
+			state.jornadaNoFormal = payload;
+		},
+		onFillConsultaCiudadana: (state, { payload }) => {
+			state.consultaCiudadana = payload;
 		},
 	},
 });
@@ -101,6 +153,21 @@ export const {
 	onAddRespuesta,
 	onSetPapeletaActual,
 	onSetVerificado,
+	onFillFolios,
+	onCheckingVerificacion,
+	onOkStatusVerificacion,
+	onFailStatusVerificacion,
+	onOffStatusVerificacion,
+	onSetSelfieVerificada,
+	onSetTokenSmsEnviadoTrue,
+	onSetTokenSmsEnviadoFalse,
+	onCheckingJornadas,
+	onOkJornadas,
+	onFailJornadas,
+	onOffJornadas,
+	onFillConsultaCiudadana,
+	onFillJornadaFormal,
+	onFillJornadaNoFormal,
 } = votanteSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

@@ -27,11 +27,11 @@ body,
 ::-webkit-scrollbar-thumb{
   border: 3px solid #f8f7f3;
   border-radius: 10px;
-  background: #7E328B;
+  background: #543884;
 }
 
 ::-webkit-scrollbar-thumb:hover{
-  background: #511079;
+  background: #543884;
 }
 
 

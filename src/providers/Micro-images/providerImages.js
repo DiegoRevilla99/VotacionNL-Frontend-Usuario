@@ -1,3 +1,4 @@
+import { votanteAPI } from "../Micro-Votante/votanteConfig";
 import { imagesAPI } from "./configImages";
 
 export const subirImagenes = async ({ credFrontalCrop, credTraseraCrop, selfieCrop }) => {
@@ -26,6 +27,61 @@ export const subirImagenes = async ({ credFrontalCrop, credTraseraCrop, selfieCr
 			linkCredSelfieCrop: linkCredSelfieCrop.data.link,
 		};
 	} catch (error) {
+		return { ok: false };
+	}
+};
+export const subirSelfie = async (selfie) => {
+	try {
+		const formData1 = new FormData();
+		formData1.append("file", selfie);
+
+		const linkSelfie = await imagesAPI.post("file/upload", formData1);
+
+		console.log("LINK SELFIE", linkSelfie);
+
+		return {
+			ok: true,
+			linkSelfie: linkSelfie.data.link,
+		};
+	} catch (error) {
+		return { ok: false };
+	}
+};
+export const compararSelfies = async (linkSelfie, curp) => {
+	try {
+		const { data } = await votanteAPI.get(`${curp}/images_comparision`);
+		console.log("LINK DE LA SELFIE YA GUARDADA", data.selfie);
+
+		const url = `https://ms-bio.herokuapp.com/api/selfie?nombreUser=${linkSelfie}&nombreUser2=${data.selfie}`;
+
+		let okResp = false;
+		let verif = false;
+		const response = await fetch(url, {
+			mode: "cors",
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+			},
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("RESPUESTA SELFIE", data);
+				okResp = true;
+				verif = data.data;
+			})
+			.catch((error) => {
+				console.log("ERROR DE PETICIÓN SELFIE COMP.", error);
+				okResp = false;
+				verif = data.data;
+			});
+
+		console.log("VERIFICACIÓN DE LA SELFIE: ", verif);
+
+		return {
+			ok2: okResp,
+			selfieVerificada: verif,
+		};
+	} catch (error) {
+		console.log("ERROR", error.message);
 		return { ok: false };
 	}
 };

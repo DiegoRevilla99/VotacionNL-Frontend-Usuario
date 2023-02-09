@@ -1,6 +1,12 @@
-import { subirImagenes, verificarCredencial } from "../../providers/Micro-images/providerImages";
-import { getDataVotantePassword } from "../../providers/Micro-Token/providerToken";
 import {
+	compararSelfies,
+	subirImagenes,
+	subirSelfie,
+	verificarCredencial,
+} from "../../providers/Micro-images/providerImages";
+import { enviartTokenSms, getDataVotantePassword } from "../../providers/Micro-Token/providerToken";
+import {
+	getProcesosDelVotante,
 	getStatusValidacion,
 	guardarLinkVotante,
 	verificarVotante,
@@ -23,16 +29,29 @@ import {
 	onOkPeticion,
 	onSetConsulta,
 	onSetVerificado,
+	onFillFolios,
+	onCheckingVerificacion,
+	onOkStatusVerificacion,
+	onSetSelfieVerificada,
+	onFailStatusVerificacion,
+	onSetTokenSmsEnviadoTrue,
+	onCheckingJornadas,
+	onOkJornadas,
+	onFailJornadas,
+	onFillJornadaFormal,
+	onFillJornadaNoFormal,
+	onFillConsultaCiudadana,
 } from "./votanteSlice";
 
 export const onEmitirVoto = (values, navigate = () => {}) => {
 	return async (dispatch) => {
-		// dispatch(onChecking());
+		dispatch(onCheckingPeticion());
 
-		const { ok } = await emitirVoto();
+		const { ok, data } = await emitirVoto(values);
 
 		if (ok) {
 			// dispatch(onLogin({ uid: uid, displayName: name, email: email }));
+			dispatch(onFillFolios(data));
 			dispatch(onNoVotando());
 			navigate();
 		} else {
@@ -57,19 +76,21 @@ export const onEmitirRespuestaConsulta = (values, navigate = () => {}) => {
 	};
 };
 
-export const onComenzarVotacion = (values, navigate = () => {}) => {
+export const onComenzarVotacion = (token, curp, navigate = () => {}) => {
 	return async (dispatch) => {
-		// dispatch(onChecking());
 		dispatch(onCheckingVotante());
 
-		const { ok } = await comenzarVotacion();
+		// const { ok, data } = await comenzarVotacion(token, curp);
 
-		if (ok) {
-			// dispatch(onLogin({ uid: uid, displayName: name, email: email }));
+		if (
+			token === "123123"
+			// ok && data === "Verificado"
+		) {
 			dispatch(onVotando());
 			navigate();
 		} else {
-			dispatch(onError("Error de autenticación. Revisa tus credenciales"));
+			dispatch(onNoVotando());
+			dispatch(onError("El token es incorrecto o ha caducado."));
 		}
 	};
 };
@@ -143,11 +164,16 @@ export const onVerificarCredencial = ({ credFrontalCrop, credTraseraCrop, selfie
 				linkCredTraseraCrop,
 				linkCredSelfieCrop,
 			});
-			if (ok1) {
-				console.log("LO QUE LLEGA", verificado);
 
+			if (ok1 && !verificado) {
+				dispatch(onSetVerificado(verificado));
+				dispatch(onOkPeticion());
+				return;
+			}
+			if (ok1) {
 				const { ok2 } = await guardarLinkVotante({
 					curp,
+					linkCredSelfieCrop,
 					linkCredFrontalCrop,
 					linkCredTraseraCrop,
 				});
@@ -185,7 +211,6 @@ export const onVerificarCredencial = ({ credFrontalCrop, credTraseraCrop, selfie
 export const onGetStatusValidacion = (curp) => {
 	return async (dispatch) => {
 		dispatch(onCheckingPeticion());
-		console.log("ENTRA A PEDIR EL STATUS");
 
 		const { ok, data } = await getStatusValidacion(curp);
 
@@ -194,6 +219,63 @@ export const onGetStatusValidacion = (curp) => {
 			dispatch(onOkPeticion());
 		} else {
 			dispatch(onError("Error"));
+		}
+	};
+};
+
+export const onCompararSelfies = (selfie, curp) => {
+	return async (dispatch) => {
+		dispatch(onCheckingVerificacion());
+
+		const { ok, linkSelfie } = await subirSelfie(selfie);
+
+		if (ok) {
+			const { ok2, selfieVerificada } = await compararSelfies(linkSelfie, curp);
+
+			if (ok2) {
+				dispatch(onSetSelfieVerificada(selfieVerificada));
+				dispatch(onOkStatusVerificacion());
+			} else {
+				dispatch(onFailStatusVerificacion("Error"));
+			}
+		} else {
+			dispatch(onFailStatusVerificacion("Error"));
+		}
+	};
+};
+
+export const onEnviarTokenSms = (curp) => {
+	return async (dispatch) => {
+		// dispatch(onCheckingPeticion());
+
+		const { ok } = await enviartTokenSms(curp);
+
+		if (ok) {
+			// dispatch(onSetVerificado(data));
+			// dispatch(onOkPeticion());
+			dispatch(onSetTokenSmsEnviadoTrue());
+			console.log("EL TOKEN SE HA ENVIADO CORRECTAMENTE");
+		} else {
+			// dispatch(onError("Error"));
+			console.log("EL TOKEN NO SE ENVIÓ CORRECTAMENTE");
+		}
+	};
+};
+
+export const onGetProcesosDelVotante = (curp) => {
+	return async (dispatch) => {
+		dispatch(onCheckingJornadas());
+
+		const { ok, data } = await getProcesosDelVotante(curp);
+
+		if (ok) {
+			dispatch(onFillJornadaFormal(data.jornadaFormal));
+			dispatch(onFillJornadaNoFormal(data.jornadaNoFormal));
+			dispatch(onFillConsultaCiudadana(data.consultaCiudadana));
+			dispatch(onOkJornadas());
+		} else {
+			dispatch(onFailJornadas());
+			console.log("EL TOKEN NO SE ENVIÓ CORRECTAMENTE");
 		}
 	};
 };

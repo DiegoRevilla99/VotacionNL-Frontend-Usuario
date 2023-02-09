@@ -18,22 +18,36 @@ import "cropperjs/dist/cropper.css";
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { onComenzarConsulta, onGetStatusValidacion } from "../../store/votante/votanteThunks";
+import {
+	onComenzarConsulta,
+	onGetProcesosDelVotante,
+	onGetStatusValidacion,
+} from "../../store/votante/votanteThunks";
 import { ModalRecortarFoto } from "../components/ModalRecortarFoto";
 import { ModalTokenVotacion } from "../components/ModalTokenVotacion";
 import { ModalVerificarCuenta } from "../components/ModalVerificarCuenta";
+import { ModalCamara } from "../components/ModalCamara";
 
 let cropper = null;
-const tieneJornadaFormal = false;
-const tieneJornadaNoFormal = true;
-const tieneConsultaCiudadana = true;
+const tieneJornadaFormal = true;
+const tieneJornadaNoFormal = false;
+const tieneConsultaCiudadana = false;
 
 export const InicioVotante = () => {
-	const { verificado, statusPeticion } = useSelector((state) => state.votante);
+	const {
+		verificado,
+		statusPeticion,
+		selfieVerificada,
+		statusJornadas,
+		jornadaFormal,
+		jornadaNoFormal,
+		consultaCiudadana,
+	} = useSelector((state) => state.votante);
 	const { username } = useSelector((state) => state.auth);
 	const [statusModal, setStatusModal] = useState(false);
 	const [statusModalVerificar, setStatusModalVerificar] = useState(false);
 	const [statusModalRecorte, setStatusModalRecorte] = useState(false);
+	const [statusModalCamara, setStatusModalCamara] = useState(false);
 
 	const [refVisible, setRefVisible] = useState(false);
 	const [cropperObject, setCropper] = useState(null);
@@ -57,6 +71,10 @@ export const InicioVotante = () => {
 	const refImagen = useRef(null);
 
 	useEffect(() => {
+		dispatch(onGetProcesosDelVotante(username));
+	}, []);
+
+	useEffect(() => {
 		if (username !== "") dispatch(onGetStatusValidacion(username));
 	}, [username]);
 
@@ -67,7 +85,6 @@ export const InicioVotante = () => {
 
 	useEffect(() => {
 		if (!refVisible) return;
-		console.log("LO QUE LLEGA", imagenes);
 		if (imagenes.current === "credFrontal" && imagenes.credFrontal.name === "") {
 			setImagenes({ ...imagenes, current: "" });
 			return;
@@ -94,23 +111,54 @@ export const InicioVotante = () => {
 			imagenes.current === "credFrontal" || imagenes.current === "credTrasera" ? 16 / 9 : 1;
 
 		setCropper(
-			new Cropper(image, {
+			(cropper = new Cropper(image, {
 				aspectRatio: proporcion,
 				preview: ".img-sample",
 				zoomable: true,
-				viewMode: 1,
-				responsive: false,
+				viewMode: 0,
+				// responsive: false,
 				dragMode: "move",
 				ready() {
 					document.querySelector(".cropper-container").style.width = "100%";
 					document.querySelector(".cropper-container").style.height = "100%";
+					this.cropper.setCropBoxData({
+						left: 50,
+						top: 50,
+						width: 100,
+						height: 100,
+					});
 				},
-			})
+			}))
 		);
+		// console.log("container", cropper.getContainerData());
 	}, [refVisible]);
 
+	// useEffect(() => {
+	// 	if (cropperObject !== null) {
+	// 		const containerData = cropperObject.getContainerData();
+	// 		console.log("ENTRA OPTION", cropperObject.getContainerData());
+	// 		// setCropper(
+	// 		// 	cropperObject.zoomTo(0.5, {
+	// 		// 		x: containerData.width / 2,
+	// 		// 		y: containerData.height / 2,
+	// 		// 	})
+	// 		// );
+	// 	}
+	// }, [cropperObject]);
+
+	const rotateLeft = () => {
+		if (cropperObject !== null) {
+			cropperObject.rotate(-90);
+		}
+	};
+	const rotateRight = () => {
+		if (cropperObject !== null) {
+			cropperObject.rotate(90);
+		}
+	};
+
 	const handleCrop = () => {
-		let canva = cropperObject.getCroppedCanvas();
+		let canva = cropperObject.getCroppedCanvas({ fillColor: "#000000" });
 		console.log(canva);
 		let file = null;
 
@@ -129,10 +177,13 @@ export const InicioVotante = () => {
 		image.src = "";
 
 		setCropper(null);
+		// cropper = null;
 	};
 
 	const handleCloseModal = () => setStatusModal(false);
 	const handleOpenModal = () => setStatusModal(true);
+	const handleOpenModalCamara = () => setStatusModalCamara(true);
+	const handleCloseModalCamara = () => setStatusModalCamara(false);
 	const handleCloseModalVerificar = () => setStatusModalVerificar(false);
 	const handleOpenModalVerificar = () => setStatusModalVerificar(true);
 	const handleCloseModalRecorte = () => {
@@ -170,7 +221,15 @@ export const InicioVotante = () => {
 					refImagen={refImagen}
 					setRefVisible={setRefVisible}
 					handleCrop={handleCrop}
+					rotateLeft={rotateLeft}
+					rotateRight={rotateRight}
 				/>
+				<ModalCamara
+					statusModalCamara={statusModalCamara}
+					handleCloseModalCamara={handleCloseModalCamara}
+					handleOpenModal={handleOpenModal}
+				/>
+				<ModalTokenVotacion statusModal={statusModal} handleCloseModal={handleCloseModal} />
 				<Grid container display="flex" spacing={5} height="100%" pt={5}>
 					<Grid item xs={12}>
 						<Box
@@ -211,7 +270,7 @@ export const InicioVotante = () => {
 										color="#323232"
 										display="flex"
 										justifyContent="center"
-										align="justify"
+										align="center"
 										mb="2rem"
 									>
 										{verificado
@@ -275,7 +334,7 @@ export const InicioVotante = () => {
 									JORNADAS FORMALES
 								</Typography>
 							</Box>
-							{verificado && tieneJornadaFormal ? (
+							{verificado && jornadaFormal !== null ? (
 								<Box
 									display="flex"
 									flexDirection="column"
@@ -297,6 +356,7 @@ export const InicioVotante = () => {
 										display="flex"
 										justifyContent="center"
 										align="center"
+										pt="2rem"
 										mb="2rem"
 									>
 										Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
@@ -305,7 +365,12 @@ export const InicioVotante = () => {
 										variant="contained"
 										size="large"
 										color="darkButton"
-										onClick={handleOpenModal}
+										// onClick={handleOpenModal}
+										onClick={
+											selfieVerificada
+												? handleOpenModal
+												: handleOpenModalCamara
+										}
 										sx={{
 											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 											transition: "all 0.5s ease",
@@ -348,17 +413,23 @@ export const InicioVotante = () => {
 											border="1px solid #f8f7f3"
 											borderRadius="2rem"
 										>
-											<Typography
-												variant="body1"
-												color="#f8f7f3"
-												display="flex"
-												justifyContent="center"
-												align="center"
-											>
-												{verificado
-													? "No tienes ninguna jornada formal por contestar"
-													: "Verifica tu cuenta para poder ver si tienes una jornada formal pendiente por contestar"}
-											</Typography>
+											{statusJornadas === "checking" ? (
+												<Box sx={{ display: "flex" }}>
+													<CircularProgress color="base" />
+												</Box>
+											) : (
+												<Typography
+													variant="body1"
+													color="#f8f7f3"
+													display="flex"
+													justifyContent="center"
+													align="center"
+												>
+													{verificado
+														? "No tienes ninguna jornada formal por contestar"
+														: "Verifica tu cuenta para poder ver si tienes una jornada formal pendiente por contestar"}
+												</Typography>
+											)}
 										</Box>
 									</Box>
 									<Box
@@ -384,6 +455,7 @@ export const InicioVotante = () => {
 											display="flex"
 											justifyContent="center"
 											align="center"
+											pt="2rem"
 											mb="2rem"
 										>
 											Jornada electoral de Nuevo León 2023
@@ -439,7 +511,7 @@ export const InicioVotante = () => {
 									JORNADAS NO FORMALES
 								</Typography>
 							</Box>
-							{tieneJornadaNoFormal ? (
+							{jornadaNoFormal !== null ? (
 								<Box
 									display="flex"
 									flexDirection="column"
@@ -462,8 +534,9 @@ export const InicioVotante = () => {
 										justifyContent="center"
 										align="center"
 										mb="2rem"
+										pt="2rem"
 									>
-										Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+										Jornada No formal 2023
 									</Typography>
 									<Button
 										variant="contained"
@@ -512,15 +585,22 @@ export const InicioVotante = () => {
 											border="1px solid #f8f7f3"
 											borderRadius="2rem"
 										>
-											<Typography
-												variant="body1"
-												color="#f8f7f3"
-												display="flex"
-												justifyContent="center"
-												align="center"
-											>
-												No tienes ninguna jornada no formal por contestar
-											</Typography>
+											{statusJornadas === "checking" ? (
+												<Box sx={{ display: "flex" }}>
+													<CircularProgress color="base" />
+												</Box>
+											) : (
+												<Typography
+													variant="body1"
+													color="#f8f7f3"
+													display="flex"
+													justifyContent="center"
+													align="center"
+												>
+													No tienes ninguna jornada no formal por
+													contestar
+												</Typography>
+											)}
 										</Box>
 									</Box>
 									<Box
@@ -547,8 +627,9 @@ export const InicioVotante = () => {
 											justifyContent="center"
 											align="center"
 											mb="2rem"
+											pt={{ xs: "2rem", md: "0" }}
 										>
-											Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+											Jornada No formal 2023
 										</Typography>
 										<Button
 											variant="contained"
@@ -602,7 +683,7 @@ export const InicioVotante = () => {
 									CONSULTAS CIUDADANAS
 								</Typography>
 							</Box>
-							{tieneConsultaCiudadana ? (
+							{consultaCiudadana !== null ? (
 								<Box
 									display="flex"
 									flexDirection="column"
@@ -625,6 +706,7 @@ export const InicioVotante = () => {
 										justifyContent="center"
 										align="center"
 										mb="2rem"
+										pt={{ xs: "2rem", md: "0" }}
 									>
 										Consulta Ciudadana Nuevo León 2023
 									</Typography>
@@ -675,15 +757,22 @@ export const InicioVotante = () => {
 											border="1px solid #f8f7f3"
 											borderRadius="2rem"
 										>
-											<Typography
-												variant="body1"
-												color="#f8f7f3"
-												display="flex"
-												justifyContent="center"
-												align="center"
-											>
-												No tienes ninguna consulta ciudadana por contestar
-											</Typography>
+											{statusJornadas === "checking" ? (
+												<Box sx={{ display: "flex" }}>
+													<CircularProgress color="base" />
+												</Box>
+											) : (
+												<Typography
+													variant="body1"
+													color="#f8f7f3"
+													display="flex"
+													justifyContent="center"
+													align="center"
+												>
+													No tienes ninguna consulta ciudadana por
+													contestar
+												</Typography>
+											)}
 										</Box>
 									</Box>
 									<Box
@@ -710,6 +799,7 @@ export const InicioVotante = () => {
 											justifyContent="center"
 											align="center"
 											mb="2rem"
+											pt={{ xs: "2rem", md: "0" }}
 										>
 											Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
 										</Typography>
@@ -740,7 +830,6 @@ export const InicioVotante = () => {
 					</Grid>
 				</Grid>
 			</Container>
-			<ModalTokenVotacion statusModal={statusModal} handleCloseModal={handleCloseModal} />
 		</Box>
 	);
 };

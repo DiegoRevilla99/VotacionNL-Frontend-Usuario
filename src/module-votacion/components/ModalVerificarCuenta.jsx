@@ -1,5 +1,6 @@
 import { PhotoCamera } from "@mui/icons-material";
 import {
+	Alert,
 	Box,
 	Button,
 	CircularProgress,
@@ -220,6 +221,25 @@ export const ModalVerificarCuenta = ({
 							/>
 						</FormControl>
 					</Box>
+					{statusPeticion === "ok" && isSubmitted && !verificado ? (
+						<Box pt={2}>
+							<Alert severity="error">
+								Tu foto de credencial de lector no coincide con tu selfie. Intenta
+								tomarte fotos más parecidas y con buena iluminación
+							</Alert>
+						</Box>
+					) : (
+						<></>
+					)}
+
+					{statusPeticion === "fail" ? (
+						<Box pt={2}>
+							<Alert severity="error">Error de servidor. Intentalo más tarde</Alert>
+						</Box>
+					) : (
+						<></>
+					)}
+
 					<Box
 						// height="10%"
 						sx={{
@@ -229,7 +249,11 @@ export const ModalVerificarCuenta = ({
 							width: "100%",
 						}}
 					>
-						<Button color="error" variant="outlined">
+						<Button
+							color="error"
+							variant="outlined"
+							onClick={handleCloseModalVerificar}
+						>
 							Regresar
 						</Button>
 
