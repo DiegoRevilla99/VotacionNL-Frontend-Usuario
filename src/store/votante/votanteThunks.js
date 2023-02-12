@@ -46,6 +46,8 @@ import {
 	onFillConsultaCiudadana,
 	onSetJornadaActual,
 	onSetPapeletaActual,
+	onDeleteJornadaActual,
+	onDeleteJornadaFormal,
 } from "./votanteSlice";
 
 export const onEmitirVoto = (values, idJornadaVotante, curp, navigate = () => {}) => {
@@ -62,8 +64,9 @@ export const onEmitirVoto = (values, idJornadaVotante, curp, navigate = () => {}
 				console.log("Guardó bien el voto");
 				dispatch(onFillFolios(data));
 				dispatch(onNoVotando());
-				navigate();
+				dispatch(onDeleteJornadaFormal());
 				dispatch(onOkPeticion());
+				navigate();
 			} else {
 				console.log("no se emitio el voto");
 				const { ok1 } = await flagJornadaNoRealizada(idJornadaVotante);
@@ -120,10 +123,10 @@ export const onComenzarVotacion = (token, curp, navigate = () => {}, jornadaForm
 			token === "123123"
 			// ok && data === "Verificado"
 		) {
-			const { ok: ok1, data } = await getBoletasDeVotante(curp);
+			const { ok: ok1, data } = await getBoletasDeVotante(jornadaFormal.idJornada);
 			if (ok1) {
 				dispatch(onFillBoletas(data));
-				dispatch(onSetJornadaActual(jornadaFormal));
+				dispatch(onSetJornadaActual({ jornadaFormal, tipoJornada: "JornadaFormal" }));
 				dispatch(onVotando());
 				navigate();
 			}
@@ -357,7 +360,7 @@ export const onGetProcesosDelVotante = (curp) => {
 
 		const { ok, data } = await getProcesosDelVotante(curp);
 
-		console.log("DATA PROCESOS", data);
+		// console.log("DATA PROCESOS", data);
 
 		if (ok) {
 			dispatch(onFillJornadaFormal(data.jornadaFormal));

@@ -10,19 +10,39 @@ import { TarjetaCandidaturaNoRegistrada } from "../components/TarjetaCandidatura
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetBoletasDeVotante } from "../../store/votante/votanteThunks";
-import { onAddVoto, onSetBoletaActual } from "../../store/votante/votanteSlice";
+import {
+	onAddCandidaturaNoRegistrada,
+	onAddVoto,
+	onSetBoletaActual,
+} from "../../store/votante/votanteSlice";
 
 export const EditarBoleta = () => {
 	const { statusPeticion, boletaActual, votos } = useSelector((state) => state.votante);
 	const params = useParams();
 	// const [noBoleta, setNoBoleta] = useState(params.noBoleta + 1);
+	const [candidaturaNoRegistrada, setCandidaturaNoRegistrada] = useState("");
 	const [seleccionados, setSeleccionados] = useState([]);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	console.log("SELECCIONADOS", seleccionados);
+
 	const handleSubmit = () => {
+		if (seleccionados.includes(100)) {
+			console.log("HACE EL REGISTRO DE LA CANDIDATURA");
+			dispatch(
+				onAddCandidaturaNoRegistrada({
+					candidaturaNoRegistrada,
+					noBoleta: parseInt(params.noBoleta + 1, 10),
+				})
+			);
+		}
 		dispatch(onAddVoto({ seleccionados, noBoleta: parseInt(params.noBoleta, 10) + 1 }));
 		navigate("/votacion/votosRegistrados");
+	};
+
+	const handleChange = (event) => {
+		setCandidaturaNoRegistrada(event.target.value);
 	};
 
 	useEffect(() => {
@@ -176,6 +196,9 @@ export const EditarBoleta = () => {
 												<TarjetaRepresentante
 													id={representante.id}
 													nombre={representante.nombre}
+													nombrePartido={representante.nombrePartido}
+													clavePartido={representante.clavePartido}
+													nombreSuplente={representante.nombreSuplente}
 													logo={representante.logo}
 													seleccionados={seleccionados}
 													setSeleccionados={setSeleccionados}
@@ -197,6 +220,10 @@ export const EditarBoleta = () => {
 											seleccionados={seleccionados}
 											setSeleccionados={setSeleccionados}
 											max={boletaActual.maxOpciones}
+											handleChange={handleChange}
+											candidaturaNoRegistrada={candidaturaNoRegistrada}
+											setCandidaturaNoRegistrada={setCandidaturaNoRegistrada}
+											// noBoleta={noBoleta}
 										/>
 									</Grid>
 								</Grid>

@@ -20,7 +20,7 @@ export const useCheckAuth = () => {
 			try {
 				// const {data: usuario} = await axios.get("url")
 				dispatch(onRefreshSession());
-				console.log("LLEGA AQUI");
+				// console.log("LLEGA AQUI");
 				// await timeout(500);
 				// dispatch(
 				// 	onLogin({

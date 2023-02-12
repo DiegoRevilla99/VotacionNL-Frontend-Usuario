@@ -14,6 +14,9 @@ export const votanteSlice = createSlice({
 		boletas: [],
 		boletaActual: {
 			candidatos: [],
+			entidad: "",
+			distritoElectoral: "",
+			municipio: "",
 		},
 		votos: [],
 		folios: [],
@@ -32,16 +35,19 @@ export const votanteSlice = createSlice({
 		},
 		respuestasPapeletas: [],
 		verificado: false,
-		selfieVerificada: false,
+		selfieVerificada: true,
 		tokenSmsEnviado: false,
 		jornadaActual: null,
 	},
 	reducers: {
+		onDeleteJornadaFormal: (state) => {
+			state.jornadaFormal = null;
+		},
 		onDeleteJornadaActual: (state) => {
 			state.jornadaActual = null;
 		},
 		onSetJornadaActual: (state, { payload }) => {
-			state.jornadaActual = payload;
+			state.jornadaActual = { ...payload.jornadaFormal, tipoJornada: payload.tipoJornada };
 		},
 		onCheckingJornadas: (state) => {
 			state.statusJornadas = "checking";
@@ -108,6 +114,7 @@ export const votanteSlice = createSlice({
 			state.votos[payload.noBoleta - 1] = [].concat(payload.seleccionados);
 		},
 		onAddCandidaturaNoRegistrada: (state, { payload }) => {
+			console.log("PAYLOAD", payload);
 			state.candidaturaNoRegistrada[payload.noBoleta - 1] = payload.candidaturaNoRegistrada;
 		},
 		onSetConsulta: (state, { payload }) => {
@@ -177,6 +184,7 @@ export const {
 	onFillJornadaNoFormal,
 	onDeleteJornadaActual,
 	onSetJornadaActual,
+	onDeleteJornadaFormal,
 } = votanteSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

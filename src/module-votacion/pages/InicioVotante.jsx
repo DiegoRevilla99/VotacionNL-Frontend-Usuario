@@ -54,7 +54,7 @@ export const InicioVotante = () => {
 		consultaCiudadana: "en espera",
 	});
 
-	console.log("STATUS JORNADA", statusBoton);
+	// console.log("STATUS JORNADA", statusBoton);
 
 	const [refVisible, setRefVisible] = useState(false);
 	const [cropperObject, setCropper] = useState(null);

@@ -42,7 +42,7 @@ export const ModalVerificarCuenta = ({
 	const [isSubmitted, setisSubmitted] = useState(false);
 	const dispatch = useDispatch();
 
-	console.log("Verificado", verificado);
+	// console.log("Verificado", verificado);
 
 	const handleVerificarCredencial = () => {
 		setisSubmitted(true);

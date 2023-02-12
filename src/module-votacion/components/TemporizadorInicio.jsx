@@ -10,7 +10,7 @@ export const TemporizadorInicio = ({
 	statusBoton,
 	boton,
 }) => {
-	console.log("TIPO DE BOTON INICIO", boton);
+	// console.log("TIPO DE BOTON INICIO", boton);
 	// const time = new Date();
 	const time = new Date(fechaInicio);
 	// time.setSeconds(time.getSeconds() + 5);

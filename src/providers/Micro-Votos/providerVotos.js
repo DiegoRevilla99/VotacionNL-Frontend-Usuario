@@ -1,4 +1,5 @@
 import { consultasAPI } from "../Micro-ConsultasCiudadanas/configConsultas";
+import { jornadaFormalApi } from "../Micro-JornadaFormal/configjornadaFormal";
 import { tokenSmsApi } from "../Micro-Token/configToken";
 import { votanteAPI, votanteJornadaAPI } from "../Micro-Votante/votanteConfig";
 import { votosAPI } from "./configVotos";
@@ -12,8 +13,6 @@ export const emitirVoto = async (values) => {
 			const { folioBoleta, nombreEleccion } = boletaModel;
 			folios.push({ folioBoleta, nombreEleccion });
 		}
-
-		console.log("FOLIOS", folios);
 
 		return { ok2: true, data: folios };
 	} catch (error) {
@@ -74,150 +73,47 @@ export const comenzarVotacion = async (token, curp) => {
 	}
 };
 
-export const getBoletasDeVotante = async (uid) => {
+export const getBoletasDeVotante = async (idJornada) => {
 	try {
 		await timeout(2000);
-		// const boletas = [
-		// 	{
-		// 		encabezado: "Elecciones de gobernador del estado de Nuevo León 2023",
-		// 		jornadaElectoral: "Jornada 1",
-		// 		entidad: "Nuevo León",
-		// 		distritoElectoral: 23,
-		// 		municipio: "Municipio 1",
-		// 		maxOpciones: 1,
-		// 		minOpciones: 1,
-		// 		modalidad: "Representante",
-		// 		votoNulo: true,
-		// 		candidaturaNoRegistrada: true,
-		// 		candidatos: [
-		// 			{
-		// 				id: 1,
-		// 				nombrePartido: "PRI",
-		// 				nombre: "Juan Manuel Hernandez Perez ",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "BIUB",
-		// 				logo: "logo1",
-		// 			},
-		// 			{
-		// 				id: 2,
-		// 				nombrePartido: "PAN",
-		// 				nombre: "José Antonio Diego Revilla",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "AHDU",
-		// 				logo: "logo2",
-		// 			},
-		// 			{
-		// 				id: 3,
-		// 				nombrePartido: "PRD",
-		// 				nombre: "Melvin Paul González Pascual",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "ASDA",
-		// 				logo: "logo3",
-		// 			},
-		// 			{
-		// 				id: 4,
-		// 				nombrePartido: "PARTIDO VERDE",
-		// 				nombre: "Kevin Edilberto Chávez Sanchez",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "AHSU",
-		// 				logo: "logo4",
-		// 			},
-		// 			{
-		// 				id: 5,
-		// 				nombrePartido: "MORENA",
-		// 				nombre: "Laura Yessenia Sánchez Martínez",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "AUDH",
-		// 				logo: "logo5",
-		// 			},
-		// 		],
-		// 	},
-		// 	{
-		// 		encabezado: "Elecciones del comité del estado de Nuevo León 2023",
-		// 		jornadaElectoral: "Jornada 2",
-		// 		entidad: "Nuevo León",
-		// 		distritoElectoral: 23,
-		// 		municipio: "Municipio 1",
-		// 		maxOpciones: 3,
-		// 		minOpciones: 3,
-		// 		votoNulo: true,
-		// 		candidaturaNoRegistrada: true,
-		// 		candidatos: [
-		// 			{
-		// 				id: 1,
-		// 				nombrePartido: "PRI",
-		// 				nombre: "Pedro Manuel Hernandez Perez ",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "DHFY",
-		// 				logo: "logo1",
-		// 			},
-		// 			{
-		// 				id: 2,
-		// 				nombrePartido: "PAN",
-		// 				nombre: "Ivan Antonio Diego Revilla",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "UDYF",
-		// 				logo: "logo2",
-		// 			},
-		// 			{
-		// 				id: 3,
-		// 				nombrePartido: "PRD",
-		// 				nombre: "Mauricio Paul González Pascual",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "IGUE",
-		// 				logo: "logo3",
-		// 			},
-		// 			{
-		// 				id: 4,
-		// 				nombrePartido: "PARTIDO VERDE",
-		// 				nombre: "Josué Edilberto Chávez Sanchez",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "SYRV",
-		// 				logo: "logo4",
-		// 			},
-		// 			{
-		// 				id: 5,
-		// 				nombrePartido: "MORENA",
-		// 				nombre: "Ana María Sánchez Martínez",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "FURB",
-		// 				logo: "logo5",
-		// 			},
-		// 			{
-		// 				id: 6,
-		// 				nombrePartido: "PSD",
-		// 				nombre: "Ana Sofía",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "ASDM",
-		// 				logo: "logo6",
-		// 			},
-		// 			{
-		// 				id: 7,
-		// 				nombrePartido: "MOVIMIENTO CIUDADANO",
-		// 				nombre: "Kevin Edilberto Chávez Sanchez",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "UFBT",
-		// 				logo: "logo4",
-		// 			},
-		// 			{
-		// 				id: 8,
-		// 				nombrePartido: "FUERZA POR MÉXICO",
-		// 				nombre: "Laura Yessenia Sánchez Martínez",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "AOQP",
-		// 				logo: "logo5",
-		// 			},
-		// 			{
-		// 				id: 9,
-		// 				nombrePartido: "PT",
-		// 				nombre: "Ana María",
-		// 				nombreSuplente: "Default1",
-		// 				clavePartido: "SEHS",
-		// 				logo: "logo6",
-		// 			},
-		// 		],
-		// 	},
-		// ];
+
+		const { data } = await jornadaFormalApi.get(
+			`jornada/electoral/${idJornada}/informacion/completa/`
+		);
+
+		console.log("BOLETAS OBTENIDAS DE JORNADA", data);
+
+		let boletas1 = [];
+
+		data.boletas.forEach((boleta, index) => {
+			let partidos = [];
+			boleta.partidos.forEach((partido, indexPartido) => {
+				partidos.push({
+					id: partido.partido.clavePartido,
+					nombrePartido: partido.partido.nombre,
+					nombre: `${partido.candidato.nombreCandidato} ${partido.candidato.apellidoPCandidato} ${partido.candidato.apellidoMCandidato}`,
+					nombreSuplente: `${partido.suplente.nombreSuplente} ${partido.suplente.apellidoPSuplente} ${partido.suplente.apellidoMSuplente}`,
+					clavePartido: partido.partido.clavePartido,
+					logo: partido.partido.logo,
+				});
+			});
+
+			boletas1.push({
+				encabezado: boleta.boletaModel.nombreEleccion,
+				jornadaElectoral: data.jornadaModel.nombreJornada,
+				entidad: data.jornadaModel.entidad,
+				distritoElectoral: boleta.boletaModel.distrito,
+				municipio: boleta.boletaModel.municipio,
+				maxOpciones: 1,
+				minOpciones: 1,
+				modalidad: "Representante",
+				votoNulo: true,
+				candidaturaNoRegistrada: true,
+				candidatos: partidos,
+			});
+		});
+
+		console.log("BOLETAS CONVERTIDAS", boletas1);
 
 		const boletas = [
 			{
@@ -350,7 +246,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo5",
 					},
 					{
-						id: "AISN",
+						id: "ASJQ",
 						nombrePartido: "PT",
 						nombre: "Ana María",
 						nombreSuplente: "Default1",
@@ -360,7 +256,7 @@ export const getBoletasDeVotante = async (uid) => {
 				],
 			},
 		];
-		return { ok: true, data: boletas };
+		return { ok: true, data: boletas1 };
 	} catch (error) {
 		return { ok: false };
 	}

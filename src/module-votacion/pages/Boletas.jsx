@@ -44,7 +44,7 @@ export const Boletas = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	console.log("ME RENDERIZO PADRE");
+	// console.log("ME RENDERIZO PADRE");
 
 	const handleChange = (event) => {
 		setCandidaturaNoRegistrada(event.target.value);
@@ -132,7 +132,7 @@ export const Boletas = () => {
 										sx={{ backgroundColor: "#423838" }}
 									>
 										{/* GOBERNADOR */}
-										{boletaActual.maxOpciones === 1 ? "GOBERNADOR" : "COMITÉ"}
+										{/* {boletaActual.maxOpciones === 1 ? "GOBERNADOR" : "COMITÉ"} */}
 									</Typography>
 								</Box>
 								<Grid container spacing={3} pb="2rem">
@@ -155,7 +155,7 @@ export const Boletas = () => {
 														backgroundColor: "white !important",
 													},
 												}}
-												defaultValue={boletaActual.entidad}
+												value={boletaActual.entidad}
 												disabled
 											/>
 										</Grid>
@@ -179,7 +179,7 @@ export const Boletas = () => {
 														backgroundColor: "white !important",
 													},
 												}}
-												defaultValue={boletaActual.distritoElectoral}
+												value={boletaActual.distritoElectoral}
 												disabled
 											/>
 										</Grid>
@@ -203,7 +203,7 @@ export const Boletas = () => {
 														backgroundColor: "white !important",
 													},
 												}}
-												defaultValue={boletaActual.municipio}
+												value={boletaActual.municipio}
 												disabled
 											/>
 										</Grid>

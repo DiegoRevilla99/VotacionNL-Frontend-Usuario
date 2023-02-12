@@ -11,9 +11,8 @@ import { VotoRegistrado } from "../components/VotoRegistrado";
 
 export const VotosRegistrados = () => {
 	const [modalStatus, setModalStatus] = useState(false);
-	const { votos, boletas, jornadaFormal, jornadaActual, status } = useSelector(
-		(state) => state.votante
-	);
+	const { votos, boletas, jornadaFormal, jornadaActual, status, candidaturaNoRegistrada } =
+		useSelector((state) => state.votante);
 	const { username } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -26,14 +25,28 @@ export const VotosRegistrados = () => {
 		const votosObject = votos.map((boleta, indexBoleta) => {
 			const boletaCurrent = boletas[indexBoleta];
 			const partidos = boleta.map((idPartido) => {
-				const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
-				// return boletaCurrent.candidatos[index];
-				return {
-					idSeleccion: boletaCurrent.candidatos[index].id,
-					clavePartido: boletaCurrent.candidatos[index].clavePartido,
-					nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
-					nombreCandidato: boletaCurrent.candidatos[index].nombre,
-				};
+				if (idPartido === 100)
+					return {
+						clavePartido: "CANORE",
+						nombrePartido: "Candidatura no registrada",
+						nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+					};
+				else if (idPartido === 200)
+					return {
+						clavePartido: "NULO",
+						nombrePartido: "Voto nulo",
+						nombreCandidato: "Voto nulo",
+					};
+				else {
+					const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+					// return boletaCurrent.candidatos[index];
+					return {
+						idSeleccion: boletaCurrent.candidatos[index].id,
+						clavePartido: boletaCurrent.candidatos[index].clavePartido,
+						nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
+						nombreCandidato: boletaCurrent.candidatos[index].nombre,
+					};
+				}
 			});
 			return {
 				boletaModel: {

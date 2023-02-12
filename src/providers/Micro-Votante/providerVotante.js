@@ -6,7 +6,7 @@ export const guardarLinkVotante = async ({
 	linkCredFrontalCrop,
 	linkCredTraseraCrop,
 }) => {
-	console.log("CURP", curp);
+	// console.log("CURP", curp);
 	try {
 		const response1 = await votanteAPI.put(`credencial/votante/fotoFrente/${curp}`, {
 			fotoFrente: linkCredFrontalCrop,
@@ -27,7 +27,7 @@ export const guardarLinkVotante = async ({
 };
 
 export const verificarVotante = async ({ curp }) => {
-	console.log("CURP", curp);
+	// console.log("CURP", curp);
 	try {
 		const data = await votanteAPI.put(`votante/validacion/${curp}`, {
 			validacion: true,
@@ -43,11 +43,11 @@ export const verificarVotante = async ({ curp }) => {
 	}
 };
 export const getStatusValidacion = async (curp) => {
-	console.log("CURP", curp);
+	// console.log("CURP", curp);
 	try {
 		const { data } = await votanteAPI.get(`status/${curp}`);
 
-		console.log("ESTÁ VALIDADO?", data);
+		// console.log("ESTÁ VALIDADO?", data);
 
 		return {
 			ok: true,
@@ -66,7 +66,7 @@ export const getProcesosDelVotante = async (curp) => {
 
 		const { data } = await votanteAPI.get(`${curp}/jornadas_actuales`);
 
-		console.log("RESPONSE PROCESOS", data);
+		// console.log("RESPONSE PROCESOS", data);
 
 		// const endpoint = {
 		// 	jornadaFormal:
@@ -109,43 +109,4 @@ export const getProcesosDelVotante = async (curp) => {
 
 const timeout = (ms) => {
 	return new Promise((resolve) => setTimeout(resolve, ms));
-};
-
-const endpoint = {
-	jornadaFormal: {
-		//SI EL VOTANTE YA HIZO SU VOTO, ESTE CAMPO DEBE SER NULL
-		votanteTieneJornadaRelacionada: true,
-		votantePuedeRealizarLaVotacion: true,
-		idJornada: "JO-H1-82",
-		nombreJornada: "Jornada Formal 1",
-		configuracionDeJornada: {
-			fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
-			fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
-			tiempoParaContestarBoletas: "30:00",
-			tiempoExtra: "10:00",
-		},
-	},
-	jornadaNoFormal: {
-		votanteTieneJornadaRelacionada: true,
-		votantePuedeRealizarLaVotacion: true,
-		nombreJornada: "Jornada Formal 1",
-		configuracionDeJornada: {
-			fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
-			fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
-			tiempoParaContestarBoletas: "30:00",
-			tiempoExtra: "10:00",
-		},
-	},
-	consultaCiudadana: {
-		votanteTieneConsultaRelacionada: true,
-		votantePuedeRealizarLaConsulta: true,
-		idConsulta: "CO-H1-32",
-		nombreConsulta: "Consulta 1",
-		configuracionDeConsulta: {
-			fechaYHoraDeInicioDeConsulta: "1997-07-16T19:20:30.45+01:00",
-			fechaYHoraDeFinDeConsulta: "1997-09-16T19:20:30.45+01:00",
-			tiempoParaContestarPapeletas: "30:00",
-			tiempoExtra: "10:00",
-		},
-	},
 };

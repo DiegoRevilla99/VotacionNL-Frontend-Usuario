@@ -45,7 +45,7 @@ export const refreshToken = async (refreshToken) => {
 			refreshToken: sessionStorage.getItem(REFRESH_TOKEN_KEY),
 		});
 
-		console.log("DATA REFRESH: ", data);
+		// console.log("DATA REFRESH: ", data);
 		return { ok: true, refreshResponse: data.refreshResponse, user: data.user };
 	} catch (error) {
 		console.log("ERROR REFRESH", error);
