@@ -8,7 +8,7 @@ export const Folios = () => {
 	const navigate = useNavigate();
 
 	const handleRegresar = () => {
-		navigate("/votacion/inicio");
+		navigate("/home");
 	};
 	return (
 		<Box

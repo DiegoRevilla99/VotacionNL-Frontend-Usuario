@@ -129,6 +129,43 @@ export const verificarCredencial = async ({
 	}
 };
 
+export const verificarFrenteDeCredencial = async ({ linkCredFrontalCrop }) => {
+	const uriCredFrontalCrop = encodeURIComponent(linkCredFrontalCrop);
+
+	try {
+		const url = `https://validcredenciales.herokuapp.com/api/credencial?nombreUser=${uriCredFrontalCrop}`;
+		// https://validcredenciales.herokuapp.com/api/credencial?nombreUser=https://imagesvotacion.s3.eu-north-1.amazonaws.com/1675827520926_fileName17079.jpeg
+
+		let okResp = false;
+		let verif = false;
+
+		const response = await fetch(url, {
+			mode: "cors",
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+			},
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("VERIFICACIÓN FRENTE CREDENCIAL", data);
+				okResp = true;
+				verif = data.data;
+			})
+			.catch((error) => {
+				console.log("ERROR DE PETICIÓN FRENTE CREDENCIAL", error);
+				okResp = false;
+				verif = data.data;
+			});
+
+		return {
+			ok: okResp,
+			esCredencial: verif,
+		};
+	} catch (error) {
+		return { ok1: false };
+	}
+};
+
 const timeout = (ms) => {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 };

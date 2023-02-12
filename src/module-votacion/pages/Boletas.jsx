@@ -36,6 +36,7 @@ export const Boletas = () => {
 		boletaActual,
 		votos,
 		candidaturaNoRegistrada: previo,
+		status,
 	} = useSelector((state) => state.votante);
 	const [noBoleta, setNoBoleta] = useState(1);
 	const [seleccionados, setSeleccionados] = useState([]);
@@ -66,7 +67,10 @@ export const Boletas = () => {
 	};
 
 	useEffect(() => {
-		dispatch(onGetBoletasDeVotante());
+		// dispatch(onGetBoletasDeVotante());
+		if (status === "noVotando") {
+			navigate("/votacion/inicio");
+		}
 	}, []);
 
 	useEffect(() => {

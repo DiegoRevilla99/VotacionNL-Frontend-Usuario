@@ -55,9 +55,9 @@ export const Papeletas = () => {
 		setNoPapeleta((n) => n - 1);
 	};
 
-	useEffect(() => {
-		dispatch(onGetConsultasDeVotante());
-	}, []);
+	// useEffect(() => {
+	// 	dispatch(onGetConsultasDeVotante());
+	// }, []);
 
 	useEffect(() => {
 		if (respuestasPapeletas[noPapeleta] !== undefined) {
@@ -66,7 +66,10 @@ export const Papeletas = () => {
 	}, [noPapeleta]);
 
 	useEffect(() => {
-		if (papeletas.length !== 0) dispatch(onSetPapeletaActual(noPapeleta));
+		if (papeletas.length !== 0) {
+			console.log("ENTRA A DESPACHAR LA PAPELETA");
+			dispatch(onSetPapeletaActual(noPapeleta));
+		}
 	}, [papeletas, noPapeleta]);
 
 	if (statusPeticion === "checking") return <LinearProgress color="linearProgress" />;

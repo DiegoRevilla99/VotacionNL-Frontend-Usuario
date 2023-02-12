@@ -48,7 +48,9 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 	time.setSeconds(time.getSeconds() + tiempo);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { status, errorMessage, tokenSmsEnviado } = useSelector((state) => state.votante);
+	const { status, errorMessage, tokenSmsEnviado, jornadaFormal } = useSelector(
+		(state) => state.votante
+	);
 	const { username } = useSelector((state) => state.auth);
 	const { seconds, minutes, isRunning, start, restart } = useTimer({
 		expiryTimestamp: time,
@@ -70,7 +72,14 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 	};
 
 	const handleSubmit = (values) => {
-		dispatch(onComenzarVotacion(values.token, username, () => navigate("/votacion/boletas")));
+		dispatch(
+			onComenzarVotacion(
+				values.token,
+				username,
+				() => navigate("/votacion/boletas"),
+				jornadaFormal
+			)
+		);
 	};
 
 	useEffect(() => {

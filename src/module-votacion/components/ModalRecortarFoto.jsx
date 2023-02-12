@@ -131,7 +131,18 @@ export const ModalRecortarFoto = ({
 							width: "100%",
 						}}
 					>
-						<Button color="error" variant="outlined" onClick={handleCloseModalRecorte}>
+						<Button
+							color="error"
+							variant="outlined"
+							onClick={() => {
+								setImagenes({
+									...imagenes,
+									[imagenes.current]: { name: "" },
+									current: "",
+								});
+								handleCloseModalRecorte();
+							}}
+						>
 							Regresar
 						</Button>
 

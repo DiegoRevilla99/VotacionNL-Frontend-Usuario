@@ -1,4 +1,6 @@
+import { consultasAPI } from "../Micro-ConsultasCiudadanas/configConsultas";
 import { tokenSmsApi } from "../Micro-Token/configToken";
+import { votanteAPI, votanteJornadaAPI } from "../Micro-Votante/votanteConfig";
 import { votosAPI } from "./configVotos";
 
 export const emitirVoto = async (values) => {
@@ -13,7 +15,41 @@ export const emitirVoto = async (values) => {
 
 		console.log("FOLIOS", folios);
 
-		return { ok: true, data: folios };
+		return { ok2: true, data: folios };
+	} catch (error) {
+		return { ok2: false };
+	}
+};
+export const flagJornadaRealizada = async (idJornadaVotante, curp) => {
+	try {
+		const { data } = await votanteJornadaAPI.put(
+			`jornadavotante/${curp}/jornada/${idJornadaVotante}/update/realizacion`,
+			{
+				flag: true,
+			}
+		);
+
+		// https://ms-votante.herokuapp.com/jornadavotante/DIRA991216HOCGVN02/jornada/EL-DE-CO-ES-IN-SI-ORD-2023/update/realizacion
+
+		https: console.log("data flag realizada", data);
+
+		return { ok1: true };
+	} catch (error) {
+		return { ok1: false };
+	}
+};
+export const flagJornadaNoRealizada = async (idJornadaVotante) => {
+	try {
+		const { data } = await votanteJornadaAPI.put(
+			`jornadavotante/${curp}/jornada/${idJornadaVotante}/update/realizacion`,
+			{
+				flag: false,
+			}
+		);
+
+		https: console.log("data flag no realizada", data);
+
+		return { ok: true };
 	} catch (error) {
 		return { ok: false };
 	}
@@ -40,7 +76,149 @@ export const comenzarVotacion = async (token, curp) => {
 
 export const getBoletasDeVotante = async (uid) => {
 	try {
-		await timeout(500);
+		await timeout(2000);
+		// const boletas = [
+		// 	{
+		// 		encabezado: "Elecciones de gobernador del estado de Nuevo León 2023",
+		// 		jornadaElectoral: "Jornada 1",
+		// 		entidad: "Nuevo León",
+		// 		distritoElectoral: 23,
+		// 		municipio: "Municipio 1",
+		// 		maxOpciones: 1,
+		// 		minOpciones: 1,
+		// 		modalidad: "Representante",
+		// 		votoNulo: true,
+		// 		candidaturaNoRegistrada: true,
+		// 		candidatos: [
+		// 			{
+		// 				id: 1,
+		// 				nombrePartido: "PRI",
+		// 				nombre: "Juan Manuel Hernandez Perez ",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "BIUB",
+		// 				logo: "logo1",
+		// 			},
+		// 			{
+		// 				id: 2,
+		// 				nombrePartido: "PAN",
+		// 				nombre: "José Antonio Diego Revilla",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "AHDU",
+		// 				logo: "logo2",
+		// 			},
+		// 			{
+		// 				id: 3,
+		// 				nombrePartido: "PRD",
+		// 				nombre: "Melvin Paul González Pascual",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "ASDA",
+		// 				logo: "logo3",
+		// 			},
+		// 			{
+		// 				id: 4,
+		// 				nombrePartido: "PARTIDO VERDE",
+		// 				nombre: "Kevin Edilberto Chávez Sanchez",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "AHSU",
+		// 				logo: "logo4",
+		// 			},
+		// 			{
+		// 				id: 5,
+		// 				nombrePartido: "MORENA",
+		// 				nombre: "Laura Yessenia Sánchez Martínez",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "AUDH",
+		// 				logo: "logo5",
+		// 			},
+		// 		],
+		// 	},
+		// 	{
+		// 		encabezado: "Elecciones del comité del estado de Nuevo León 2023",
+		// 		jornadaElectoral: "Jornada 2",
+		// 		entidad: "Nuevo León",
+		// 		distritoElectoral: 23,
+		// 		municipio: "Municipio 1",
+		// 		maxOpciones: 3,
+		// 		minOpciones: 3,
+		// 		votoNulo: true,
+		// 		candidaturaNoRegistrada: true,
+		// 		candidatos: [
+		// 			{
+		// 				id: 1,
+		// 				nombrePartido: "PRI",
+		// 				nombre: "Pedro Manuel Hernandez Perez ",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "DHFY",
+		// 				logo: "logo1",
+		// 			},
+		// 			{
+		// 				id: 2,
+		// 				nombrePartido: "PAN",
+		// 				nombre: "Ivan Antonio Diego Revilla",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "UDYF",
+		// 				logo: "logo2",
+		// 			},
+		// 			{
+		// 				id: 3,
+		// 				nombrePartido: "PRD",
+		// 				nombre: "Mauricio Paul González Pascual",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "IGUE",
+		// 				logo: "logo3",
+		// 			},
+		// 			{
+		// 				id: 4,
+		// 				nombrePartido: "PARTIDO VERDE",
+		// 				nombre: "Josué Edilberto Chávez Sanchez",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "SYRV",
+		// 				logo: "logo4",
+		// 			},
+		// 			{
+		// 				id: 5,
+		// 				nombrePartido: "MORENA",
+		// 				nombre: "Ana María Sánchez Martínez",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "FURB",
+		// 				logo: "logo5",
+		// 			},
+		// 			{
+		// 				id: 6,
+		// 				nombrePartido: "PSD",
+		// 				nombre: "Ana Sofía",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "ASDM",
+		// 				logo: "logo6",
+		// 			},
+		// 			{
+		// 				id: 7,
+		// 				nombrePartido: "MOVIMIENTO CIUDADANO",
+		// 				nombre: "Kevin Edilberto Chávez Sanchez",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "UFBT",
+		// 				logo: "logo4",
+		// 			},
+		// 			{
+		// 				id: 8,
+		// 				nombrePartido: "FUERZA POR MÉXICO",
+		// 				nombre: "Laura Yessenia Sánchez Martínez",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "AOQP",
+		// 				logo: "logo5",
+		// 			},
+		// 			{
+		// 				id: 9,
+		// 				nombrePartido: "PT",
+		// 				nombre: "Ana María",
+		// 				nombreSuplente: "Default1",
+		// 				clavePartido: "SEHS",
+		// 				logo: "logo6",
+		// 			},
+		// 		],
+		// 	},
+		// ];
+
 		const boletas = [
 			{
 				encabezado: "Elecciones de gobernador del estado de Nuevo León 2023",
@@ -55,7 +233,7 @@ export const getBoletasDeVotante = async (uid) => {
 				candidaturaNoRegistrada: true,
 				candidatos: [
 					{
-						id: 1,
+						id: "HSJD",
 						nombrePartido: "PRI",
 						nombre: "Juan Manuel Hernandez Perez ",
 						nombreSuplente: "Default1",
@@ -63,7 +241,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo1",
 					},
 					{
-						id: 2,
+						id: "AKSF",
 						nombrePartido: "PAN",
 						nombre: "José Antonio Diego Revilla",
 						nombreSuplente: "Default1",
@@ -71,7 +249,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo2",
 					},
 					{
-						id: 3,
+						id: "SKDL",
 						nombrePartido: "PRD",
 						nombre: "Melvin Paul González Pascual",
 						nombreSuplente: "Default1",
@@ -79,7 +257,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo3",
 					},
 					{
-						id: 4,
+						id: "JSUR",
 						nombrePartido: "PARTIDO VERDE",
 						nombre: "Kevin Edilberto Chávez Sanchez",
 						nombreSuplente: "Default1",
@@ -87,7 +265,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo4",
 					},
 					{
-						id: 5,
+						id: "SJDL",
 						nombrePartido: "MORENA",
 						nombre: "Laura Yessenia Sánchez Martínez",
 						nombreSuplente: "Default1",
@@ -108,7 +286,7 @@ export const getBoletasDeVotante = async (uid) => {
 				candidaturaNoRegistrada: true,
 				candidatos: [
 					{
-						id: 1,
+						id: "SJDK",
 						nombrePartido: "PRI",
 						nombre: "Pedro Manuel Hernandez Perez ",
 						nombreSuplente: "Default1",
@@ -116,7 +294,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo1",
 					},
 					{
-						id: 2,
+						id: "ALQP",
 						nombrePartido: "PAN",
 						nombre: "Ivan Antonio Diego Revilla",
 						nombreSuplente: "Default1",
@@ -124,7 +302,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo2",
 					},
 					{
-						id: 3,
+						id: "AJSK",
 						nombrePartido: "PRD",
 						nombre: "Mauricio Paul González Pascual",
 						nombreSuplente: "Default1",
@@ -132,7 +310,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo3",
 					},
 					{
-						id: 4,
+						id: "AKSO",
 						nombrePartido: "PARTIDO VERDE",
 						nombre: "Josué Edilberto Chávez Sanchez",
 						nombreSuplente: "Default1",
@@ -140,7 +318,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo4",
 					},
 					{
-						id: 5,
+						id: "AISN",
 						nombrePartido: "MORENA",
 						nombre: "Ana María Sánchez Martínez",
 						nombreSuplente: "Default1",
@@ -148,7 +326,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo5",
 					},
 					{
-						id: 6,
+						id: "AKWO",
 						nombrePartido: "PSD",
 						nombre: "Ana Sofía",
 						nombreSuplente: "Default1",
@@ -156,7 +334,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo6",
 					},
 					{
-						id: 7,
+						id: "AKSI",
 						nombrePartido: "MOVIMIENTO CIUDADANO",
 						nombre: "Kevin Edilberto Chávez Sanchez",
 						nombreSuplente: "Default1",
@@ -164,7 +342,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo4",
 					},
 					{
-						id: 8,
+						id: "AORK",
 						nombrePartido: "FUERZA POR MÉXICO",
 						nombre: "Laura Yessenia Sánchez Martínez",
 						nombreSuplente: "Default1",
@@ -172,7 +350,7 @@ export const getBoletasDeVotante = async (uid) => {
 						logo: "logo5",
 					},
 					{
-						id: 9,
+						id: "AISN",
 						nombrePartido: "PT",
 						nombre: "Ana María",
 						nombreSuplente: "Default1",
@@ -188,9 +366,46 @@ export const getBoletasDeVotante = async (uid) => {
 	}
 };
 
-export const getConsultasDeVotante = async (uid) => {
+export const getConsultasDeVotante = async (curp) => {
 	try {
-		await timeout(500);
+		// await timeout(1000);
+
+		const { data } = await consultasAPI.get("jornada/consulta/informacion/completa");
+
+		let consulta1 = {
+			nombreJornada: data[0].jornadaModel.nombreJornada,
+			entidad: data[0].jornadaModel.entidad,
+			papeletas: [],
+		};
+		let papeletas = [];
+		data[0].papeletas.forEach((papeleta) => {
+			papeletas.push({
+				id: papeleta.estructuraPapeletaModel.idPapeleta,
+				asunto: papeleta.estructuraPapeletaModel.nombre,
+				distritoElectoral: papeleta.estructuraPapeletaModel.distrito,
+				municipio: papeleta.estructuraPapeletaModel.municipio,
+				primerFirmanteNombre: papeleta.estructuraPapeletaModel.primerFirmanteNombre,
+				primerFirmanteCargo: papeleta.estructuraPapeletaModel.primerFirmanteCargo,
+				segundoFirmanteNombre: papeleta.estructuraPapeletaModel.segundoFirmanteNombre,
+				segundoFirmanteCargo: papeleta.estructuraPapeletaModel.segundoFirmanteCargo,
+				pregunta: {
+					idPregunta: papeleta.preguntaModel.idPregunta,
+					descPregunta: papeleta.preguntaModel.descPregunta,
+					tipoRespuesta: papeleta.preguntaModel.tipoRespuesta,
+					subtipo: papeleta.preguntaModel.subtipo,
+					opcion1: papeleta.preguntaModel.opcion1,
+					opcion2: papeleta.preguntaModel.opcion2,
+					opcion3: papeleta.preguntaModel.opcion3,
+					opcion4: papeleta.preguntaModel.opcion4,
+					opcion5: papeleta.preguntaModel.opcion5,
+				},
+			});
+		});
+
+		consulta1.papeletas = papeletas;
+
+		console.log("DATA CONSULTA", consulta1);
+
 		const consultas = {
 			nombreJornada: "Consulta ciudadana 2023",
 			entidad: "Nuevo León",
@@ -317,8 +532,10 @@ export const getConsultasDeVotante = async (uid) => {
 				},
 			],
 		};
-		return { ok: true, data: consultas };
+
+		return { ok: true, data: consulta1 };
 	} catch (error) {
+		console.log(error.message);
 		return { ok: false };
 	}
 };

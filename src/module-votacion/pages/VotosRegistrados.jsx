@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { Button, Container, Grid, IconButton, TextField } from "@mui/material";
@@ -11,7 +11,10 @@ import { VotoRegistrado } from "../components/VotoRegistrado";
 
 export const VotosRegistrados = () => {
 	const [modalStatus, setModalStatus] = useState(false);
-	const { votos, boletas } = useSelector((state) => state.votante);
+	const { votos, boletas, jornadaFormal, jornadaActual, status } = useSelector(
+		(state) => state.votante
+	);
+	const { username } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -45,8 +48,18 @@ export const VotosRegistrados = () => {
 
 		console.log("votosObject", votosObject);
 
-		dispatch(onEmitirVoto(votosObject, () => navigate("/votacion/folios")));
+		dispatch(
+			onEmitirVoto(votosObject, jornadaActual.idJornada, username, () =>
+				navigate("/votacion/folios")
+			)
+		);
 	};
+
+	useEffect(() => {
+		if (status === "noVotando") {
+			navigate("/votacion/inicio");
+		}
+	}, []);
 
 	return (
 		<Box

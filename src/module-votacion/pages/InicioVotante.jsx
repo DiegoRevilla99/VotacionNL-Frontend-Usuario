@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
 	onComenzarConsulta,
+	onComenzarJornadaNoFormal,
 	onGetProcesosDelVotante,
 	onGetStatusValidacion,
 } from "../../store/votante/votanteThunks";
@@ -27,11 +28,8 @@ import { ModalRecortarFoto } from "../components/ModalRecortarFoto";
 import { ModalTokenVotacion } from "../components/ModalTokenVotacion";
 import { ModalVerificarCuenta } from "../components/ModalVerificarCuenta";
 import { ModalCamara } from "../components/ModalCamara";
-
-let cropper = null;
-const tieneJornadaFormal = true;
-const tieneJornadaNoFormal = false;
-const tieneConsultaCiudadana = false;
+import { TemporizadorInicio } from "../components/TemporizadorInicio";
+import { TemporizadorFin } from "../components/TemporizadorFin";
 
 export const InicioVotante = () => {
 	const {
@@ -42,12 +40,21 @@ export const InicioVotante = () => {
 		jornadaFormal,
 		jornadaNoFormal,
 		consultaCiudadana,
+		status,
 	} = useSelector((state) => state.votante);
 	const { username } = useSelector((state) => state.auth);
 	const [statusModal, setStatusModal] = useState(false);
 	const [statusModalVerificar, setStatusModalVerificar] = useState(false);
 	const [statusModalRecorte, setStatusModalRecorte] = useState(false);
 	const [statusModalCamara, setStatusModalCamara] = useState(false);
+	// const [statusBoton, setStatusBoton] = useState("en espera");
+	const [statusBoton, setStatusBoton] = useState({
+		jornadaFormal: "en espera",
+		jornadaNoFormal: "en espera",
+		consultaCiudadana: "en espera",
+	});
+
+	console.log("STATUS JORNADA", statusBoton);
 
 	const [refVisible, setRefVisible] = useState(false);
 	const [cropperObject, setCropper] = useState(null);
@@ -111,7 +118,7 @@ export const InicioVotante = () => {
 			imagenes.current === "credFrontal" || imagenes.current === "credTrasera" ? 16 / 9 : 1;
 
 		setCropper(
-			(cropper = new Cropper(image, {
+			new Cropper(image, {
 				aspectRatio: proporcion,
 				preview: ".img-sample",
 				zoomable: true,
@@ -128,23 +135,9 @@ export const InicioVotante = () => {
 						height: 100,
 					});
 				},
-			}))
+			})
 		);
-		// console.log("container", cropper.getContainerData());
 	}, [refVisible]);
-
-	// useEffect(() => {
-	// 	if (cropperObject !== null) {
-	// 		const containerData = cropperObject.getContainerData();
-	// 		console.log("ENTRA OPTION", cropperObject.getContainerData());
-	// 		// setCropper(
-	// 		// 	cropperObject.zoomTo(0.5, {
-	// 		// 		x: containerData.width / 2,
-	// 		// 		y: containerData.height / 2,
-	// 		// 	})
-	// 		// );
-	// 	}
-	// }, [cropperObject]);
 
 	const rotateLeft = () => {
 		if (cropperObject !== null) {
@@ -159,7 +152,6 @@ export const InicioVotante = () => {
 
 	const handleCrop = () => {
 		let canva = cropperObject.getCroppedCanvas({ fillColor: "#000000" });
-		console.log(canva);
 		let file = null;
 
 		canva.toBlob((blob) => {
@@ -204,6 +196,21 @@ export const InicioVotante = () => {
 	const handleConsultaCiudadana = () => {
 		dispatch(onComenzarConsulta("", navigate("/votacion/papeletas")));
 	};
+
+	const handleComezarjornadaNoFormal = () => {
+		dispatch(
+			onComenzarJornadaNoFormal(jornadaNoFormal, username, () =>
+				navigate("/votacion/boletas")
+			)
+		);
+	};
+
+	const handleComezarConsultaCiudadana = () => {
+		dispatch(
+			onComenzarConsulta(consultaCiudadana, username, () => navigate("/votacion/papeletas"))
+		);
+	};
+
 	return (
 		<Box display="flex" height="100%" sx={{ overflowY: "auto" }}>
 			<Container maxWidth="lg" sx={{ height: "100%" }}>
@@ -356,15 +363,47 @@ export const InicioVotante = () => {
 										display="flex"
 										justifyContent="center"
 										align="center"
-										pt="2rem"
-										mb="2rem"
+										pt={{ xs: "1.5rem", md: "0" }}
+										mb="1rem"
+										alignContent="center"
+										alignItems="center"
+										// height="35%"
 									>
-										Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+										{jornadaFormal.nombreJornada}
 									</Typography>
+									<Box>
+										{statusBoton.jornadaFormal === "en espera" ? (
+											<TemporizadorInicio
+												fechaInicio={
+													jornadaFormal.requestConfigJornada
+														.inicioRecepVoto
+												}
+												setStatusBoton={setStatusBoton}
+												statusBoton={statusBoton.jornadaFormal}
+												boton={"jornadaFormal"}
+											/>
+										) : (
+											<TemporizadorFin
+												fechaFin={
+													jornadaFormal.requestConfigJornada.finRecepVoto
+												}
+												setStatusBoton={setStatusBoton}
+												statusBoton={statusBoton.jornadaFormal}
+												boton={"jornadaFormal"}
+												idProceso={jornadaFormal.idJornada}
+												curp={username}
+											/>
+										)}
+									</Box>
 									<Button
 										variant="contained"
 										size="large"
 										color="darkButton"
+										disabled={
+											statusBoton.jornadaFormal === "en espera" ||
+											statusBoton.jornadaFormal === "terminada" ||
+											status === "checking"
+										}
 										// onClick={handleOpenModal}
 										onClick={
 											selfieVerificada
@@ -374,11 +413,8 @@ export const InicioVotante = () => {
 										sx={{
 											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 											transition: "all 0.5s ease",
-											// backgroundColor: "#543884",
 											width: { xs: "100%", md: "50%" },
-											// borderRadius: "2rem 2rem 2rem 2rem",
 											"&:hover": {
-												// backgroundColor: "#7E328B !important",
 												transform: "translate(-5px, -5px)",
 												boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
 											},
@@ -398,13 +434,13 @@ export const InicioVotante = () => {
 										width="100%"
 										zIndex={10}
 										position="absolute"
+										p="2rem"
 										sx={{
 											background: "rgba(120, 120, 120, 0.75 )",
 											borderRadius: { xs: "0.5rem", md: "1rem" },
 											backdropFilter: "blur( 10px )",
 											WebkitBackdropFilter: "blur( 10px )",
 											border: "1px solid rgba( 255, 255, 255, 0.18 )",
-											p: "2rem",
 										}}
 									>
 										<Box
@@ -458,7 +494,7 @@ export const InicioVotante = () => {
 											pt="2rem"
 											mb="2rem"
 										>
-											Jornada electoral de Nuevo León 2023
+											Jornada de ejemplo
 										</Typography>
 										<Button
 											variant="contained"
@@ -533,16 +569,49 @@ export const InicioVotante = () => {
 										display="flex"
 										justifyContent="center"
 										align="center"
-										mb="2rem"
-										pt="2rem"
+										mb="1rem"
+										pt={{ xs: "1.5rem", md: "0" }}
+										alignContent="center"
+										alignItems="center"
+										// height="35%"
 									>
-										Jornada No formal 2023
+										{jornadaNoFormal.nombreJornada}
 									</Typography>
+									<Box>
+										{statusBoton.jornadaNoFormal === "en espera" ? (
+											<TemporizadorInicio
+												fechaInicio={
+													jornadaNoFormal.requestConfigJornada
+														.inicioRecepVoto
+												}
+												setStatusBoton={setStatusBoton}
+												statusBoton={statusBoton.jornadaNoFormal}
+												boton={"jornadaNoFormal"}
+											/>
+										) : (
+											<TemporizadorFin
+												fechaFin={
+													jornadaNoFormal.requestConfigJornada
+														.finRecepVoto
+												}
+												setStatusBoton={setStatusBoton}
+												statusBoton={statusBoton.jornadaNoFormal}
+												boton={"jornadaNoFormal"}
+												idProceso={jornadaNoFormal.idJornada}
+												curp={username}
+											/>
+										)}
+									</Box>
 									<Button
 										variant="contained"
 										size="large"
 										color="darkButton"
-										onClick={handleOpenModal}
+										onClick={handleComezarjornadaNoFormal}
+										disabled={
+											statusBoton.jornadaNoFormal === "en espera" ||
+											statusBoton.jornadaNoFormal === "terminada" ||
+											status === "checking"
+										}
 										sx={{
 											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 											transition: "all 0.5s ease",
@@ -629,7 +698,7 @@ export const InicioVotante = () => {
 											mb="2rem"
 											pt={{ xs: "2rem", md: "0" }}
 										>
-											Jornada No formal 2023
+											Jornada No formal de ejemplo
 										</Typography>
 										<Button
 											variant="contained"
@@ -705,16 +774,49 @@ export const InicioVotante = () => {
 										display="flex"
 										justifyContent="center"
 										align="center"
-										mb="2rem"
-										pt={{ xs: "2rem", md: "0" }}
+										mb="1rem"
+										pt={{ xs: "1.5rem", md: "0" }}
+										alignContent="center"
+										alignItems="center"
+										// height="35%"
 									>
-										Consulta Ciudadana Nuevo León 2023
+										{consultaCiudadana.nombreJornada}
 									</Typography>
+									<Box>
+										{statusBoton.consultaCiudadana === "en espera" ? (
+											<TemporizadorInicio
+												fechaInicio={
+													consultaCiudadana.requestConfigJornada
+														.inicioRecepVoto
+												}
+												setStatusBoton={setStatusBoton}
+												statusBoton={statusBoton.consultaCiudadana}
+												boton={"consultaCiudadana"}
+											/>
+										) : (
+											<TemporizadorFin
+												fechaFin={
+													consultaCiudadana.requestConfigJornada
+														.finRecepVoto
+												}
+												setStatusBoton={setStatusBoton}
+												statusBoton={statusBoton.consultaCiudadana}
+												boton={"consultaCiudadana"}
+												idProceso={consultaCiudadana.idJornada}
+												curp={username}
+											/>
+										)}
+									</Box>
 									<Button
 										variant="contained"
 										size="large"
 										color="darkButton"
-										onClick={handleConsultaCiudadana}
+										disabled={
+											statusBoton.consultaCiudadana === "en espera" ||
+											statusBoton.consultaCiudadana === "terminada" ||
+											status === "checking"
+										}
+										onClick={handleComezarConsultaCiudadana}
 										sx={{
 											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 											transition: "all 0.5s ease",
@@ -801,9 +903,9 @@ export const InicioVotante = () => {
 											mb="2rem"
 											pt={{ xs: "2rem", md: "0" }}
 										>
-											Jornada electoral de Nuevo León NUEVA DIRECCIÓN 2023
+											Consulta ciudadana de ejemplo
 										</Typography>
-										<Button
+										{/* <Button
 											variant="contained"
 											size="large"
 											color="darkButton"
@@ -822,7 +924,7 @@ export const InicioVotante = () => {
 											}}
 										>
 											Comenzar Votación
-										</Button>
+										</Button> */}
 									</Box>
 								</Box>
 							)}

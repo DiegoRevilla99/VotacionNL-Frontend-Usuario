@@ -6,6 +6,7 @@ import {
 	CircularProgress,
 	Container,
 	FormControl,
+	Grid,
 	IconButton,
 	InputLabel,
 	Modal,
@@ -36,7 +37,7 @@ export const ModalVerificarCuenta = ({
 	imagenes,
 	setImagenes,
 }) => {
-	const { statusPeticion, verificado } = useSelector((state) => state.votante);
+	const { statusPeticion, verificado, errorMessage } = useSelector((state) => state.votante);
 	const { username } = useSelector((state) => state.auth);
 	const [isSubmitted, setisSubmitted] = useState(false);
 	const dispatch = useDispatch();
@@ -59,21 +60,17 @@ export const ModalVerificarCuenta = ({
 		<Modal
 			open={verificado ? false : statusModalVerificar}
 			onClose={handleCloseModalVerificar}
-			sx={{ marginX: "1rem", zIndex: 9999 }}
+			sx={{ marginX: "1rem", zIndex: 9999, overflow: "auto" }}
 		>
 			<Container maxWidth="lg" sx={style}>
 				<Box
 					display="flex"
 					flexDirection="column"
-					alignItems="center"
-					justifyContent="center"
+					// alignItems="center"
+					// justifyContent="center"
+					// overflow="auto"
 					sx={{
-						// minHeight: "10rem",
-						// height: "auto",
-						// boxShadow: 1,
-						// backgroundColor: "white",
-						// borderRadius: { xs: "0.5rem", md: "1rem" },
-						p: "2rem",
+						p: { xs: "0.5rem", md: "2rem" },
 					}}
 				>
 					<Typography
@@ -124,6 +121,7 @@ export const ModalVerificarCuenta = ({
 											hidden
 											accept="image/png,image/jpg,image/jpeg"
 											type="file"
+											value=""
 											onChange={(e) =>
 												setImagenes((i) => {
 													return {
@@ -166,6 +164,7 @@ export const ModalVerificarCuenta = ({
 											hidden
 											accept="image/png,image/jpg,image/jpeg"
 											type="file"
+											value=""
 											onChange={(e) =>
 												setImagenes((i) => {
 													return {
@@ -203,6 +202,7 @@ export const ModalVerificarCuenta = ({
 											hidden
 											accept="image/png,image/jpg,image/jpeg"
 											type="file"
+											value=""
 											onChange={(e) =>
 												setImagenes((i) => {
 													return {
@@ -225,7 +225,8 @@ export const ModalVerificarCuenta = ({
 						<Box pt={2}>
 							<Alert severity="error">
 								Tu foto de credencial de lector no coincide con tu selfie. Intenta
-								tomarte fotos más parecidas y con buena iluminación
+								tomar fotos más parecidas y con buena iluminación y vuelve a
+								intentarlo.
 							</Alert>
 						</Box>
 					) : (
@@ -234,13 +235,13 @@ export const ModalVerificarCuenta = ({
 
 					{statusPeticion === "fail" ? (
 						<Box pt={2}>
-							<Alert severity="error">Error de servidor. Intentalo más tarde</Alert>
+							<Alert severity="error">{errorMessage}</Alert>
 						</Box>
 					) : (
 						<></>
 					)}
 
-					<Box
+					{/* <Box
 						// height="10%"
 						sx={{
 							display: "flex",
@@ -248,45 +249,65 @@ export const ModalVerificarCuenta = ({
 							pt: 4,
 							width: "100%",
 						}}
+					> */}
+					<Grid
+						container
+						direction={{ xs: "column-reverse", md: "row" }}
+						pt={{ xs: "1rem", md: "2rem" }}
 					>
-						<Button
-							color="error"
-							variant="outlined"
-							onClick={handleCloseModalVerificar}
-						>
-							Regresar
-						</Button>
+						<Grid item xs={12} md={5}>
+							<Button
+								color="error"
+								variant="outlined"
+								onClick={handleCloseModalVerificar}
+								fullWidth
+							>
+								Regresar
+							</Button>
+						</Grid>
 
-						<Box sx={{ flex: "1 1 auto" }} />
+						<Grid item xs={12} md={2}></Grid>
 
-						<Button
-							// sx={{
-							// 	"&.Mui-disabled": {
-							// 		color: "#f8f7f3 !important",
-							// 		border: "1px solid #f8f7f3 !important",
-							// 	},
-							// }}
-							// color="baseButton"
-							variant="contained"
-							// type="submit"
-							onClick={handleVerificarCredencial}
-							disabled={
-								imagenes.credFrontalCrop === null ||
-								imagenes.credTraseraCrop === null ||
-								imagenes.selfieCrop === null ||
-								imagenes.credFrontal.name === "" ||
-								imagenes.credTrasera.name === "" ||
-								imagenes.selfie.name === "" ||
-								statusPeticion === "checking"
-							}
-							// endIcon={<SendIcon />}
-							endIcon={
-								statusPeticion === "checking" ? <CircularProgress /> : <SendIcon />
-							}
-						>
-							{statusPeticion === "checking" ? "Verificando" : "Verificar credencial"}
-						</Button>
-					</Box>
+						{/* <Box sx={{ flex: "1 1 auto" }} /> */}
+
+						<Grid item xs={12} md={5} pb={{ xs: "2rem", md: "0" }}>
+							<Button
+								// sx={{
+								// 	"&.Mui-disabled": {
+								// 		color: "#f8f7f3 !important",
+								// 		border: "1px solid #f8f7f3 !important",
+								// 	},
+								// }}
+								// color="baseButton"
+								variant="contained"
+								// type="submit"
+								fullWidth
+								onClick={handleVerificarCredencial}
+								disabled={
+									imagenes.credFrontalCrop === null ||
+									imagenes.credTraseraCrop === null ||
+									imagenes.selfieCrop === null ||
+									imagenes.credFrontal.name === "" ||
+									imagenes.credTrasera.name === "" ||
+									imagenes.selfie.name === "" ||
+									statusPeticion === "checking"
+								}
+								// endIcon={<SendIcon />}
+								endIcon={
+									statusPeticion === "checking" ? (
+										<CircularProgress />
+									) : (
+										<SendIcon />
+									)
+								}
+							>
+								{statusPeticion === "checking"
+									? "Verificando"
+									: "Verificar credencial"}
+							</Button>
+						</Grid>
+						{/* </Box> */}
+					</Grid>
 				</Box>
 			</Container>
 		</Modal>

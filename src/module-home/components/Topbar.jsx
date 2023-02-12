@@ -10,7 +10,7 @@ export const Topbar = () => {
 					<img
 						alt="logo"
 						// src="../../images/CEE600x321.png"
-						src="./../../images/CEE600x321.png"
+						src="/images/CEE600x321.png"
 						style={{
 							transition: "width 0.5s, height 0.5s",
 							width: "8rem",

@@ -3,6 +3,7 @@ import {
 	subirImagenes,
 	subirSelfie,
 	verificarCredencial,
+	verificarFrenteDeCredencial,
 } from "../../providers/Micro-images/providerImages";
 import { enviartTokenSms, getDataVotantePassword } from "../../providers/Micro-Token/providerToken";
 import {
@@ -15,6 +16,8 @@ import {
 	comenzarVotacion,
 	emitirRespuestaConsulta,
 	emitirVoto,
+	flagJornadaNoRealizada,
+	flagJornadaRealizada,
 	getBoletasDeVotante,
 	getConsultasDeVotante,
 } from "../../providers/Micro-Votos/providerVotos";
@@ -41,21 +44,52 @@ import {
 	onFillJornadaFormal,
 	onFillJornadaNoFormal,
 	onFillConsultaCiudadana,
+	onSetJornadaActual,
+	onSetPapeletaActual,
 } from "./votanteSlice";
 
-export const onEmitirVoto = (values, navigate = () => {}) => {
+export const onEmitirVoto = (values, idJornadaVotante, curp, navigate = () => {}) => {
 	return async (dispatch) => {
 		dispatch(onCheckingPeticion());
 
-		const { ok, data } = await emitirVoto(values);
+		const { ok1 } = await flagJornadaRealizada(idJornadaVotante, curp);
 
-		if (ok) {
+		if (ok1) {
+			console.log("Cambió bien la flag");
+			const { ok2, data } = await emitirVoto(values);
 			// dispatch(onLogin({ uid: uid, displayName: name, email: email }));
-			dispatch(onFillFolios(data));
-			dispatch(onNoVotando());
-			navigate();
+			if (ok2) {
+				console.log("Guardó bien el voto");
+				dispatch(onFillFolios(data));
+				dispatch(onNoVotando());
+				navigate();
+				dispatch(onOkPeticion());
+			} else {
+				console.log("no se emitio el voto");
+				const { ok1 } = await flagJornadaNoRealizada(idJornadaVotante);
+				dispatch(onError("Fallo al emitir voto, intenta mas tarde."));
+				dispatch(onNoVotando());
+			}
 		} else {
-			dispatch(onError("Error de autenticación. Revisa tus credenciales"));
+			console.log("FLAG JORNADA NO REALIZADA 1");
+			dispatch(onNoVotando());
+			dispatch(onError("Fallo al emitir voto, intenta mas tarde."));
+		}
+	};
+};
+
+export const tiempoAgotadoJornada = (idJornadaVotante, curp) => {
+	return async (dispatch) => {
+		dispatch(onCheckingPeticion());
+
+		console.log("ENTRÓ TIEMPO AGOTADO");
+		const { ok1 } = await flagJornadaRealizada(idJornadaVotante, curp);
+
+		if (ok1) {
+			console.log("Cambió bien la flag");
+			dispatch(onOkPeticion());
+		} else {
+			dispatch(onOkPeticion());
 		}
 	};
 };
@@ -76,7 +110,7 @@ export const onEmitirRespuestaConsulta = (values, navigate = () => {}) => {
 	};
 };
 
-export const onComenzarVotacion = (token, curp, navigate = () => {}) => {
+export const onComenzarVotacion = (token, curp, navigate = () => {}, jornadaFormal) => {
 	return async (dispatch) => {
 		dispatch(onCheckingVotante());
 
@@ -86,8 +120,13 @@ export const onComenzarVotacion = (token, curp, navigate = () => {}) => {
 			token === "123123"
 			// ok && data === "Verificado"
 		) {
-			dispatch(onVotando());
-			navigate();
+			const { ok: ok1, data } = await getBoletasDeVotante(curp);
+			if (ok1) {
+				dispatch(onFillBoletas(data));
+				dispatch(onSetJornadaActual(jornadaFormal));
+				dispatch(onVotando());
+				navigate();
+			}
 		} else {
 			dispatch(onNoVotando());
 			dispatch(onError("El token es incorrecto o ha caducado."));
@@ -95,18 +134,45 @@ export const onComenzarVotacion = (token, curp, navigate = () => {}) => {
 	};
 };
 
-export const onComenzarConsulta = (values, navigate = () => {}) => {
+export const onComenzarConsulta = (consultaCiudadana, curp, navigate = () => {}) => {
 	return async (dispatch) => {
 		// dispatch(onChecking());
 		dispatch(onCheckingVotante());
 
-		const { ok } = await comenzarVotacion();
+		// const { ok } = await comenzarVotacion();
+		const { ok, data } = await getConsultasDeVotante(curp);
 
 		if (ok) {
+			console.log("CONSULTAS", data);
 			// dispatch(onLogin({ uid: uid, displayName: name, email: email }));
+			dispatch(onSetJornadaActual(consultaCiudadana));
+			dispatch(onSetConsulta(data));
+			// dispatch(onSetPapeletaActual(0));
 			dispatch(onVotando());
 			navigate();
 		} else {
+			console.log("ERROR CONSULTAS GET CONSULTAS DE VOTANTE");
+			dispatch(onNoVotando());
+			dispatch(onError("Error."));
+		}
+	};
+};
+
+export const onComenzarJornadaNoFormal = (jornadaNoFormal, curp, navigate = () => {}) => {
+	return async (dispatch) => {
+		dispatch(onCheckingVotante());
+		// dispatch(onCheckingPeticion());
+
+		// const { ok } = await comenzarVotacion();
+		const { ok, data } = await getBoletasDeVotante(curp);
+
+		if (ok) {
+			dispatch(onSetJornadaActual(jornadaNoFormal));
+			dispatch(onFillBoletas(data));
+			dispatch(onVotando());
+			navigate();
+		} else {
+			dispatch(onNoVotando());
 			dispatch(onError("Error."));
 		}
 	};
@@ -167,9 +233,32 @@ export const onVerificarCredencial = ({ credFrontalCrop, credTraseraCrop, selfie
 
 			if (ok1 && !verificado) {
 				dispatch(onSetVerificado(verificado));
-				dispatch(onOkPeticion());
+				dispatch(
+					onError(
+						"No hay coincidencia entre la foto de tu credencial y tu selfie, intenta tomar fotos más claras."
+					)
+				);
+				// dispatch(onOkPeticion());
 				return;
 			}
+
+			const { ok: ok0, esCredencial } = await verificarFrenteDeCredencial({
+				linkCredFrontalCrop,
+			});
+
+			if (ok0 && !esCredencial) {
+				dispatch(onSetVerificado(false));
+				dispatch(
+					onError(
+						"La foto de la parte delantera de tu credencial no pudo ser procesada. Intenta tomar una foto con más claridad."
+					)
+				);
+				return;
+			} else if (!ok0) {
+				dispatch(onError("Error de servidor"));
+				return;
+			}
+
 			if (ok1) {
 				const { ok2 } = await guardarLinkVotante({
 					curp,
@@ -189,21 +278,21 @@ export const onVerificarCredencial = ({ credFrontalCrop, credTraseraCrop, selfie
 					} else {
 						// TODO: BORRADO DE LA IMAGEN EN EL MICRO IMAGENES
 						console.log("ERROR DE GUARDADO DE IMAGEN EN VOTANTE");
-						dispatch(onError("Error"));
+						dispatch(onError("Error de servidor"));
 					}
 				} else {
 					// TODO: BORRADO DE LA IMAGEN EN EL MICRO IMAGENES
 					console.log("ERROR DE DEL LLENADO DE CAMPO VERIFICACION EN VOTANTE");
-					dispatch(onError("Error"));
+					dispatch(onError("Error de servidor"));
 				}
 			} else {
 				// TODO: BORRADO DE LA IMAGEN EN EL MICRO IMAGENES
 				console.log("ERROR DE LA VERIFICACIÓN THUNK");
-				dispatch(onError("Error"));
+				dispatch(onError("Error de servidor"));
 			}
 		} else {
 			console.log("ERROR DE LA SUBIDA DE IMAGENES");
-			dispatch(onError("Error"));
+			dispatch(onError("Error de servidor"));
 		}
 	};
 };
@@ -268,10 +357,12 @@ export const onGetProcesosDelVotante = (curp) => {
 
 		const { ok, data } = await getProcesosDelVotante(curp);
 
+		console.log("DATA PROCESOS", data);
+
 		if (ok) {
 			dispatch(onFillJornadaFormal(data.jornadaFormal));
 			dispatch(onFillJornadaNoFormal(data.jornadaNoFormal));
-			dispatch(onFillConsultaCiudadana(data.consultaCiudadana));
+			dispatch(onFillConsultaCiudadana(data.jornadaConsultas));
 			dispatch(onOkJornadas());
 		} else {
 			dispatch(onFailJornadas());

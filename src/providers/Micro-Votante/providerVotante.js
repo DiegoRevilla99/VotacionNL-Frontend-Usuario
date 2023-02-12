@@ -62,41 +62,45 @@ export const getProcesosDelVotante = async (curp) => {
 	try {
 		// const { data } = await votanteAPI.get(`status/${curp}`);
 
-		await timeout(5000);
+		// await timeout(5000);
 
-		const endpoint = {
-			jornadaFormal:
-				// null,
-				{
-					//SI EL VOTANTE YA HIZO SU VOTO, ESTE CAMPO DEBE SER NULL
-					votanteTieneJornadaRelacionada: true,
-					votantePuedeRealizarLaVotacion: true,
-					idJornada: "JO-H1-82",
-					nombreJornada: "Jornada Formal 1",
-					configuracionDeJornada: {
-						fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
-						fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
-						tiempoParaContestarBoletas: "30:00",
-						tiempoExtra: "10:00",
-					},
-				},
-			jornadaNoFormal: {
-				votanteTieneJornadaRelacionada: true,
-				votantePuedeRealizarLaVotacion: true,
-				nombreJornada: "Jornada Formal 1",
-				configuracionDeJornada: {
-					fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
-					fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
-					tiempoParaContestarBoletas: "30:00",
-					tiempoExtra: "10:00",
-				},
-			},
-			consultaCiudadana: null,
-		};
+		const { data } = await votanteAPI.get(`${curp}/jornadas_actuales`);
+
+		console.log("RESPONSE PROCESOS", data);
+
+		// const endpoint = {
+		// 	jornadaFormal:
+		// 		// null,
+		// 		{
+		// 			//SI EL VOTANTE YA HIZO SU VOTO, ESTE CAMPO DEBE SER NULL
+		// 			votanteTieneJornadaRelacionada: true,
+		// 			votantePuedeRealizarLaVotacion: true,
+		// 			idJornada: "JO-H1-82",
+		// 			nombreJornada: "Jornada Formal 1",
+		// 			configuracionDeJornada: {
+		// 				fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
+		// 				fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
+		// 				tiempoParaContestarBoletas: "30:00",
+		// 				tiempoExtra: "10:00",
+		// 			},
+		// 		},
+		// 	jornadaNoFormal: {
+		// 		votanteTieneJornadaRelacionada: true,
+		// 		votantePuedeRealizarLaVotacion: true,
+		// 		nombreJornada: "Jornada Formal 1",
+		// 		configuracionDeJornada: {
+		// 			fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
+		// 			fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
+		// 			tiempoParaContestarBoletas: "30:00",
+		// 			tiempoExtra: "10:00",
+		// 		},
+		// 	},
+		// 	consultaCiudadana: null,
+		// };
 
 		return {
 			ok: true,
-			data: endpoint,
+			data: data,
 		};
 	} catch (error) {
 		return { ok: false };
