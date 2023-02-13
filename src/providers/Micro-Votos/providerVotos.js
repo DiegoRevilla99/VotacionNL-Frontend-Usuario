@@ -1,6 +1,6 @@
 import { consultasAPI } from "../Micro-ConsultasCiudadanas/configConsultas";
 import { jornadaFormalApi } from "../Micro-JornadaFormal/configjornadaFormal";
-import { tokenSmsApi } from "../Micro-Token/configToken";
+import { tokenApi, tokenSmsApi } from "../Micro-Token/configToken";
 import { votanteAPI, votanteJornadaAPI } from "../Micro-Votante/votanteConfig";
 import { votosAPI } from "./configVotos";
 
@@ -65,7 +65,7 @@ export const emitirRespuestaConsulta = async () => {
 
 export const comenzarVotacion = async (token, curp) => {
 	try {
-		const { data } = await tokenSmsApi.get(`sms/validation/${token}/verification/${curp}`);
+		const { data } = await tokenApi.get(`sms/validation/${token}/verification/${curp}`);
 		console.log("RESPUESTA GET TOKEN", data);
 		return { ok: true, data: data.data || "No verificado" };
 	} catch (error) {
