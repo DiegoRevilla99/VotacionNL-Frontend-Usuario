@@ -51,8 +51,8 @@ export const ModalCamara = ({ statusModalCamara, handleCloseModalCamara, handleO
 	useEffect(() => {
 		if (selfieVerificada) {
 			setPage(2);
-			// dispatch(onEnviarTokenSms(username));
-			// ! DESACTIVAR EL IF EN ONvERIFICAR TOKEN
+			dispatch(onEnviarTokenSms(username));
+			// ! DESACTIVAR EL IF EN COMENZARVOTACION
 		}
 	}, [selfieVerificada]);
 

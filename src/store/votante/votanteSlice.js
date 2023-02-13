@@ -35,11 +35,15 @@ export const votanteSlice = createSlice({
 		},
 		respuestasPapeletas: [],
 		verificado: false,
-		selfieVerificada: true,
+		selfieVerificada: false,
 		tokenSmsEnviado: false,
 		jornadaActual: null,
+		horaComienzoVotacion: null,
 	},
 	reducers: {
+		onSetHoraComeinzoVotacion: (state, { payload }) => {
+			state.horaComienzoVotacion = payload;
+		},
 		onDeleteJornadaFormal: (state) => {
 			state.jornadaFormal = null;
 		},
@@ -185,6 +189,7 @@ export const {
 	onDeleteJornadaActual,
 	onSetJornadaActual,
 	onDeleteJornadaFormal,
+	onSetHoraComeinzoVotacion,
 } = votanteSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

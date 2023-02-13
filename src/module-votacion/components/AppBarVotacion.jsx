@@ -10,7 +10,7 @@ import {
 	Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/hourglass.css";
 
@@ -18,6 +18,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import { onLogoutThunk } from "../../store/auth/authThunks";
+import { TemporizadorVotacion } from "./TemporizadorVotacion";
 const pages = ["Inicio", "Resultados", "Verificación", "Información"];
 const settings = ["Ingresar"];
 const settings2 = ["Cerrar sesión"];
@@ -26,10 +27,40 @@ const votando = false;
 export const AppBarVotacion = () => {
 	const [anchorElNav, setAnchorElNav] = React.useState(null);
 	const [anchorElUser, setAnchorElUser] = React.useState(null);
-	const { status } = useSelector((state) => state.votante);
-	const { status: logged } = useSelector((state) => state.auth);
+	const {
+		status,
+		jornadaActual,
+		horaComienzoVotacion,
+		jornadaFormal,
+		jornadaNoFormal,
+		consultaCiudadana,
+	} = useSelector((state) => state.votante);
+	const { status: logged, username } = useSelector((state) => state.auth);
+	const [time, setTime] = useState(null);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	console.log("TIME SETEADO", time);
+
+	useEffect(() => {
+		if (jornadaActual !== null) {
+			const horaSeparada = jornadaActual.requestConfigJornada.tiempoDuracionVoto.split(":");
+			const horaSeparadaInt = horaSeparada.map((numero) => parseInt(numero, 10));
+			console.log("TIEMPO horaSeparadaInt", horaSeparadaInt);
+			const horaComienzo = new Date(horaComienzoVotacion);
+			console.log("horaComienzoVotacion", horaComienzo);
+
+			horaComienzo.setHours(horaComienzo.getHours() + horaSeparadaInt[0]);
+			horaComienzo.setMinutes(horaComienzo.getMinutes() + horaSeparadaInt[1]);
+			horaComienzo.setSeconds(horaComienzo.getSeconds() + horaSeparadaInt[2]);
+
+			const timeTemp = new Date(horaComienzo);
+			// setTime(timeTemp);
+
+			const time = new Date();
+			time.setSeconds(time.getSeconds() + 10);
+			setTime(time);
+		}
+	}, [jornadaActual]);
 
 	const handleOpenNavMenu = (event) => {
 		setAnchorElNav(event.currentTarget);
@@ -197,21 +228,26 @@ export const AppBarVotacion = () => {
 							/>
 						</Box>
 
-						<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+						<Box sx={{ flexGrow: 2, display: { xs: "flex", md: "none" } }}>
 							{status === "votando" && (
 								<>
 									<div className="hourglass"></div>
-									<Typography
-										pl="1rem"
-										display="flex"
-										variant="subtitle1"
-										color="base"
-										justifyContent="center"
-										alignContent="center"
-										alignItems="center"
-									>
-										15:60
-									</Typography>
+									{time !== null ? (
+										<TemporizadorVotacion
+											time={time}
+											idProceso={
+												jornadaActual.tipoJornada === "JornadaFormal"
+													? jornadaFormal.idJornada
+													: jornadaActual.tipoJornada ===
+													  "JornadaNoFormal"
+													? jornadaNoFormal.idJornada
+													: consultaCiudadana.idJornada
+											}
+											curp={username}
+										/>
+									) : (
+										<> </>
+									)}
 								</>
 							)}
 						</Box>
@@ -219,18 +255,19 @@ export const AppBarVotacion = () => {
 
 					<Box sx={{ flexGrow: 1, width: "100%" }} display="flex" justifyContent="center">
 						{status === "votando" ? (
-							<Box sx={{ display: { xs: "flex", md: "none" }, mr: 0, flexGrow: 1 }}>
-								<img
-									alt="logo"
-									// src="../../images/CEE600x321.png"
-									src="/images/CEE600x321.png"
-									style={{
-										transition: "width 0.5s, height 0.5s",
-										width: "8rem",
-									}}
-								/>
-							</Box>
+							<></>
 						) : (
+							// <Box sx={{ display: { xs: "flex", md: "none" }, mr: 0, flexGrow: 1 }}>
+							// 	<img
+							// 		alt="logo"
+							// 		// src="../../images/CEE600x321.png"
+							// 		src="/images/CEE600x321.png"
+							// 		style={{
+							// 			transition: "width 0.5s, height 0.5s",
+							// 			width: "8rem",
+							// 		}}
+							// 	/>
+							// </Box>
 							<>
 								<Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
 									<img
@@ -297,17 +334,24 @@ export const AppBarVotacion = () => {
 							{status === "votando" && (
 								<>
 									<div className="hourglass"></div>
-									<Typography
-										pl="2rem"
-										display="flex"
-										variant="subtitle1"
-										color="base.main"
-										justifyContent="center"
-										alignContent="center"
-										alignItems="center"
-									>
-										15:60
-									</Typography>
+
+									{time !== null ? (
+										<TemporizadorVotacion
+											time={time}
+											idProceso={
+												jornadaActual.tipoJornada === "JornadaFormal"
+													? jornadaFormal.idJornada
+													: jornadaActual.tipoJornada ===
+													  "JornadaNoFormal"
+													? jornadaNoFormal.idJornada
+													: consultaCiudadana.idJornada
+											}
+											curp={username}
+											tipoJornada={jornadaActual.tipoJornada}
+										/>
+									) : (
+										<> </>
+									)}
 								</>
 							)}
 						</Box>
@@ -331,7 +375,17 @@ export const AppBarVotacion = () => {
 
 					<Box sx={{ flexGrow: 1, width: "100%" }} display="flex" justifyContent="right">
 						{status === "votando" ? (
-							<></>
+							<Box sx={{ display: { xs: "flex", md: "none" }, mr: 0, flexGrow: 1 }}>
+								<img
+									alt="logo"
+									// src="../../images/CEE600x321.png"
+									src="/images/CEE600x321.png"
+									style={{
+										transition: "width 0.5s, height 0.5s",
+										width: "8rem",
+									}}
+								/>
+							</Box>
 						) : (
 							<Box sx={{ flexGrow: 0 }}>
 								<Tooltip title="Abrir opciones">

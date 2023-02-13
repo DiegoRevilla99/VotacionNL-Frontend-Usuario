@@ -48,6 +48,7 @@ import {
 	onSetPapeletaActual,
 	onDeleteJornadaActual,
 	onDeleteJornadaFormal,
+	onSetHoraComeinzoVotacion,
 } from "./votanteSlice";
 
 export const onEmitirVoto = (values, idJornadaVotante, curp, navigate = () => {}) => {
@@ -97,6 +98,23 @@ export const tiempoAgotadoJornada = (idJornadaVotante, curp) => {
 	};
 };
 
+export const tiempoAgotadoJornadaEnVotacion = (idJornadaVotante, curp, navigate = () => {}) => {
+	return async (dispatch) => {
+		dispatch(onCheckingPeticion());
+
+		console.log("ENTRÓ TIEMPO AGOTADO EN VOTACION");
+		const { ok1 } = await flagJornadaRealizada(idJornadaVotante, curp);
+
+		if (ok1) {
+			console.log("Cambió bien la flag");
+			dispatch(onOkPeticion());
+			navigate();
+		} else {
+			dispatch(onError("Error"));
+		}
+	};
+};
+
 export const onEmitirRespuestaConsulta = (values, navigate = () => {}) => {
 	return async (dispatch) => {
 		// dispatch(onChecking());
@@ -117,16 +135,18 @@ export const onComenzarVotacion = (token, curp, navigate = () => {}, jornadaForm
 	return async (dispatch) => {
 		dispatch(onCheckingVotante());
 
-		// const { ok, data } = await comenzarVotacion(token, curp);
+		const { ok, data } = await comenzarVotacion(token, curp);
 
 		if (
-			token === "123123"
-			// ok && data === "Verificado"
+			// token === "123123"
+			ok &&
+			data === "Verificado"
 		) {
 			const { ok: ok1, data } = await getBoletasDeVotante(jornadaFormal.idJornada);
 			if (ok1) {
 				dispatch(onFillBoletas(data));
 				dispatch(onSetJornadaActual({ jornadaFormal, tipoJornada: "JornadaFormal" }));
+				dispatch(onSetHoraComeinzoVotacion(Date.now()));
 				dispatch(onVotando());
 				navigate();
 			}

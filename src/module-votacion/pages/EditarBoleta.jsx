@@ -15,6 +15,7 @@ import {
 	onAddVoto,
 	onSetBoletaActual,
 } from "../../store/votante/votanteSlice";
+import { VotoNulo } from "../components/VotoNulo";
 
 export const EditarBoleta = () => {
 	const { statusPeticion, boletaActual, votos } = useSelector((state) => state.votante);
@@ -208,24 +209,46 @@ export const EditarBoleta = () => {
 										);
 									})}
 
-									<Grid
-										item
-										xs={12}
-										sm={6}
-										display="flex"
-										justifyContent="center"
-									>
-										<TarjetaCandidaturaNoRegistrada
-											id={100}
-											seleccionados={seleccionados}
-											setSeleccionados={setSeleccionados}
-											max={boletaActual.maxOpciones}
-											handleChange={handleChange}
-											candidaturaNoRegistrada={candidaturaNoRegistrada}
-											setCandidaturaNoRegistrada={setCandidaturaNoRegistrada}
-											// noBoleta={noBoleta}
-										/>
-									</Grid>
+									{boletaActual.candidaturaNoRegistrada && (
+										<Grid
+											item
+											xs={12}
+											sm={6}
+											display="flex"
+											justifyContent="center"
+										>
+											<TarjetaCandidaturaNoRegistrada
+												id={100}
+												seleccionados={seleccionados}
+												setSeleccionados={setSeleccionados}
+												max={boletaActual.maxOpciones}
+												handleChange={handleChange}
+												candidaturaNoRegistrada={candidaturaNoRegistrada}
+												setCandidaturaNoRegistrada={
+													setCandidaturaNoRegistrada
+												}
+												// noBoleta={noBoleta}
+											/>
+										</Grid>
+									)}
+
+									{boletaActual.votoNulo && (
+										<Grid
+											item
+											xs={12}
+											sm={6}
+											display="flex"
+											justifyContent="center"
+										>
+											<VotoNulo
+												id={200}
+												seleccionados={seleccionados}
+												setSeleccionados={setSeleccionados}
+												max={boletaActual.maxOpciones}
+												// noBoleta={noBoleta}
+											/>
+										</Grid>
+									)}
 								</Grid>
 							</Box>
 							<Box
@@ -237,14 +260,32 @@ export const EditarBoleta = () => {
 							>
 								<Box sx={{ flex: "1 1 auto" }} />
 
-								<Button
+								{/* <Button
 									color="base"
 									onClick={handleSubmit}
 									variant="contained"
 									disabled={!(seleccionados.length >= boletaActual.minOpciones)}
 								>
 									Terminar
-								</Button>
+								</Button> */}
+								{seleccionados.includes(200) ? (
+									<Button color="base" onClick={handleSubmit} variant="contained">
+										Terminar
+									</Button>
+								) : (
+									<Button
+										color="base"
+										onClick={handleSubmit}
+										variant="contained"
+										disabled={
+											!(seleccionados.length >= boletaActual.minOpciones) ||
+											(seleccionados.includes(100) &&
+												candidaturaNoRegistrada === "")
+										}
+									>
+										Terminar
+									</Button>
+								)}
 							</Box>
 						</Box>
 					</Container>

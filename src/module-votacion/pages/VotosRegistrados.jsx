@@ -16,6 +16,8 @@ export const VotosRegistrados = () => {
 	const { username } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [coalicionInvalida, setCoalicionInvalida] = useState([]);
+	console.log("STATUS COALICIONES", coalicionInvalida);
 
 	const onSubmit = () => {
 		setModalStatus(true);
@@ -42,6 +44,7 @@ export const VotosRegistrados = () => {
 					// return boletaCurrent.candidatos[index];
 					return {
 						idSeleccion: boletaCurrent.candidatos[index].id,
+						claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
 						clavePartido: boletaCurrent.candidatos[index].clavePartido,
 						nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
 						nombreCandidato: boletaCurrent.candidatos[index].nombre,
@@ -61,17 +64,117 @@ export const VotosRegistrados = () => {
 
 		console.log("votosObject", votosObject);
 
-		dispatch(
-			onEmitirVoto(votosObject, jornadaActual.idJornada, username, () =>
-				navigate("/votacion/folios")
-			)
-		);
+		const votosObjectCoaliciones = verificarCoaliciones(votosObject);
+		console.log("VALIDACION COALICIONES", votosObjectCoaliciones);
+
+		// dispatch(
+		// 	onEmitirVoto(votosObject, jornadaActual.idJornada, username, () =>
+		// 		navigate("/votacion/folios")
+		// 	)
+		// );
+	};
+
+	const verificarCoaliciones = (votos) => {
+		const nuevos = [];
+		votos.forEach((voto) => {
+			const numero = voto.partidos[0].claveCoalicion;
+			let nulo = voto.partidos.some((partido) => {
+				return partido.claveCoalicion !== numero;
+			});
+
+			if (nulo) {
+				nuevos.push({
+					boletaModel: voto.boletaModel,
+					partidos: {
+						clavePartido: "NULO",
+						nombreCandidato: "Voto nulo",
+						nombrePartido: "Voto nulo",
+					},
+				});
+			} else {
+				nuevos.push({
+					boletaModel: voto.boletaModel,
+					partidos: voto.partidos,
+				});
+			}
+		});
+		return nuevos;
+	};
+
+	const verificarCoalicionesPreEnvio = (votos) => {
+		console.log("LOS VOTOS QUE LLEGAN", votos);
+		const nuevos = [];
+		const array = [];
+		votos.forEach((voto) => {
+			console.log("voto foreach", voto);
+			const numero = voto.partidos[0].claveCoalicion;
+			console.log("Numero", numero);
+			let nulo = voto.partidos.some((partido) => {
+				return partido.claveCoalicion !== numero;
+			});
+
+			console.log("ES NULO?", nulo);
+
+			if (nulo) {
+				console.log("LO SETEA EN TRUE");
+				array.push(true);
+			} else {
+				array.push(false);
+			}
+		});
+		setCoalicionInvalida(array);
+		return nuevos;
 	};
 
 	useEffect(() => {
 		if (status === "noVotando") {
 			navigate("/votacion/inicio");
 		}
+	}, []);
+
+	useEffect(() => {
+		const votosObject = votos.map((boleta, indexBoleta) => {
+			const boletaCurrent = boletas[indexBoleta];
+			const partidos = boleta.map((idPartido) => {
+				if (idPartido === 100)
+					return {
+						clavePartido: "CANORE",
+						nombrePartido: "Candidatura no registrada",
+						nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+					};
+				else if (idPartido === 200)
+					return {
+						clavePartido: "NULO",
+						nombrePartido: "Voto nulo",
+						nombreCandidato: "Voto nulo",
+					};
+				else {
+					const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+					// return boletaCurrent.candidatos[index];
+					return {
+						idSeleccion: boletaCurrent.candidatos[index].id,
+						claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
+						clavePartido: boletaCurrent.candidatos[index].clavePartido,
+						nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
+						nombreCandidato: boletaCurrent.candidatos[index].nombre,
+					};
+				}
+			});
+			return {
+				boletaModel: {
+					nombreEleccion: boletaCurrent.encabezado,
+					municipio: boletaCurrent.municipio,
+					distrito: boletaCurrent.distritoElectoral,
+					jornadaElectoral: boletaCurrent.jornadaElectoral,
+				},
+				partidos: partidos,
+			};
+		});
+
+		console.log("votosObject", votosObject);
+
+		const votosObjectCoaliciones = verificarCoalicionesPreEnvio(votosObject);
+		console.log("VALIDACION COALICIONES", votosObjectCoaliciones);
 	}, []);
 
 	return (
@@ -134,6 +237,7 @@ export const VotosRegistrados = () => {
 												boleta={boleta}
 												noBoleta={index}
 												key={boleta.encabezado}
+												coalicionInvalida={coalicionInvalida[index]}
 											/>
 										);
 									})}

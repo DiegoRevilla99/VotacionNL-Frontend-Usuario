@@ -90,6 +90,7 @@ export const getBoletasDeVotante = async (idJornada) => {
 			boleta.partidos.forEach((partido, indexPartido) => {
 				partidos.push({
 					id: partido.partido.clavePartido,
+					claveCoalicion: partido.coalicion.claveCoalicion,
 					nombrePartido: partido.partido.nombre,
 					nombre: `${partido.candidato.nombreCandidato} ${partido.candidato.apellidoPCandidato} ${partido.candidato.apellidoMCandidato}`,
 					nombreSuplente: `${partido.suplente.nombreSuplente} ${partido.suplente.apellidoPSuplente} ${partido.suplente.apellidoMSuplente}`,
@@ -104,7 +105,7 @@ export const getBoletasDeVotante = async (idJornada) => {
 				entidad: data.jornadaModel.entidad,
 				distritoElectoral: boleta.boletaModel.distrito,
 				municipio: boleta.boletaModel.municipio,
-				maxOpciones: 1,
+				maxOpciones: 3,
 				minOpciones: 1,
 				modalidad: "Representante",
 				votoNulo: true,

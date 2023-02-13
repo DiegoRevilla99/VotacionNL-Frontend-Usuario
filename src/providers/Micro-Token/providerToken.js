@@ -34,9 +34,10 @@ export const registrarUsuario = async (password, email, curp) => {
 };
 
 export const enviartTokenSms = async (curp) => {
+	console.log("CURP QUE LLEGAAAA", curp);
 	try {
-		const response = await tokenSmsApi.post(`sms/validation/sendtoken/${curp}`, {
-			telefono: "9512406578",
+		const response = await tokenApi.post(`sms/validation/sendtoken`, {
+			curp: curp,
 		});
 		// await timeout(1000);
 

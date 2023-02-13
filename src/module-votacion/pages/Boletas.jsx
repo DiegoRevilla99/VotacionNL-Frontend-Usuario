@@ -17,18 +17,6 @@ import {
 } from "../../store/votante/votanteSlice";
 import { VotoNulo } from "../components/VotoNulo";
 
-const representantes = [
-	{ id: 1, nombre: "Juan Manuel Hernandez Perez ", logo: "logo1" },
-	{ id: 2, nombre: "José Antonio Diego Revilla", logo: "logo2" },
-	{ id: 3, nombre: "Melvin Paul González Pascual", logo: "logo3" },
-	{ id: 4, nombre: "Kevin Edilberto Chávez Sanchez", logo: "logo4" },
-	{ id: 5, nombre: "Laura Yessenia Sánchez Martínez", logo: "logo5" },
-	{ id: 6, nombre: "Ana", logo: "logo6" },
-	{ id: 7, nombre: "Kevin Edilberto Chávez Sanchez", logo: "logo4" },
-	{ id: 8, nombre: "Laura Yessenia Sánchez Martínez", logo: "logo5" },
-	{ id: 9, nombre: "Ana", logo: "logo6" },
-];
-
 export const Boletas = () => {
 	const {
 		statusPeticion,
@@ -44,7 +32,7 @@ export const Boletas = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// console.log("ME RENDERIZO PADRE");
+	console.log("ME RENDERIZO BOLETA");
 
 	const handleChange = (event) => {
 		setCandidaturaNoRegistrada(event.target.value);
