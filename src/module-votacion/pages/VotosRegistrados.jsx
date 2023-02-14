@@ -21,57 +21,61 @@ export const VotosRegistrados = () => {
 
 	const onSubmit = () => {
 		setModalStatus(true);
-		console.log("votos", votos);
-		console.log("boletas", boletas);
 
-		const votosObject = votos.map((boleta, indexBoleta) => {
-			const boletaCurrent = boletas[indexBoleta];
-			const partidos = boleta.map((idPartido) => {
-				if (idPartido === 100)
-					return {
-						clavePartido: "CANORE",
-						nombrePartido: "Candidatura no registrada",
-						nombreCandidato: candidaturaNoRegistrada[indexBoleta],
-					};
-				else if (idPartido === 200)
-					return {
-						clavePartido: "NULO",
-						nombrePartido: "Voto nulo",
-						nombreCandidato: "Voto nulo",
-					};
-				else {
-					const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
-					// return boletaCurrent.candidatos[index];
-					return {
-						idSeleccion: boletaCurrent.candidatos[index].id,
-						claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
-						clavePartido: boletaCurrent.candidatos[index].clavePartido,
-						nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
-						nombreCandidato: boletaCurrent.candidatos[index].nombre,
-					};
-				}
+		if (jornadaActual.tipoJornada === "JornadaFormal") {
+			const votosObject = votos.map((boleta, indexBoleta) => {
+				const boletaCurrent = boletas[indexBoleta];
+				const partidos = boleta.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							clavePartido: "CANORE",
+							nombrePartido: "Candidatura no registrada",
+							nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+						};
+					else if (idPartido === 200)
+						return {
+							clavePartido: "NULO",
+							nombrePartido: "Voto nulo",
+							nombreCandidato: "Voto nulo",
+						};
+					else {
+						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+						// return boletaCurrent.candidatos[index];
+						return {
+							idSeleccion: boletaCurrent.candidatos[index].id,
+							claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
+							clavePartido: boletaCurrent.candidatos[index].clavePartido,
+							nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
+							nombreCandidato: boletaCurrent.candidatos[index].nombre,
+						};
+					}
+				});
+				return {
+					boletaModel: {
+						nombreEleccion: boletaCurrent.encabezado,
+						municipio: boletaCurrent.municipio,
+						distrito: boletaCurrent.distritoElectoral,
+						jornadaElectoral: boletaCurrent.jornadaElectoral,
+						idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
+					},
+					partidos: partidos,
+				};
 			});
-			return {
-				boletaModel: {
-					nombreEleccion: boletaCurrent.encabezado,
-					municipio: boletaCurrent.municipio,
-					distrito: boletaCurrent.distritoElectoral,
-					jornadaElectoral: boletaCurrent.jornadaElectoral,
-				},
-				partidos: partidos,
-			};
-		});
 
-		console.log("votosObject", votosObject);
+			console.log("votosObject", votosObject);
 
-		const votosObjectCoaliciones = verificarCoaliciones(votosObject);
-		console.log("VALIDACION COALICIONES", votosObjectCoaliciones);
+			const votosObjectCoaliciones = verificarCoaliciones(votosObject);
+			console.log("VALIDACION COALICIONES", votosObjectCoaliciones);
 
-		// dispatch(
-		// 	onEmitirVoto(votosObject, jornadaActual.idJornada, username, () =>
-		// 		navigate("/votacion/folios")
-		// 	)
-		// );
+			dispatch(
+				onEmitirVoto(votosObject, jornadaActual.idJornada, username, () =>
+					navigate("/votacion/folios")
+				)
+			);
+		} else if (jornadaActual.tipoJornada === "JornadaNoFormal") {
+			console.log("votos NO FORMAL", votos);
+			console.log("boletas NO FORMAL", boletas);
+		}
 	};
 
 	const verificarCoaliciones = (votos) => {
@@ -166,6 +170,8 @@ export const VotosRegistrados = () => {
 					municipio: boletaCurrent.municipio,
 					distrito: boletaCurrent.distritoElectoral,
 					jornadaElectoral: boletaCurrent.jornadaElectoral,
+					idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
+					// jornadaElectoral: boletaCurrent.jornadaElectoral,
 				},
 				partidos: partidos,
 			};

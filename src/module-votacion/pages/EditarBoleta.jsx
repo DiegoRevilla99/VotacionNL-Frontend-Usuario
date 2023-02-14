@@ -99,7 +99,9 @@ export const EditarBoleta = () => {
 										sx={{ backgroundColor: "#423838" }}
 									>
 										{/* GOBERNADOR */}
-										{boletaActual.maxOpciones === 1 ? "GOBERNADOR" : "COMITÉ"}
+										{boletaActual.modalidad === "REPRESENTANTE"
+											? "REPRESENTANTE"
+											: "COMITÉ"}
 									</Typography>
 								</Box>
 								<Grid container spacing={3} pb="2rem">

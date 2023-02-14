@@ -32,7 +32,12 @@ const style = {
 	p: 4,
 	// height: "auto",
 };
-export const ModalCamara = ({ statusModalCamara, handleCloseModalCamara, handleOpenModal }) => {
+export const ModalCamara = ({
+	statusModalCamara,
+	handleCloseModalCamara,
+	handleOpenModal,
+	setIsOnModalToken,
+}) => {
 	const { statusVerificacion, selfieVerificada } = useSelector((state) => state.votante);
 	const { username } = useSelector((state) => state.auth);
 	const [foto, setfoto] = useState({
@@ -57,6 +62,7 @@ export const ModalCamara = ({ statusModalCamara, handleCloseModalCamara, handleO
 	}, [selfieVerificada]);
 
 	const cerrarCamaraAbrirToken = () => {
+		setIsOnModalToken(true);
 		handleCloseModalCamara();
 		handleOpenModal();
 	};
@@ -124,11 +130,27 @@ export const ModalCamara = ({ statusModalCamara, handleCloseModalCamara, handleO
 							color="#323232"
 							display="flex"
 							justifyContent="center"
-							align="justify"
+							align="center"
 							mb="1rem"
 						>
 							{selfieVerificada ? "Identificación exitosa" : "Identificarme"}
 						</Typography>
+						{page === 1 ? (
+							<Typography
+								variant="body2"
+								color="#323232"
+								display="flex"
+								justifyContent="center"
+								mb="1rem"
+								align="center"
+							>
+								{selfieVerificada
+									? "Identificación exitosa"
+									: "Procura que tu cara abarque todo el ovalo punteado"}
+							</Typography>
+						) : (
+							<></>
+						)}
 					</Box>
 
 					{page === 0 ? (
@@ -143,7 +165,7 @@ export const ModalCamara = ({ statusModalCamara, handleCloseModalCamara, handleO
 							>
 								A continuación deberás tomarte una selfie para compararla de nuevo
 								con tu foto de credencial de lector, con el fin de que podamos
-								asegurarnos de que que la persona que está a punto de comenzar la
+								asegurarnos de que la persona que está a punto de comenzar la
 								votación seas realmente tú.
 							</Typography>
 						</Box>
@@ -168,13 +190,27 @@ export const ModalCamara = ({ statusModalCamara, handleCloseModalCamara, handleO
 												{foto.status ? (
 													<img src={foto.data} />
 												) : (
-													<Webcam
-														screenshotFormat="image/jpeg"
-														audio={false}
-														height={330}
-														ref={webcamRef}
-														videoConstraints={{ facingMode: "user" }}
-													/>
+													<>
+														<Box
+															marginTop="20px"
+															height="290px"
+															width="200px"
+															position="absolute"
+															// bgcolor="black"
+															border="5px dashed"
+															borderColor="#fed300"
+															borderRadius="50%"
+														></Box>
+														<Webcam
+															screenshotFormat="image/jpeg"
+															audio={false}
+															height={330}
+															ref={webcamRef}
+															videoConstraints={{
+																facingMode: "user",
+															}}
+														/>
+													</>
 												)}
 											</Box>
 										</Grid>

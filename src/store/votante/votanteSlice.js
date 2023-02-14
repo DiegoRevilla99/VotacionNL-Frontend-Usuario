@@ -47,11 +47,15 @@ export const votanteSlice = createSlice({
 		onDeleteJornadaFormal: (state) => {
 			state.jornadaFormal = null;
 		},
+		onDeleteConsultaCiudadana: (state) => {
+			state.consultaCiudadana = null;
+		},
 		onDeleteJornadaActual: (state) => {
 			state.jornadaActual = null;
 		},
 		onSetJornadaActual: (state, { payload }) => {
-			state.jornadaActual = { ...payload.jornadaFormal, tipoJornada: payload.tipoJornada };
+			console.log("LO QUE LLEGA PAYLOAD", payload);
+			state.jornadaActual = { ...payload.jornada, tipoJornada: payload.tipoJornada };
 		},
 		onCheckingJornadas: (state) => {
 			state.statusJornadas = "checking";
@@ -190,6 +194,7 @@ export const {
 	onSetJornadaActual,
 	onDeleteJornadaFormal,
 	onSetHoraComeinzoVotacion,
+	onDeleteConsultaCiudadana,
 } = votanteSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

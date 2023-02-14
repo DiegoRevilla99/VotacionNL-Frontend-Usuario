@@ -1,8 +1,9 @@
 import { consultasAPI } from "../Micro-ConsultasCiudadanas/configConsultas";
 import { jornadaFormalApi } from "../Micro-JornadaFormal/configjornadaFormal";
+import { jornadaNoFormalApi } from "../Micro-JornadaNoFormal/configNoFormal";
 import { tokenApi, tokenSmsApi } from "../Micro-Token/configToken";
 import { votanteAPI, votanteJornadaAPI } from "../Micro-Votante/votanteConfig";
-import { votosAPI } from "./configVotos";
+import { votosAPI, votosConsultaAPI } from "./configVotos";
 
 export const emitirVoto = async (values) => {
 	try {
@@ -30,7 +31,7 @@ export const flagJornadaRealizada = async (idJornadaVotante, curp) => {
 
 		// https://ms-votante.herokuapp.com/jornadavotante/DIRA991216HOCGVN02/jornada/EL-DE-CO-ES-IN-SI-ORD-2023/update/realizacion
 
-		https: console.log("data flag realizada", data);
+		// https: console.log("data flag realizada", data);
 
 		return { ok1: true };
 	} catch (error) {
@@ -54,10 +55,22 @@ export const flagJornadaNoRealizada = async (idJornadaVotante) => {
 	}
 };
 
-export const emitirRespuestaConsulta = async () => {
+export const emitirRespuestaConsulta = async (votos) => {
 	try {
-		await timeout(500);
-		return { ok: true };
+		// await timeout(500);
+
+		let folios = [];
+		for (const voto of votos) {
+			console.log("VOTO FOR", voto);
+			const { data } = await votosConsultaAPI.post("votos/consulta/registrar/boleta", voto);
+
+			console.log("DATA EMITIR RESP", data);
+			const { boletaModel } = data;
+			const { folioBoleta, nombreEleccion } = boletaModel;
+			folios.push({ folioBoleta, nombreEleccion });
+		}
+
+		return { ok: true, data: folios };
 	} catch (error) {
 		return { ok: false };
 	}
@@ -101,13 +114,14 @@ export const getBoletasDeVotante = async (idJornada) => {
 
 			boletas1.push({
 				encabezado: boleta.boletaModel.nombreEleccion,
+				idEstructuraBoleta: boleta.boletaModel.idEstructuraBoleta,
 				jornadaElectoral: data.jornadaModel.nombreJornada,
 				entidad: data.jornadaModel.entidad,
 				distritoElectoral: boleta.boletaModel.distrito,
 				municipio: boleta.boletaModel.municipio,
-				maxOpciones: 3,
+				maxOpciones: 100,
 				minOpciones: 1,
-				modalidad: "Representante",
+				// modalidad: "Representante",
 				votoNulo: true,
 				candidaturaNoRegistrada: true,
 				candidatos: partidos,
@@ -116,149 +130,55 @@ export const getBoletasDeVotante = async (idJornada) => {
 
 		console.log("BOLETAS CONVERTIDAS", boletas1);
 
-		const boletas = [
-			{
-				encabezado: "Elecciones de gobernador del estado de Nuevo León 2023",
-				jornadaElectoral: "Jornada 1",
-				entidad: "Nuevo León",
-				distritoElectoral: 23,
-				municipio: "Municipio 1",
-				maxOpciones: 1,
-				minOpciones: 1,
-				modalidad: "Representante",
-				votoNulo: true,
-				candidaturaNoRegistrada: true,
-				candidatos: [
-					{
-						id: "HSJD",
-						nombrePartido: "PRI",
-						nombre: "Juan Manuel Hernandez Perez ",
-						nombreSuplente: "Default1",
-						clavePartido: "BIUB",
-						logo: "logo1",
-					},
-					{
-						id: "AKSF",
-						nombrePartido: "PAN",
-						nombre: "José Antonio Diego Revilla",
-						nombreSuplente: "Default1",
-						clavePartido: "AHDU",
-						logo: "logo2",
-					},
-					{
-						id: "SKDL",
-						nombrePartido: "PRD",
-						nombre: "Melvin Paul González Pascual",
-						nombreSuplente: "Default1",
-						clavePartido: "ASDA",
-						logo: "logo3",
-					},
-					{
-						id: "JSUR",
-						nombrePartido: "PARTIDO VERDE",
-						nombre: "Kevin Edilberto Chávez Sanchez",
-						nombreSuplente: "Default1",
-						clavePartido: "AHSU",
-						logo: "logo4",
-					},
-					{
-						id: "SJDL",
-						nombrePartido: "MORENA",
-						nombre: "Laura Yessenia Sánchez Martínez",
-						nombreSuplente: "Default1",
-						clavePartido: "AUDH",
-						logo: "logo5",
-					},
-				],
-			},
-			{
-				encabezado: "Elecciones del comité del estado de Nuevo León 2023",
-				jornadaElectoral: "Jornada 2",
-				entidad: "Nuevo León",
-				distritoElectoral: 23,
-				municipio: "Municipio 1",
-				maxOpciones: 3,
-				minOpciones: 3,
-				votoNulo: true,
-				candidaturaNoRegistrada: true,
-				candidatos: [
-					{
-						id: "SJDK",
-						nombrePartido: "PRI",
-						nombre: "Pedro Manuel Hernandez Perez ",
-						nombreSuplente: "Default1",
-						clavePartido: "DHFY",
-						logo: "logo1",
-					},
-					{
-						id: "ALQP",
-						nombrePartido: "PAN",
-						nombre: "Ivan Antonio Diego Revilla",
-						nombreSuplente: "Default1",
-						clavePartido: "UDYF",
-						logo: "logo2",
-					},
-					{
-						id: "AJSK",
-						nombrePartido: "PRD",
-						nombre: "Mauricio Paul González Pascual",
-						nombreSuplente: "Default1",
-						clavePartido: "IGUE",
-						logo: "logo3",
-					},
-					{
-						id: "AKSO",
-						nombrePartido: "PARTIDO VERDE",
-						nombre: "Josué Edilberto Chávez Sanchez",
-						nombreSuplente: "Default1",
-						clavePartido: "SYRV",
-						logo: "logo4",
-					},
-					{
-						id: "AISN",
-						nombrePartido: "MORENA",
-						nombre: "Ana María Sánchez Martínez",
-						nombreSuplente: "Default1",
-						clavePartido: "FURB",
-						logo: "logo5",
-					},
-					{
-						id: "AKWO",
-						nombrePartido: "PSD",
-						nombre: "Ana Sofía",
-						nombreSuplente: "Default1",
-						clavePartido: "ASDM",
-						logo: "logo6",
-					},
-					{
-						id: "AKSI",
-						nombrePartido: "MOVIMIENTO CIUDADANO",
-						nombre: "Kevin Edilberto Chávez Sanchez",
-						nombreSuplente: "Default1",
-						clavePartido: "UFBT",
-						logo: "logo4",
-					},
-					{
-						id: "AORK",
-						nombrePartido: "FUERZA POR MÉXICO",
-						nombre: "Laura Yessenia Sánchez Martínez",
-						nombreSuplente: "Default1",
-						clavePartido: "AOQP",
-						logo: "logo5",
-					},
-					{
-						id: "ASJQ",
-						nombrePartido: "PT",
-						nombre: "Ana María",
-						nombreSuplente: "Default1",
-						clavePartido: "SEHS",
-						logo: "logo6",
-					},
-				],
-			},
-		];
 		return { ok: true, data: boletas1 };
 	} catch (error) {
+		return { ok: false };
+	}
+};
+
+export const getBoletasDeVotanteNoFormal = async (idJornada) => {
+	try {
+		const { data } = await jornadaNoFormalApi.get(
+			`jornada/no_formal/${idJornada}/informacion/completa`
+		);
+
+		console.log("BOLETAS OBTENIDAS DE NO FORMAL", data);
+
+		let boletas1 = [];
+
+		data.boletaModCands.forEach((boleta, index) => {
+			if (boleta.modalidad.modalidad === "REPRESENTANTE") {
+				let misCandidatos = [];
+				boleta.candidatos.forEach((candidato, indexPartido) => {
+					misCandidatos.push({
+						id: candidato.candidatoModel.claveCandidato,
+						nombre: `${candidato.candidatoModel.nombreCandidato} ${candidato.candidatoModel.apellidoPCandidato} ${candidato.candidatoModel.apellidoMCandidato}`,
+						logo: candidato.candidatoModel.fotoCandidato,
+					});
+				});
+
+				boletas1.push({
+					encabezado: boleta.estructuraBoleta.encabezadoBoleta,
+					idEstructuraBoleta: boleta.estructuraBoleta.idEstructuraBoleta,
+					jornadaElectoral: "XXXX",
+					entidad: boleta.estructuraBoleta.entidadFederativa,
+					distritoElectoral: 0,
+					municipio: boleta.estructuraBoleta.municipio,
+					maxOpciones: boleta.modalidad.maxOpciones,
+					minOpciones: boleta.modalidad.minOpciones,
+					modalidad: boleta.modalidad.modalidad,
+					votoNulo: boleta.modalidad.mostrarVotoNulo,
+					candidaturaNoRegistrada: boleta.modalidad.mostrarCandidaturasNoReg,
+					candidatos: misCandidatos,
+				});
+			}
+		});
+
+		console.log("BOLETAS CONVERTIDAS", boletas1);
+
+		return { ok: true, data: boletas1 };
+	} catch (error) {
+		console.log(error.message);
 		return { ok: false };
 	}
 };
@@ -303,132 +223,132 @@ export const getConsultasDeVotante = async (curp) => {
 
 		console.log("DATA CONSULTA", consulta1);
 
-		const consultas = {
-			nombreJornada: "Consulta ciudadana 2023",
-			entidad: "Nuevo León",
-			papeletas: [
-				{
-					id: 1,
-					asunto: "Papeleta 1",
-					distritoElectoral: 23,
-					municipio: "Municipio 1",
-					pregunta: {
-						idPregunta: 1,
-						descPregunta:
-							"¿Estás de acuerdo en que a Andrés Manuel López Obrador, Presidente de los Estados Unidos Mexicanos, se le revoque el mandato por pérdida de la confienza o soga en la Presidencia de la República hasta que termine su periodo?",
-						tipoRespuesta: "cerrada",
-						subtipo: "escalaDeLikert",
-						opcion1: "Totalmente en desacuerdo",
-						opcion2: "En desacuerdo",
-						opcion3: "Neutral",
-						opcion4: "De acuerdo",
-						opcion5: "Totalmente de acuerdo",
-					},
-				},
-				{
-					id: 2,
-					asunto: "Papeleta 2",
-					distritoElectoral: 23,
-					municipio: "Municipio 1",
-					pregunta: {
-						idPregunta: 2,
-						descPregunta: "Te gusta la nueva presidencia?",
-						tipoRespuesta: "cerrada",
-						subtipo: "3respuestas",
-						opcion1: "De acuerdo",
-						opcion2: "Neutral",
-						opcion3: "En desacuerdo",
-						opcion4: "",
-						opcion5: "",
-					},
-				},
-				{
-					id: 3,
-					asunto: "Papeleta 3",
-					distritoElectoral: 23,
-					municipio: "Municipio 1",
-					pregunta: {
-						idPregunta: 3,
-						descPregunta: "Pregunta 3?",
-						tipoRespuesta: "cerrada",
-						subtipo: "2respuestas",
-						opcion1: "",
-						opcion2: "",
-						opcion3: "",
-						opcion4: "",
-						opcion5: "",
-					},
-				},
-				{
-					id: 4,
-					asunto: "Papeleta 4",
-					distritoElectoral: 23,
-					municipio: "Municipio 1",
-					pregunta: {
-						idPregunta: 3,
-						descPregunta: "Pregunta 4?",
-						tipoRespuesta: "cerrada",
-						subtipo: "personalizado1",
-						opcion1: "Me gusta",
-						opcion2: "No me gusta",
-						opcion3: "",
-						opcion4: "",
-						opcion5: "",
-					},
-				},
-				{
-					id: 5,
-					asunto: "Papeleta 5",
-					distritoElectoral: 23,
-					municipio: "Municipio 1",
-					pregunta: {
-						idPregunta: 4,
-						descPregunta: "Pregunta 5?",
-						tipoRespuesta: "cerrada",
-						subtipo: "personalizado2",
-						opcion1: "Me gusta",
-						opcion2: "Neutral",
-						opcion3: "No me gusta",
-						opcion4: "",
-						opcion5: "",
-					},
-				},
-				{
-					id: 6,
-					asunto: "Papeleta 6",
-					distritoElectoral: 23,
-					municipio: "Municipio 1",
-					pregunta: {
-						idPregunta: 5,
-						descPregunta: "Pregunta 6?",
-						tipoRespuesta: "cerrada",
-						subtipo: "personalizado3",
-						opcion1: "Me gusta",
-						opcion2: "Neutral",
-						opcion3: "No me gusta",
-						opcion4: "Opcion 4",
-						opcion5: "Opcion 5",
-					},
-				},
-				{
-					id: 7,
-					asunto: "Papeleta 7",
-					distritoElectoral: 23,
-					municipio: "Municipio 1",
-					pregunta: {
-						idPregunta: 5,
-						descPregunta: "Pregunta 6?",
-						tipoRespuesta: "abierta",
-						subtipo: "",
-						opcion1: "",
-						opcion2: "",
-						opcion3: "",
-						opcion4: "",
-						opcion5: "",
-					},
-				},
-			],
-		};
+		// const consultas = {
+		// 	nombreJornada: "Consulta ciudadana 2023",
+		// 	entidad: "Nuevo León",
+		// 	papeletas: [
+		// 		{
+		// 			id: 1,
+		// 			asunto: "Papeleta 1",
+		// 			distritoElectoral: 23,
+		// 			municipio: "Municipio 1",
+		// 			pregunta: {
+		// 				idPregunta: 1,
+		// 				descPregunta:
+		// 					"¿Estás de acuerdo en que a Andrés Manuel López Obrador, Presidente de los Estados Unidos Mexicanos, se le revoque el mandato por pérdida de la confienza o soga en la Presidencia de la República hasta que termine su periodo?",
+		// 				tipoRespuesta: "cerrada",
+		// 				subtipo: "escalaDeLikert",
+		// 				opcion1: "Totalmente en desacuerdo",
+		// 				opcion2: "En desacuerdo",
+		// 				opcion3: "Neutral",
+		// 				opcion4: "De acuerdo",
+		// 				opcion5: "Totalmente de acuerdo",
+		// 			},
+		// 		},
+		// 		{
+		// 			id: 2,
+		// 			asunto: "Papeleta 2",
+		// 			distritoElectoral: 23,
+		// 			municipio: "Municipio 1",
+		// 			pregunta: {
+		// 				idPregunta: 2,
+		// 				descPregunta: "Te gusta la nueva presidencia?",
+		// 				tipoRespuesta: "cerrada",
+		// 				subtipo: "3respuestas",
+		// 				opcion1: "De acuerdo",
+		// 				opcion2: "Neutral",
+		// 				opcion3: "En desacuerdo",
+		// 				opcion4: "",
+		// 				opcion5: "",
+		// 			},
+		// 		},
+		// 		{
+		// 			id: 3,
+		// 			asunto: "Papeleta 3",
+		// 			distritoElectoral: 23,
+		// 			municipio: "Municipio 1",
+		// 			pregunta: {
+		// 				idPregunta: 3,
+		// 				descPregunta: "Pregunta 3?",
+		// 				tipoRespuesta: "cerrada",
+		// 				subtipo: "2respuestas",
+		// 				opcion1: "",
+		// 				opcion2: "",
+		// 				opcion3: "",
+		// 				opcion4: "",
+		// 				opcion5: "",
+		// 			},
+		// 		},
+		// 		{
+		// 			id: 4,
+		// 			asunto: "Papeleta 4",
+		// 			distritoElectoral: 23,
+		// 			municipio: "Municipio 1",
+		// 			pregunta: {
+		// 				idPregunta: 3,
+		// 				descPregunta: "Pregunta 4?",
+		// 				tipoRespuesta: "cerrada",
+		// 				subtipo: "personalizado1",
+		// 				opcion1: "Me gusta",
+		// 				opcion2: "No me gusta",
+		// 				opcion3: "",
+		// 				opcion4: "",
+		// 				opcion5: "",
+		// 			},
+		// 		},
+		// 		{
+		// 			id: 5,
+		// 			asunto: "Papeleta 5",
+		// 			distritoElectoral: 23,
+		// 			municipio: "Municipio 1",
+		// 			pregunta: {
+		// 				idPregunta: 4,
+		// 				descPregunta: "Pregunta 5?",
+		// 				tipoRespuesta: "cerrada",
+		// 				subtipo: "personalizado2",
+		// 				opcion1: "Me gusta",
+		// 				opcion2: "Neutral",
+		// 				opcion3: "No me gusta",
+		// 				opcion4: "",
+		// 				opcion5: "",
+		// 			},
+		// 		},
+		// 		{
+		// 			id: 6,
+		// 			asunto: "Papeleta 6",
+		// 			distritoElectoral: 23,
+		// 			municipio: "Municipio 1",
+		// 			pregunta: {
+		// 				idPregunta: 5,
+		// 				descPregunta: "Pregunta 6?",
+		// 				tipoRespuesta: "cerrada",
+		// 				subtipo: "personalizado3",
+		// 				opcion1: "Me gusta",
+		// 				opcion2: "Neutral",
+		// 				opcion3: "No me gusta",
+		// 				opcion4: "Opcion 4",
+		// 				opcion5: "Opcion 5",
+		// 			},
+		// 		},
+		// 		{
+		// 			id: 7,
+		// 			asunto: "Papeleta 7",
+		// 			distritoElectoral: 23,
+		// 			municipio: "Municipio 1",
+		// 			pregunta: {
+		// 				idPregunta: 5,
+		// 				descPregunta: "Pregunta 6?",
+		// 				tipoRespuesta: "abierta",
+		// 				subtipo: "",
+		// 				opcion1: "",
+		// 				opcion2: "",
+		// 				opcion3: "",
+		// 				opcion4: "",
+		// 				opcion5: "",
+		// 			},
+		// 		},
+		// 	],
+		// };
 
 		return { ok: true, data: consulta1 };
 	} catch (error) {

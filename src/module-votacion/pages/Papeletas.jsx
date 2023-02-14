@@ -23,7 +23,7 @@ import {
 } from "../../store/votante/votanteThunks";
 import { CuadroRespuesta } from "../components/CuadroRespuesta";
 export const Papeletas = () => {
-	const { statusPeticion, consulta, papeletaActual, papeletas, respuestasPapeletas } =
+	const { statusPeticion, consulta, papeletaActual, papeletas, respuestasPapeletas, status } =
 		useSelector((state) => state.votante);
 	const [noPapeleta, setNoPapeleta] = useState(0);
 	const [respuesta, setRespuesta] = useState("");
@@ -40,11 +40,10 @@ export const Papeletas = () => {
 	};
 
 	const handleSubmit = () => {
+		// console.log("RESPUESTA GUARDADA", respuesta);
 		dispatch(onAddRespuesta({ respuesta, noPapeleta }));
 		if (noPapeleta + 1 === papeletas.length) {
-			dispatch(
-				onEmitirRespuestaConsulta("valor", () => navigate("/votacion/respuestasPapeletas"))
-			);
+			navigate("/votacion/respuestasPapeletas");
 		} else {
 			setRespuesta("");
 			setNoPapeleta((n) => n + 1);
@@ -55,9 +54,12 @@ export const Papeletas = () => {
 		setNoPapeleta((n) => n - 1);
 	};
 
-	// useEffect(() => {
-	// 	dispatch(onGetConsultasDeVotante());
-	// }, []);
+	useEffect(() => {
+		// dispatch(onGetBoletasDeVotante());
+		if (status === "noVotando") {
+			navigate("/votacion/inicio");
+		}
+	}, []);
 
 	useEffect(() => {
 		if (respuestasPapeletas[noPapeleta] !== undefined) {
@@ -210,7 +212,11 @@ export const Papeletas = () => {
 									<Box>
 										<Divider />
 										<Box display="flex" justifyContent="center" pt={2}>
-											<Typography variant="body1" color="initial">
+											<Typography
+												variant="body1"
+												color="initial"
+												align="center"
+											>
 												Marque la respuesta de su preferencia para la
 												pregunta
 											</Typography>

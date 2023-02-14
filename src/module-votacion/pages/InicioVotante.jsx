@@ -47,6 +47,7 @@ export const InicioVotante = () => {
 	const [statusModalVerificar, setStatusModalVerificar] = useState(false);
 	const [statusModalRecorte, setStatusModalRecorte] = useState(false);
 	const [statusModalCamara, setStatusModalCamara] = useState(false);
+	const [isOnModalToken, setIsOnModalToken] = useState(false);
 	// const [statusBoton, setStatusBoton] = useState("en espera");
 	const [statusBoton, setStatusBoton] = useState({
 		jornadaFormal: "en espera",
@@ -193,10 +194,6 @@ export const InicioVotante = () => {
 		setStatusModalRecorte(true);
 	};
 
-	const handleConsultaCiudadana = () => {
-		dispatch(onComenzarConsulta("", navigate("/votacion/papeletas")));
-	};
-
 	const handleComezarjornadaNoFormal = () => {
 		dispatch(
 			onComenzarJornadaNoFormal(jornadaNoFormal, username, () =>
@@ -235,8 +232,13 @@ export const InicioVotante = () => {
 					statusModalCamara={statusModalCamara}
 					handleCloseModalCamara={handleCloseModalCamara}
 					handleOpenModal={handleOpenModal}
+					setIsOnModalToken={setIsOnModalToken}
 				/>
-				<ModalTokenVotacion statusModal={statusModal} handleCloseModal={handleCloseModal} />
+				<ModalTokenVotacion
+					statusModal={statusModal}
+					handleCloseModal={handleCloseModal}
+					isOnModalToken={isOnModalToken}
+				/>
 				<Grid container display="flex" spacing={5} height="100%" pt={5}>
 					<Grid item xs={12}>
 						<Box

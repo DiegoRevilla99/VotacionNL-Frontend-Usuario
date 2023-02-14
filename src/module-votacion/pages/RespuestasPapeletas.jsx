@@ -11,13 +11,41 @@ import { onEmitirRespuestaConsulta } from "../../store/votante/votanteThunks";
 
 export const RespuestasPapeletas = () => {
 	const [modalStatus, setModalStatus] = useState(false);
-	const { respuestasPapeletas, papeletas } = useSelector((state) => state.votante);
+	const { respuestasPapeletas, papeletas, jornadaActual } = useSelector((state) => state.votante);
+	const { username } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const onSubmit = () => {
 		setModalStatus(true);
-		dispatch(onEmitirRespuestaConsulta("valor", () => navigate("/votacion/finalPapeletas")));
+		console.log("RESPUESTAS PAPELETAS", respuestasPapeletas);
+
+		let votosPapeletas = [];
+
+		papeletas.forEach((papeleta, index) => {
+			votosPapeletas.push({
+				boletaModel: {
+					idJornada: jornadaActual.idJornada,
+					nombreJornada: jornadaActual.nombreJornada,
+					idPapeleta: papeleta.id,
+					municipio: papeleta.municipio,
+					distrito: papeleta.distritoElectoral,
+				},
+				sentidoModel: {
+					idPregunta: papeleta.pregunta.idPregunta,
+					respuesta: respuestasPapeletas[index].respuesta,
+					noOpc: respuestasPapeletas[index].id,
+				},
+			});
+		});
+
+		console.log("ObjectVotosPapeletas", votosPapeletas);
+
+		dispatch(
+			onEmitirRespuestaConsulta(votosPapeletas, jornadaActual.idJornada, username, () =>
+				navigate("/votacion/finalPapeletas")
+			)
+		);
 	};
 	return (
 		<Box
@@ -57,6 +85,7 @@ export const RespuestasPapeletas = () => {
 							display="flex"
 							justifyContent="center"
 							mb="2rem"
+							align="center"
 						>
 							Respuestas registradas
 						</Typography>
@@ -87,7 +116,8 @@ export const RespuestasPapeletas = () => {
 									{papeletas.map((papeleta, index) => {
 										return (
 											<PapeletaRegistrada
-												respuesta={respuestasPapeletas[index]}
+												// respuesta={respuestasPapeletas[index]}
+												respuesta={respuestasPapeletas[index].respuesta}
 												papeleta={papeleta}
 												noPapeleta={index}
 												key={papeleta.asunto}
@@ -125,7 +155,7 @@ export const RespuestasPapeletas = () => {
 											},
 										}}
 									>
-										Emitir votos
+										Emitir respuestas
 									</Button>
 								</Box>
 							</Grid>

@@ -85,7 +85,7 @@ export const PapeletaRegistrada = ({ respuesta, papeleta, noPapeleta }) => {
 								color="initial"
 								gutterBottom
 							>
-								{papeleta.pregunta.tipoRespuesta === "abierta"
+								{/* {papeleta.pregunta.tipoRespuesta === "abierta"
 									? respuesta
 									: papeleta.pregunta.subtipo === "escalaDeLikert"
 									? escalaDeLikertRespuestas[respuesta]
@@ -99,7 +99,8 @@ export const PapeletaRegistrada = ({ respuesta, papeleta, noPapeleta }) => {
 									? personalizado2Resp[respuesta]
 									: papeleta.pregunta.subtipo === "personalizado3"
 									? personalizado3Resp[respuesta]
-									: " "}
+									: " "} */}
+								{respuesta}
 								{/* {numeroResp} */}
 							</Typography>
 						</Box>

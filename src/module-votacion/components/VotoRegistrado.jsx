@@ -9,7 +9,6 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { candidaturaNoRegistrada } = useSelector((state) => state.votante);
-	const [hayCoalicionInvalida, setHayCoalicionInvalida] = useState(false);
 	const handleEdit = () => {
 		dispatch(onSetBoletaActual(noBoleta + 1));
 		navigate("/votacion/editarBoleta/" + noBoleta);
@@ -48,7 +47,12 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 											}}
 											color="initial"
 											gutterBottom
-											key={boleta.encabezado + seleccionado}
+											key={
+												boleta.encabezado +
+												seleccionado +
+												"Invalida" +
+												index
+											}
 										>
 											Voto nulo (Por coalición invalida)
 										</Typography>
@@ -61,7 +65,7 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 											}}
 											color="initial"
 											gutterBottom
-											key={boleta.encabezado + seleccionado}
+											key={boleta.encabezado + seleccionado + index}
 										>
 											{candidaturaNoRegistrada[noBoleta]}
 										</Typography>
@@ -74,7 +78,7 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 											}}
 											color="initial"
 											gutterBottom
-											key={boleta.encabezado + seleccionado}
+											key={boleta.encabezado + seleccionado + index}
 										>
 											Voto nulo
 										</Typography>
@@ -85,7 +89,7 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 											{boleta.candidatos.map((candidato) => {
 												if (candidato.id === seleccionado)
 													return (
-														<>
+														<React.Fragment key={candidato.id}>
 															<Typography
 																sx={{
 																	fontSize: { xs: 7, md: 11 },
@@ -110,7 +114,7 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 															>
 																{candidato.nombre}
 															</Typography>
-														</>
+														</React.Fragment>
 													);
 											})}
 										</>

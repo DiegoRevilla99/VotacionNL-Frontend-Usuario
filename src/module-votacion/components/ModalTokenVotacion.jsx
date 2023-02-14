@@ -19,7 +19,7 @@ import {
 	onSetTokenSmsEnviadoFalse,
 	onSetTokenSmsEnviadoTrue,
 } from "../../store/votante/votanteSlice";
-import { onComenzarVotacion } from "../../store/votante/votanteThunks";
+import { onComenzarVotacion, onEnviarTokenSms } from "../../store/votante/votanteThunks";
 
 const style = {
 	position: "absolute",
@@ -43,7 +43,7 @@ const validationSchema = object({
 
 const tiempo = 65;
 
-export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
+export const ModalTokenVotacion = ({ statusModal, handleCloseModal, isOnModalToken }) => {
 	let time = new Date();
 	time.setSeconds(time.getSeconds() + tiempo);
 	const navigate = useNavigate();
@@ -63,7 +63,7 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 	};
 
 	const reenviarToken = () => {
-		// dispatch(reenviarToken())
+		dispatch(onEnviarTokenSms());
 		console.log("TOKEN REENVIADO");
 		dispatch(onSetTokenSmsEnviadoTrue());
 		const time1 = new Date();
@@ -84,9 +84,17 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 
 	useEffect(() => {
 		if (tokenSmsEnviado) {
-			start();
+			// restart(time);
+			// start();
 		}
 	}, [tokenSmsEnviado]);
+
+	useEffect(() => {
+		if (isOnModalToken) {
+			restart(time);
+			start();
+		}
+	}, [isOnModalToken]);
 
 	useEffect(() => {
 		if (!isRunning) {
@@ -190,7 +198,18 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal }) => {
 												onClick={reenviarToken}
 											>
 												{`Reenviar Token`}
-												{isRunning ? `(${minutes}:${seconds})` : ""}
+												{/* {isRunning ? `(${minutes}:${seconds})` : ""} */}
+												{minutes > 0 && minutes < 10
+													? ` 0${minutes}:`
+													: minutes > 10
+													? `${minutes}:`
+													: ""}
+												{/* {seconds > 0 && minutes === 0 ? `${minutes + 1} minuto ` : ""} */}
+												{seconds > 0 && seconds < 10
+													? ` 0${seconds}`
+													: seconds > 10
+													? `${seconds}`
+													: ""}
 											</Button>
 										</Grid>
 									</Grid>

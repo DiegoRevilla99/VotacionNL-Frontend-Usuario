@@ -54,11 +54,11 @@ export const AppBarVotacion = () => {
 			horaComienzo.setSeconds(horaComienzo.getSeconds() + horaSeparadaInt[2]);
 
 			const timeTemp = new Date(horaComienzo);
-			// setTime(timeTemp);
+			setTime(timeTemp);
 
-			const time = new Date();
-			time.setSeconds(time.getSeconds() + 10);
-			setTime(time);
+			// const time = new Date();
+			// time.setSeconds(time.getSeconds() + 10);
+			// setTime(time);
 		}
 	}, [jornadaActual]);
 

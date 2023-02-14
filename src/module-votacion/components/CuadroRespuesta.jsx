@@ -3,21 +3,23 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 
 export const CuadroRespuesta = ({ respuesta, eleccion, setEleccion, id }) => {
-	const [selected, setSelected] = useState(eleccion == id ? true : false);
+	const [selected, setSelected] = useState(eleccion.id == id ? true : false);
 	// console.log(selected);
 
 	const handleToggle = () => {
 		if (selected == false) {
-			setEleccion(`${id}`);
+			// setEleccion(`${id}`);
+			setEleccion({ id: `${id}`, respuesta: respuesta });
 			setSelected(true);
 		} else {
-			setEleccion("");
+			// setEleccion("");
+			setEleccion({});
 			setSelected(false);
 		}
 	};
 
 	useEffect(() => {
-		eleccion == id ? setSelected(true) : setSelected(false);
+		eleccion.id == id ? setSelected(true) : setSelected(false);
 	}, [eleccion]);
 
 	return (
