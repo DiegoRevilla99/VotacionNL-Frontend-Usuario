@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { LoginVotacionPage } from "../module-auth/pages/LoginVotacionPage";
 import { AuthRoutes } from "../module-auth/routes/AuthRoutes";
 import { HomeRoutes } from "../module-home/routes/HomeRoutes";
+import { ResultadosRoutes } from "../module-resultados/routes/Resultados.routes";
 import { VotacionRoutes } from "../module-votacion/routes/votacionRoutes";
 import { CiudadanoRoutes } from "../routes/CiudadanoRoutes";
 import { onLogin } from "../store/auth/authSlice";
@@ -43,6 +44,16 @@ export const AppRouter = () => {
 					<PrivateRoutes status={status}>
 						<VotacionRoutes />
 					</PrivateRoutes>
+				}
+			/>
+			<Route
+				path="/resultados/*"
+				element={
+					<PublicRoutes>
+						<ResultadosRoutes />
+					</PublicRoutes>
+					
+					
 				}
 			/>
 		</Routes>
