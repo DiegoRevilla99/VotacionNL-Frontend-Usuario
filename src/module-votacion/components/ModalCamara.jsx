@@ -56,7 +56,7 @@ export const ModalCamara = ({
 	useEffect(() => {
 		if (selfieVerificada) {
 			setPage(2);
-			dispatch(onEnviarTokenSms(username));
+			// dispatch(onEnviarTokenSms(username));
 			// ! DESACTIVAR EL IF EN COMENZARVOTACION
 		}
 	}, [selfieVerificada]);
@@ -192,9 +192,9 @@ export const ModalCamara = ({
 												) : (
 													<>
 														<Box
-															marginTop="20px"
-															height="290px"
-															width="200px"
+															marginTop="30px"
+															height="270px"
+															width="185px"
 															position="absolute"
 															// bgcolor="black"
 															border="5px dashed"

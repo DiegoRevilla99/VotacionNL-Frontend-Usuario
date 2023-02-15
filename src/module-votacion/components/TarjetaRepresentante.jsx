@@ -12,6 +12,7 @@ export const TarjetaRepresentante = ({
 	setSeleccionados,
 	seleccionados,
 	max,
+	tipoJornada,
 }) => {
 	const [selected, setSelected] = useState(
 		seleccionados.find((idE) => idE === id) ? "circulo" + id : null
@@ -42,7 +43,6 @@ export const TarjetaRepresentante = ({
 		<Card
 			onClick={(event) => {
 				event.stopPropagation();
-				// console.log("circulo" + id);
 				handleToggle();
 			}}
 			sx={{
@@ -119,25 +119,31 @@ export const TarjetaRepresentante = ({
 							>
 								{nombre}
 							</Typography>
-							<Typography
-								sx={{
-									fontSize: { xs: 7, md: 11 },
-									marginTop: "1rem",
-									userSelect: "none",
-								}}
-								color="text.secondary"
-								gutterBottom
-								align="center"
-							>
-								Suplente
-							</Typography>
-							<Typography
-								sx={{ fontSize: { xs: 10, md: 11 }, userSelect: "none" }}
-								color="text.secondary"
-								align="center"
-							>
-								{nombreSuplente}
-							</Typography>
+							{tipoJornada === "JornadaNoFormal" ? (
+								<></>
+							) : (
+								<>
+									<Typography
+										sx={{
+											fontSize: { xs: 7, md: 11 },
+											marginTop: "1rem",
+											userSelect: "none",
+										}}
+										color="text.secondary"
+										gutterBottom
+										align="center"
+									>
+										Suplente
+									</Typography>
+									<Typography
+										sx={{ fontSize: { xs: 10, md: 11 }, userSelect: "none" }}
+										color="text.secondary"
+										align="center"
+									>
+										{nombreSuplente}
+									</Typography>
+								</>
+							)}
 						</Box>
 					</Grid>
 				</Grid>

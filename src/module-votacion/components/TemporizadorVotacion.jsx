@@ -56,7 +56,11 @@ export const TemporizadorVotacion = ({
 						? `${minutes}:`
 						: ""}
 					{/* {seconds > 0 && minutes === 0 ? `${minutes + 1} minuto ` : ""} */}
-					{seconds > 0 && seconds < 10 ? `0${seconds}` : seconds > 10 ? `${seconds}` : ""}
+					{seconds >= 0 && seconds < 10
+						? `0${seconds}`
+						: seconds > 10
+						? `${seconds}`
+						: ""}
 				</Typography>
 			) : (
 				""

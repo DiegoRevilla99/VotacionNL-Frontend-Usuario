@@ -21,7 +21,7 @@ export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}
 			dispatch(onLogin({ accessToken, username, refreshToken, email }));
 			setToken(accessToken);
 			setRefreshToken(refreshToken);
-			navigate();
+			// navigate();
 		} else {
 			dispatch(onError("Error de autenticación. Revisa tus credenciales"));
 		}

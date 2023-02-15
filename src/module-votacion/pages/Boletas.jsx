@@ -25,6 +25,7 @@ export const Boletas = () => {
 		votos,
 		candidaturaNoRegistrada: previo,
 		status,
+		jornadaActual,
 	} = useSelector((state) => state.votante);
 	const [noBoleta, setNoBoleta] = useState(1);
 	const [seleccionados, setSeleccionados] = useState([]);
@@ -124,80 +125,84 @@ export const Boletas = () => {
 											: "COMITÉ"}
 									</Typography>
 								</Box>
-								<Grid container spacing={3} pb="2rem">
-									<Grid container item xs={12} md={7} display="flex">
-										<Grid item xs={12} md={3}>
-											<Typography
-												variant="body1"
-												color="initial"
-												align="center"
-											>
-												Entidad Federativa
-											</Typography>
+								{jornadaActual.tipoJornada === "JornadaNoFormal" ? (
+									<></>
+								) : (
+									<Grid container spacing={3} pb="2rem">
+										<Grid container item xs={12} md={7} display="flex">
+											<Grid item xs={12} md={3}>
+												<Typography
+													variant="body1"
+													color="initial"
+													align="center"
+												>
+													Entidad Federativa
+												</Typography>
+											</Grid>
+											<Grid item xs={12} md={9} px="1rem">
+												<TextField
+													fullWidth
+													label="Entidad federativa"
+													sx={{
+														"& .MuiInputBase-input": {
+															backgroundColor: "white !important",
+														},
+													}}
+													value={boletaActual.entidad}
+													disabled
+												/>
+											</Grid>
 										</Grid>
-										<Grid item xs={12} md={9} px="1rem">
-											<TextField
-												fullWidth
-												label="Entidad federativa"
-												sx={{
-													"& .MuiInputBase-input": {
-														backgroundColor: "white !important",
-													},
-												}}
-												value={boletaActual.entidad}
-												disabled
-											/>
+										<Grid container item xs={12} md={5}>
+											<Grid item xs={12} md={3} justifyContent="center">
+												<Typography
+													variant="body1"
+													color="initial"
+													align="center"
+												>
+													Distrito Electoral
+												</Typography>
+											</Grid>
+											<Grid item xs={12} md={9} px="1rem">
+												<TextField
+													fullWidth
+													label="Distrito Electoral"
+													sx={{
+														"& .MuiInputBase-input": {
+															backgroundColor: "white !important",
+														},
+													}}
+													value={boletaActual.distritoElectoral}
+													disabled
+												/>
+											</Grid>
+										</Grid>
+										<Grid container item columns={21}>
+											<Grid item xs={21} md={3} justifyContent="center">
+												<Typography
+													variant="body1"
+													color="initial"
+													align="center"
+												>
+													Municipio o Alcaldia
+												</Typography>
+											</Grid>
+											<Grid item xs={21} md={18} px="1rem">
+												<TextField
+													fullWidth
+													label="Municipio o Alcaldia"
+													sx={{
+														"& .MuiInputBase-input": {
+															backgroundColor: "white !important",
+														},
+													}}
+													value={boletaActual.municipio}
+													disabled
+												/>
+											</Grid>
 										</Grid>
 									</Grid>
-									<Grid container item xs={12} md={5}>
-										<Grid item xs={12} md={3} justifyContent="center">
-											<Typography
-												variant="body1"
-												color="initial"
-												align="center"
-											>
-												Distrito Electoral
-											</Typography>
-										</Grid>
-										<Grid item xs={12} md={9} px="1rem">
-											<TextField
-												fullWidth
-												label="Distrito Electoral"
-												sx={{
-													"& .MuiInputBase-input": {
-														backgroundColor: "white !important",
-													},
-												}}
-												value={boletaActual.distritoElectoral}
-												disabled
-											/>
-										</Grid>
-									</Grid>
-									<Grid container item columns={21}>
-										<Grid item xs={21} md={3} justifyContent="center">
-											<Typography
-												variant="body1"
-												color="initial"
-												align="center"
-											>
-												Municipio o Alcaldia
-											</Typography>
-										</Grid>
-										<Grid item xs={21} md={18} px="1rem">
-											<TextField
-												fullWidth
-												label="Municipio o Alcaldia"
-												sx={{
-													"& .MuiInputBase-input": {
-														backgroundColor: "white !important",
-													},
-												}}
-												value={boletaActual.municipio}
-												disabled
-											/>
-										</Grid>
-									</Grid>
-								</Grid>
+								)}
 
 								<Grid
 									container
@@ -226,6 +231,7 @@ export const Boletas = () => {
 													seleccionados={seleccionados}
 													setSeleccionados={setSeleccionados}
 													max={boletaActual.maxOpciones}
+													tipoJornada={jornadaActual.tipoJornada}
 												/>
 											</Grid>
 										);

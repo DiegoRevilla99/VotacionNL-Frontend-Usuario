@@ -105,7 +105,8 @@ export const AppBarCustom = () => {
 					<Box sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}>
 						<img
 							alt="logo"
-							src="../../images/CEE600x321.png"
+							// src="../../images/CEE600x321.png"
+							src="./images/CEE600x321.png"
 							style={{
 								transition: "width 0.5s, height 0.5s",
 								width: "8rem",
@@ -181,7 +182,8 @@ export const AppBarCustom = () => {
 					<Box sx={{ display: { xs: "flex", md: "none" }, mr: 0, flexGrow: 1 }}>
 						<img
 							alt="logo"
-							src="../../images/CEE600x321.png"
+							// src="../../images/CEE600x321.png"
+							src="./images/CEE600x321.png"
 							style={{
 								transition: "width 0.5s, height 0.5s",
 								width: "8rem",
