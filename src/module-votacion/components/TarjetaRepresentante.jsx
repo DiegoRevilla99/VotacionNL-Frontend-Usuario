@@ -13,6 +13,8 @@ export const TarjetaRepresentante = ({
 	seleccionados,
 	max,
 	tipoJornada,
+	tipoBoletaActual = "",
+	candidatos = [],
 }) => {
 	const [selected, setSelected] = useState(
 		seleccionados.find((idE) => idE === id) ? "circulo" + id : null
@@ -110,15 +112,39 @@ export const TarjetaRepresentante = ({
 								gutterBottom
 								align="center"
 							>
-								Representante
+								{tipoJornada === "JornadaNoFormal" &&
+								tipoBoletaActual === "PLANILLA"
+									? "Representantes"
+									: "Representante"}
+								{/* Representante */}
 							</Typography>
-							<Typography
-								sx={{ fontSize: { xs: 10, md: 11 }, userSelect: "none" }}
-								color="text.secondary"
-								align="center"
-							>
-								{nombre}
-							</Typography>
+							{tipoJornada === "JornadaNoFormal" &&
+							tipoBoletaActual === "PLANILLA" ? (
+								candidatos.map((candidato, index) => {
+									return (
+										<Typography
+											key={candidato.id + index}
+											sx={{
+												fontSize: { xs: 10, md: 11 },
+												userSelect: "none",
+											}}
+											color="text.secondary"
+											align="center"
+										>
+											{candidato.nombre}
+										</Typography>
+									);
+								})
+							) : (
+								<Typography
+									sx={{ fontSize: { xs: 10, md: 11 }, userSelect: "none" }}
+									color="text.secondary"
+									align="center"
+								>
+									{nombre}
+								</Typography>
+							)}
+
 							{tipoJornada === "JornadaNoFormal" ? (
 								<></>
 							) : (

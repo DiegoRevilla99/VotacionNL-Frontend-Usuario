@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { ModalEmitirVotos } from "../components/ModalEmitirVotos";
 import { useDispatch, useSelector } from "react-redux";
-import { onEmitirVoto } from "../../store/votante/votanteThunks";
+import { onEmitirVoto, onEmitirVotoNoFormal } from "../../store/votante/votanteThunks";
 import { VotoRegistrado } from "../components/VotoRegistrado";
 
 export const VotosRegistrados = () => {
@@ -62,10 +62,7 @@ export const VotosRegistrados = () => {
 				};
 			});
 
-			console.log("votosObject", votosObject);
-
 			const votosObjectCoaliciones = verificarCoaliciones(votosObject);
-			console.log("VALIDACION COALICIONES", votosObjectCoaliciones);
 
 			dispatch(
 				onEmitirVoto(votosObject, jornadaActual.idJornada, username, () =>
@@ -73,9 +70,147 @@ export const VotosRegistrados = () => {
 				)
 			);
 		} else if (jornadaActual.tipoJornada === "JornadaNoFormal") {
-			console.log("votos NO FORMAL", votos);
-			console.log("boletas NO FORMAL", boletas);
+			const votosObject = votos.map((boleta, indexBoleta) => {
+				const boletaCurrent = boletas[indexBoleta];
+				const partidos = boleta.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							idCandAso: "CANORE",
+						};
+					else if (idPartido === 200)
+						return {
+							idCandAso: "NULO",
+						};
+					else {
+						return {
+							idCandAso: idPartido,
+						};
+					}
+				});
+				return {
+					boletaModel: {
+						jornadaElectoral: jornadaActual.nombreJornada,
+						idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
+						modalidad:
+							boletaCurrent.modalidad === "REPRESENTANTE"
+								? 1
+								: boletaCurrent.modalidad === "COMITE"
+								? 2
+								: 3,
+					},
+					selecciones: partidos,
+				};
+			});
+
+			console.log("VOTOS NO FORMALES", votosObject);
+
+			// const votosObjectCoaliciones = verificarCoaliciones(votosObject);
+
+			dispatch(
+				onEmitirVotoNoFormal(votosObject, jornadaActual.idJornada, username, () =>
+					navigate("/votacion/folios")
+				)
+			);
 		}
+	};
+
+	useEffect(() => {
+		if (status === "noVotando") {
+			navigate("/votacion/inicio");
+		}
+	}, []);
+
+	useEffect(() => {
+		if (jornadaActual.tipoJornada === "JornadaFormal") {
+			const votosObject = votos.map((boleta, indexBoleta) => {
+				const boletaCurrent = boletas[indexBoleta];
+				const partidos = boleta.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							clavePartido: "CANORE",
+							nombrePartido: "Candidatura no registrada",
+							nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+						};
+					else if (idPartido === 200)
+						return {
+							clavePartido: "NULO",
+							nombrePartido: "Voto nulo",
+							nombreCandidato: "Voto nulo",
+						};
+					else {
+						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+						return {
+							idSeleccion: boletaCurrent.candidatos[index].id,
+							claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
+							clavePartido: boletaCurrent.candidatos[index].clavePartido,
+							nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
+							nombreCandidato: boletaCurrent.candidatos[index].nombre,
+						};
+					}
+				});
+				return {
+					boletaModel: {
+						nombreEleccion: boletaCurrent.encabezado,
+						municipio: boletaCurrent.municipio,
+						distrito: boletaCurrent.distritoElectoral,
+						jornadaElectoral: boletaCurrent.jornadaElectoral,
+						idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
+						// jornadaElectoral: boletaCurrent.jornadaElectoral,
+					},
+					partidos: partidos,
+				};
+			});
+			verificarCoalicionesPreEnvio(votosObject);
+		} else {
+			const votosObject = votos.map((boleta, indexBoleta) => {
+				const boletaCurrent = boletas[indexBoleta];
+				if (
+					boletaCurrent.modalidad === "COMITE" ||
+					boletaCurrent.modalidad === "REPRESENTANTE"
+				) {
+					return true;
+				}
+				const partidos = boleta.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							clavePartido: "CANORE",
+						};
+					else if (idPartido === 200)
+						return {
+							clavePartido: "NULO",
+						};
+					else {
+						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+						return {
+							claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
+						};
+					}
+				});
+				return {
+					partidos: partidos,
+				};
+			});
+			// verificarAsociacionesPreEnvio(votosObject);
+		}
+	}, []);
+
+	const verificarCoalicionesPreEnvio = (votos) => {
+		const nuevos = [];
+		const array = [];
+		votos.forEach((voto) => {
+			const numero = voto.partidos[0].claveCoalicion;
+			let nulo = voto.partidos.some((partido) => {
+				return partido.claveCoalicion !== numero;
+			});
+
+			if (nulo) {
+				array.push(true);
+			} else {
+				array.push(false);
+			}
+		});
+		setCoalicionInvalida(array);
+		return nuevos;
 	};
 
 	const verificarCoaliciones = (votos) => {
@@ -105,22 +240,16 @@ export const VotosRegistrados = () => {
 		return nuevos;
 	};
 
-	const verificarCoalicionesPreEnvio = (votos) => {
-		console.log("LOS VOTOS QUE LLEGAN", votos);
+	const verificarAsociacionesPreEnvio = (votos) => {
 		const nuevos = [];
 		const array = [];
 		votos.forEach((voto) => {
-			console.log("voto foreach", voto);
 			const numero = voto.partidos[0].claveCoalicion;
-			console.log("Numero", numero);
 			let nulo = voto.partidos.some((partido) => {
 				return partido.claveCoalicion !== numero;
 			});
 
-			console.log("ES NULO?", nulo);
-
 			if (nulo) {
-				console.log("LO SETEA EN TRUE");
 				array.push(true);
 			} else {
 				array.push(false);
@@ -129,59 +258,6 @@ export const VotosRegistrados = () => {
 		setCoalicionInvalida(array);
 		return nuevos;
 	};
-
-	useEffect(() => {
-		if (status === "noVotando") {
-			navigate("/votacion/inicio");
-		}
-	}, []);
-
-	useEffect(() => {
-		const votosObject = votos.map((boleta, indexBoleta) => {
-			const boletaCurrent = boletas[indexBoleta];
-			const partidos = boleta.map((idPartido) => {
-				if (idPartido === 100)
-					return {
-						clavePartido: "CANORE",
-						nombrePartido: "Candidatura no registrada",
-						nombreCandidato: candidaturaNoRegistrada[indexBoleta],
-					};
-				else if (idPartido === 200)
-					return {
-						clavePartido: "NULO",
-						nombrePartido: "Voto nulo",
-						nombreCandidato: "Voto nulo",
-					};
-				else {
-					const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
-					// return boletaCurrent.candidatos[index];
-					return {
-						idSeleccion: boletaCurrent.candidatos[index].id,
-						claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
-						clavePartido: boletaCurrent.candidatos[index].clavePartido,
-						nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
-						nombreCandidato: boletaCurrent.candidatos[index].nombre,
-					};
-				}
-			});
-			return {
-				boletaModel: {
-					nombreEleccion: boletaCurrent.encabezado,
-					municipio: boletaCurrent.municipio,
-					distrito: boletaCurrent.distritoElectoral,
-					jornadaElectoral: boletaCurrent.jornadaElectoral,
-					idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
-					// jornadaElectoral: boletaCurrent.jornadaElectoral,
-				},
-				partidos: partidos,
-			};
-		});
-
-		console.log("votosObject", votosObject);
-
-		const votosObjectCoaliciones = verificarCoalicionesPreEnvio(votosObject);
-		console.log("VALIDACION COALICIONES", votosObjectCoaliciones);
-	}, []);
 
 	return (
 		<Box
@@ -233,17 +309,18 @@ export const VotosRegistrados = () => {
 								sx={{ overflowY: "auto" }}
 								display="flex"
 								flexDirection="column"
-								justifyContent="center"
+								// justifyContent="center"
 							>
-								<Box pt="3rem">
+								<Box pt="0rem">
 									{boletas.map((boleta, index) => {
 										return (
 											<VotoRegistrado
 												voto={votos[index]}
 												boleta={boleta}
 												noBoleta={index}
-												key={boleta.encabezado}
+												key={boleta.encabezado + index}
 												coalicionInvalida={coalicionInvalida[index]}
+												modalidadBoleta={boleta.modalidad}
 											/>
 										);
 									})}

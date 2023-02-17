@@ -16,11 +16,13 @@ import {
 	comenzarVotacion,
 	emitirRespuestaConsulta,
 	emitirVoto,
+	emitirVotoNoFormal,
 	flagJornadaNoRealizada,
 	flagJornadaRealizada,
 	getBoletasDeVotante,
 	getBoletasDeVotanteNoFormal,
 	getConsultasDeVotante,
+	statusVotando,
 } from "../../providers/Micro-Votos/providerVotos";
 import { onChecking } from "../auth/authSlice";
 import {
@@ -62,9 +64,38 @@ export const onEmitirVoto = (values, idJornadaVotante, curp, navigate = () => {}
 		if (ok1) {
 			console.log("Cambió bien la flag");
 			const { ok2, data } = await emitirVoto(values);
-			// dispatch(onLogin({ uid: uid, displayName: name, email: email }));
 			if (ok2) {
 				console.log("Guardó bien el voto");
+				statusVotando(false, curp);
+				dispatch(onFillFolios(data));
+				dispatch(onNoVotando());
+				dispatch(onDeleteJornadaFormal());
+				dispatch(onOkPeticion());
+				navigate();
+			} else {
+				console.log("no se emitio el voto");
+				const { ok1 } = await flagJornadaNoRealizada(idJornadaVotante);
+				dispatch(onError("Fallo al emitir voto, intenta mas tarde."));
+				dispatch(onNoVotando());
+			}
+		} else {
+			console.log("FLAG JORNADA NO REALIZADA 1");
+			dispatch(onNoVotando());
+			dispatch(onError("Fallo al emitir voto, intenta mas tarde."));
+		}
+	};
+};
+export const onEmitirVotoNoFormal = (values, idJornadaVotante, curp, navigate = () => {}) => {
+	return async (dispatch) => {
+		dispatch(onCheckingPeticion());
+
+		const { ok1 } = await flagJornadaRealizada(idJornadaVotante, curp);
+
+		if (ok1) {
+			const { ok2, data } = await emitirVotoNoFormal(values);
+			if (ok2) {
+				console.log("Guardó bien el voto");
+				statusVotando(false, curp);
 				dispatch(onFillFolios(data));
 				dispatch(onNoVotando());
 				dispatch(onDeleteJornadaFormal());
@@ -96,6 +127,7 @@ export const onEmitirRespuestaConsulta = (votos, idJornadaVotante, curp, navigat
 			const { ok: ok2, data } = await emitirRespuestaConsulta(votos);
 
 			if (ok2) {
+				statusVotando(false, curp);
 				console.log("Guardó bien la respuesta");
 				dispatch(onFillFolios(data));
 				dispatch(onNoVotando());
@@ -162,6 +194,7 @@ export const onComenzarVotacion = (token, curp, navigate = () => {}, jornadaForm
 		) {
 			const { ok: ok1, data } = await getBoletasDeVotante(jornadaFormal.idJornada);
 			if (ok1) {
+				statusVotando(true, curp);
 				dispatch(onFillBoletas(data));
 				dispatch(
 					onSetJornadaActual({ jornada: jornadaFormal, tipoJornada: "JornadaFormal" })
@@ -189,6 +222,7 @@ export const onComenzarConsulta = (consultaCiudadana, curp, navigate = () => {})
 
 		if (ok) {
 			console.log("CONSULTAS", data);
+			statusVotando(true, curp);
 			dispatch(
 				onSetJornadaActual({ jornada: consultaCiudadana, tipoJornada: "ConsultaCiudadana" })
 			);
@@ -208,14 +242,13 @@ export const onComenzarConsulta = (consultaCiudadana, curp, navigate = () => {})
 export const onComenzarJornadaNoFormal = (jornadaNoFormal, curp, navigate = () => {}) => {
 	return async (dispatch) => {
 		dispatch(onCheckingVotante());
-		// dispatch(onCheckingPeticion());
 
-		// const { ok } = await comenzarVotacion();
 		const { ok, data } = await getBoletasDeVotanteNoFormal(jornadaNoFormal.idJornada);
 
 		console.log("ENTREGA DATA", data);
 
 		if (ok) {
+			statusVotando(true, curp);
 			dispatch(onFillBoletas(data));
 			dispatch(
 				onSetJornadaActual({ jornada: jornadaNoFormal, tipoJornada: "JornadaNoFormal" })

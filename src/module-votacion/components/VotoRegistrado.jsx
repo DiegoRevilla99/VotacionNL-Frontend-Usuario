@@ -5,7 +5,7 @@ import { onSetBoletaActual } from "../../store/votante/votanteSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) => {
+export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, modalidadBoleta }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { candidaturaNoRegistrada } = useSelector((state) => state.votante);
@@ -38,58 +38,15 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 								wordBreak: "break-word",
 							}}
 						>
-							{voto.map((seleccionado, index) => {
-								if (coalicionInvalida && index === 0) {
-									return (
-										<Typography
-											sx={{
-												fontSize: { xs: 12, md: 16 },
-											}}
-											color="initial"
-											gutterBottom
-											key={
-												boleta.encabezado +
-												seleccionado +
-												"Invalida" +
-												index
-											}
-										>
-											Voto nulo (Por coalición invalida)
-										</Typography>
-									);
-								} else if (seleccionado === 100 && !coalicionInvalida) {
-									return (
-										<Typography
-											sx={{
-												fontSize: { xs: 12, md: 16 },
-											}}
-											color="initial"
-											gutterBottom
-											key={boleta.encabezado + seleccionado + index}
-										>
-											{candidaturaNoRegistrada[noBoleta]}
-										</Typography>
-									);
-								} else if (seleccionado === 200 && !coalicionInvalida) {
-									return (
-										<Typography
-											sx={{
-												fontSize: { xs: 12, md: 16 },
-											}}
-											color="initial"
-											gutterBottom
-											key={boleta.encabezado + seleccionado + index}
-										>
-											Voto nulo
-										</Typography>
-									);
-								} else if (!coalicionInvalida)
+							{voto.map((seleccionado, index, row) => {
+								if (coalicionInvalida) {
 									return (
 										<>
-											{boleta.candidatos.map((candidato) => {
-												if (candidato.id === seleccionado)
+											{boleta.candidatos.map((candidato, index) => {
+												if (candidato.id === seleccionado) {
+													console.log("ENCUENTRA CANDIDATO ");
 													return (
-														<React.Fragment key={candidato.id}>
+														<React.Fragment key={candidato.id + index}>
 															<Typography
 																sx={{
 																	fontSize: { xs: 7, md: 11 },
@@ -103,12 +60,17 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 															</Typography>
 															<Typography
 																sx={{
-																	fontSize: { xs: 12, md: 16 },
+																	fontSize: {
+																		xs: 12,
+																		md: 16,
+																	},
 																}}
 																color="initial"
 																gutterBottom
 																key={
-																	boleta.encabezado + seleccionado
+																	boleta.encabezado +
+																	seleccionado +
+																	index
 																}
 																pb={1}
 															>
@@ -116,20 +78,186 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida }) =>
 															</Typography>
 														</React.Fragment>
 													);
+												}
 											})}
+											{index + 1 === row.length && (
+												<Typography
+													sx={{
+														fontSize: { xs: 12, md: 16 },
+													}}
+													color="error"
+													gutterBottom
+													key={
+														boleta.encabezado +
+														seleccionado +
+														"Invalida" +
+														index
+													}
+												>
+													Voto nulo (Por coalición invalida)
+												</Typography>
+											)}
 										</>
 									);
+								} else if (seleccionado === 100 && !coalicionInvalida) {
+									return (
+										<>
+											<Typography
+												sx={{
+													fontSize: {
+														xs: 7,
+														md: 11,
+													},
+													userSelect: "none",
+												}}
+												color="text.secondary"
+												gutterBottom
+												align="center"
+												pt={1}
+											>
+												CANDIDATURA NO REGISTRADA
+											</Typography>
+											<Typography
+												sx={{
+													fontSize: { xs: 12, md: 16 },
+												}}
+												color="initial"
+												gutterBottom
+												key={boleta.encabezado + seleccionado + index}
+											>
+												{candidaturaNoRegistrada[noBoleta]}
+											</Typography>
+										</>
+									);
+								} else if (seleccionado === 200 && !coalicionInvalida) {
+									return (
+										<>
+											<Typography
+												sx={{
+													fontSize: {
+														xs: 7,
+														md: 11,
+													},
+													userSelect: "none",
+												}}
+												color="text.secondary"
+												gutterBottom
+												align="center"
+												pt={1}
+											>
+												VOTO NULO
+											</Typography>
+											<Typography
+												sx={{
+													fontSize: { xs: 12, md: 16 },
+												}}
+												color="initial"
+												gutterBottom
+												key={boleta.encabezado + seleccionado + index}
+											>
+												Voto nulo
+											</Typography>
+										</>
+									);
+								} else if (!coalicionInvalida) {
+									if (modalidadBoleta === "PLANILLA") {
+										return (
+											<>
+												{boleta.candidatos.map((candidato, index) => {
+													if (candidato.id === seleccionado) {
+														return (
+															<React.Fragment
+																key={candidato.id + index}
+															>
+																<Typography
+																	sx={{
+																		fontSize: {
+																			xs: 7,
+																			md: 11,
+																		},
+																		userSelect: "none",
+																	}}
+																	color="text.secondary"
+																	gutterBottom
+																	align="center"
+																	pt={1}
+																>
+																	{candidato.nombrePartido}
+																</Typography>
+																{candidato.candidatos.map(
+																	(cand, index2) => {
+																		return (
+																			<Typography
+																				sx={{
+																					fontSize: {
+																						xs: 12,
+																						md: 16,
+																					},
+																				}}
+																				color="initial"
+																				gutterBottom
+																				key={
+																					cand.id +
+																					seleccionado +
+																					index2
+																				}
+																			>
+																				{cand.nombre}
+																			</Typography>
+																		);
+																	}
+																)}{" "}
+															</React.Fragment>
+														);
+													}
+												})}
+											</>
+										);
+									} else
+										return (
+											<>
+												{boleta.candidatos.map((candidato, index) => {
+													if (candidato.id === seleccionado)
+														return (
+															<React.Fragment
+																key={candidato.id + index}
+															>
+																<Typography
+																	sx={{
+																		fontSize: { xs: 7, md: 11 },
+																		userSelect: "none",
+																	}}
+																	color="text.secondary"
+																	gutterBottom
+																	align="center"
+																>
+																	{candidato.nombrePartido}
+																</Typography>
+																<Typography
+																	sx={{
+																		fontSize: {
+																			xs: 12,
+																			md: 16,
+																		},
+																	}}
+																	color="initial"
+																	gutterBottom
+																	key={
+																		boleta.encabezado +
+																		seleccionado +
+																		index
+																	}
+																	pb={1}
+																>
+																	{candidato.nombre}
+																</Typography>
+															</React.Fragment>
+														);
+												})}
+											</>
+										);
+								}
 							})}
-							{/* <Typography
-								sx={{
-									fontSize: { xs: 12, md: 18 },
-								}}
-								color="initial"
-								gutterBottom
-								// position={"relative"}
-							>
-								Pedro Ulises Sanchez Pérez
-							</Typography> */}
 						</Box>
 					</Box>
 					<Box

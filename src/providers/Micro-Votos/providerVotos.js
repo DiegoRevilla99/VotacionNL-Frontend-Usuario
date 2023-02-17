@@ -1,9 +1,10 @@
+import { authAPI } from "../Micro-Auth/configAuth";
 import { consultasAPI } from "../Micro-ConsultasCiudadanas/configConsultas";
 import { jornadaFormalApi } from "../Micro-JornadaFormal/configjornadaFormal";
 import { jornadaNoFormalApi } from "../Micro-JornadaNoFormal/configNoFormal";
 import { tokenApi, tokenSmsApi } from "../Micro-Token/configToken";
 import { votanteAPI, votanteJornadaAPI } from "../Micro-Votante/votanteConfig";
-import { votosAPI, votosConsultaAPI } from "./configVotos";
+import { votosAPI, votosConsultaAPI, votosNoFormalAPI } from "./configVotos";
 
 export const emitirVoto = async (values) => {
 	try {
@@ -14,6 +15,24 @@ export const emitirVoto = async (values) => {
 			const { folioBoleta, nombreEleccion } = boletaModel;
 			folios.push({ folioBoleta, nombreEleccion });
 		}
+
+		return { ok2: true, data: folios };
+	} catch (error) {
+		return { ok2: false };
+	}
+};
+export const emitirVotoNoFormal = async (values) => {
+	try {
+		console.log("VOTOS QUE LLEGAN A PROV", values);
+		let folios = [];
+		for (const voto of values) {
+			const { data } = await votosNoFormalAPI.post("votos/no/formal/registrar/boleta", voto);
+			const { boletaModel } = data;
+			const { folioBoleta, nombreEleccion } = boletaModel;
+			folios.push({ folioBoleta, nombreEleccion });
+		}
+
+		console.log("FOLIOS NO FORMAL", folios);
 
 		return { ok2: true, data: folios };
 	} catch (error) {
@@ -86,6 +105,18 @@ export const comenzarVotacion = async (token, curp) => {
 	}
 };
 
+export const statusVotando = async (status, curp) => {
+	try {
+		const { data } = await authAPI.put(`api/auth/status/sesion/${curp}`, {
+			status: status,
+		});
+		console.log("RESPUESTA STATUS VOTANDO", data);
+		return { ok: true };
+	} catch (error) {
+		return { ok: false };
+	}
+};
+
 export const getBoletasDeVotante = async (idJornada) => {
 	try {
 		await timeout(2000);
@@ -147,7 +178,10 @@ export const getBoletasDeVotanteNoFormal = async (idJornada) => {
 		let boletas1 = [];
 
 		data.boletaModCands.forEach((boleta, index) => {
-			if (boleta.modalidad.modalidad === "REPRESENTANTE") {
+			if (
+				boleta.modalidad.modalidad === "REPRESENTANTE" ||
+				boleta.modalidad.modalidad === "COMITE"
+			) {
 				let misCandidatos = [];
 				boleta.candidatos.forEach((candidato, indexPartido) => {
 					misCandidatos.push({
@@ -170,6 +204,42 @@ export const getBoletasDeVotanteNoFormal = async (idJornada) => {
 					votoNulo: boleta.modalidad.mostrarVotoNulo,
 					candidaturaNoRegistrada: boleta.modalidad.mostrarCandidaturasNoReg,
 					candidatos: misCandidatos,
+				});
+			} else if (boleta.modalidad.modalidad === "PLANILLA") {
+				let misAsociaciones = [];
+				boleta.asoCand.forEach((asociacion, indexAso) => {
+					let misCandidatos = [];
+					asociacion.candidatos.forEach((candidato) => {
+						misCandidatos.push({
+							id: candidato.claveCandidato,
+							nombre: `${candidato.nombreCandidato} ${candidato.apellidoPCandidato} ${candidato.apellidoMCandidato}`,
+						});
+					});
+
+					misAsociaciones.push({
+						id: asociacion.asociacionModel.idAsociacion,
+						emblema: asociacion.asociacionModel.emblema,
+						logo: asociacion.asociacionModel.logo,
+						nombrePartido: asociacion.asociacionModel.nombreAsociacion,
+						candidatos: misCandidatos,
+					});
+				});
+
+				boletas1.push({
+					encabezado: boleta.estructuraBoleta.encabezadoBoleta,
+					idEstructuraBoleta: boleta.estructuraBoleta.idEstructuraBoleta,
+					jornadaElectoral: "XXXX",
+					entidad: boleta.estructuraBoleta.entidadFederativa,
+					distritoElectoral: 0,
+					municipio: boleta.estructuraBoleta.municipio,
+					// maxOpciones: boleta.modalidad.maxOpciones,
+					maxOpciones: 100,
+					// minOpciones: boleta.modalidad.minOpciones,
+					minOpciones: 1,
+					modalidad: boleta.modalidad.modalidad,
+					votoNulo: boleta.modalidad.mostrarVotoNulo,
+					candidaturaNoRegistrada: boleta.modalidad.mostrarCandidaturasNoReg,
+					candidatos: misAsociaciones,
 				});
 			}
 		});
@@ -221,135 +291,6 @@ export const getConsultasDeVotante = async (curp) => {
 
 		consulta1.papeletas = papeletas;
 
-		console.log("DATA CONSULTA", consulta1);
-
-		// const consultas = {
-		// 	nombreJornada: "Consulta ciudadana 2023",
-		// 	entidad: "Nuevo León",
-		// 	papeletas: [
-		// 		{
-		// 			id: 1,
-		// 			asunto: "Papeleta 1",
-		// 			distritoElectoral: 23,
-		// 			municipio: "Municipio 1",
-		// 			pregunta: {
-		// 				idPregunta: 1,
-		// 				descPregunta:
-		// 					"¿Estás de acuerdo en que a Andrés Manuel López Obrador, Presidente de los Estados Unidos Mexicanos, se le revoque el mandato por pérdida de la confienza o soga en la Presidencia de la República hasta que termine su periodo?",
-		// 				tipoRespuesta: "cerrada",
-		// 				subtipo: "escalaDeLikert",
-		// 				opcion1: "Totalmente en desacuerdo",
-		// 				opcion2: "En desacuerdo",
-		// 				opcion3: "Neutral",
-		// 				opcion4: "De acuerdo",
-		// 				opcion5: "Totalmente de acuerdo",
-		// 			},
-		// 		},
-		// 		{
-		// 			id: 2,
-		// 			asunto: "Papeleta 2",
-		// 			distritoElectoral: 23,
-		// 			municipio: "Municipio 1",
-		// 			pregunta: {
-		// 				idPregunta: 2,
-		// 				descPregunta: "Te gusta la nueva presidencia?",
-		// 				tipoRespuesta: "cerrada",
-		// 				subtipo: "3respuestas",
-		// 				opcion1: "De acuerdo",
-		// 				opcion2: "Neutral",
-		// 				opcion3: "En desacuerdo",
-		// 				opcion4: "",
-		// 				opcion5: "",
-		// 			},
-		// 		},
-		// 		{
-		// 			id: 3,
-		// 			asunto: "Papeleta 3",
-		// 			distritoElectoral: 23,
-		// 			municipio: "Municipio 1",
-		// 			pregunta: {
-		// 				idPregunta: 3,
-		// 				descPregunta: "Pregunta 3?",
-		// 				tipoRespuesta: "cerrada",
-		// 				subtipo: "2respuestas",
-		// 				opcion1: "",
-		// 				opcion2: "",
-		// 				opcion3: "",
-		// 				opcion4: "",
-		// 				opcion5: "",
-		// 			},
-		// 		},
-		// 		{
-		// 			id: 4,
-		// 			asunto: "Papeleta 4",
-		// 			distritoElectoral: 23,
-		// 			municipio: "Municipio 1",
-		// 			pregunta: {
-		// 				idPregunta: 3,
-		// 				descPregunta: "Pregunta 4?",
-		// 				tipoRespuesta: "cerrada",
-		// 				subtipo: "personalizado1",
-		// 				opcion1: "Me gusta",
-		// 				opcion2: "No me gusta",
-		// 				opcion3: "",
-		// 				opcion4: "",
-		// 				opcion5: "",
-		// 			},
-		// 		},
-		// 		{
-		// 			id: 5,
-		// 			asunto: "Papeleta 5",
-		// 			distritoElectoral: 23,
-		// 			municipio: "Municipio 1",
-		// 			pregunta: {
-		// 				idPregunta: 4,
-		// 				descPregunta: "Pregunta 5?",
-		// 				tipoRespuesta: "cerrada",
-		// 				subtipo: "personalizado2",
-		// 				opcion1: "Me gusta",
-		// 				opcion2: "Neutral",
-		// 				opcion3: "No me gusta",
-		// 				opcion4: "",
-		// 				opcion5: "",
-		// 			},
-		// 		},
-		// 		{
-		// 			id: 6,
-		// 			asunto: "Papeleta 6",
-		// 			distritoElectoral: 23,
-		// 			municipio: "Municipio 1",
-		// 			pregunta: {
-		// 				idPregunta: 5,
-		// 				descPregunta: "Pregunta 6?",
-		// 				tipoRespuesta: "cerrada",
-		// 				subtipo: "personalizado3",
-		// 				opcion1: "Me gusta",
-		// 				opcion2: "Neutral",
-		// 				opcion3: "No me gusta",
-		// 				opcion4: "Opcion 4",
-		// 				opcion5: "Opcion 5",
-		// 			},
-		// 		},
-		// 		{
-		// 			id: 7,
-		// 			asunto: "Papeleta 7",
-		// 			distritoElectoral: 23,
-		// 			municipio: "Municipio 1",
-		// 			pregunta: {
-		// 				idPregunta: 5,
-		// 				descPregunta: "Pregunta 6?",
-		// 				tipoRespuesta: "abierta",
-		// 				subtipo: "",
-		// 				opcion1: "",
-		// 				opcion2: "",
-		// 				opcion3: "",
-		// 				opcion4: "",
-		// 				opcion5: "",
-		// 			},
-		// 		},
-		// 	],
-		// };
-
 		return { ok: true, data: consulta1 };
 	} catch (error) {
 		console.log(error.message);
@@ -360,137 +301,3 @@ export const getConsultasDeVotante = async (curp) => {
 const timeout = (ms) => {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 };
-
-const endpoint = {
-	jornadaFormal: {
-		votanteTieneJornadaRelacionada: true,
-		votantePuedeRealizarLaVotacion: true, //(Este campo lo van a activar unicamente si el votante ya verificó por completo su cuenta)
-		nombreDeLaJornadaAVotar: "Jornada Formal 1",
-		configuracionDeJornada: {
-			fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
-			fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
-			tiempoParaContestarBoletas: "30:00",
-			tiempoExtra: "10:00",
-		},
-	},
-	jornadaNoFormal: {
-		votanteTieneJornadaRelacionada: true,
-		votantePuedeRealizarLaVotacion: true, //(Este campo lo van a activar unicamente si el votante ya verificó por completo su cuenta)
-		nombreDeLaJornadaAVotar: "Jornada Formal 1",
-		configuracionDeJornada: {
-			fechaYHoraDeInicioDeJornada: "1997-07-16T19:20:30.45+01:00",
-			fechaYHoraDeFinDeJornada: "1997-09-16T19:20:30.45+01:00",
-			tiempoParaContestarBoletas: "30:00",
-			tiempoExtra: "10:00",
-		},
-	},
-	consultaCiudadana: {
-		votanteTieneConsultaRelacionada: true,
-		votantePuedeRealizarLaConsulta: true, //(Este campo lo van a activar unicamente si el votante ya verificó por completo su cuenta)
-		nombreDeLaConsultaAVotar: "Consulta 1",
-		configuracionDeConsulta: {
-			fechaYHoraDeInicioDeConsulta: "1997-07-16T19:20:30.45+01:00",
-			fechaYHoraDeFinDeConsulta: "1997-09-16T19:20:30.45+01:00",
-			tiempoParaContestarPapeletas: "30:00",
-			tiempoExtra: "10:00",
-		},
-	},
-};
-
-const boletasFormales = [
-	{
-		encabezado: "Elecciones de gobernador del estado de Nuevo León 2023",
-		coaliciones: [
-			{
-				id: 1,
-				nombreCoalicion: "Coalicion 1",
-				idPartidos: [1, 2],
-			},
-			{
-				id: 2,
-				nombreCoalicion: "Coalicion 2",
-				idPartidos: [3, 4],
-			},
-		],
-		partidos: [
-			{
-				id: 1,
-				partido: "PRI",
-				nombre: "Juan Manuel Hernandez Perez ",
-				nombreSuplente: "Default1",
-				logo: "logo1",
-			},
-			{
-				id: 2,
-				partido: "PAN",
-				nombre: "José Antonio Diego Revilla",
-				nombreSuplente: "Default1",
-				logo: "logo2",
-			},
-			{
-				id: 3,
-				partido: "PRD",
-				nombre: "José Antonio Diego Revilla",
-				nombreSuplente: "Default1",
-				logo: "logo2",
-			},
-			{
-				id: 4,
-				partido: "MORENA",
-				nombre: "José Antonio Diego Revilla",
-				nombreSuplente: "Default1",
-				logo: "logo2",
-			},
-			{
-				id: 5,
-				partido: "PARTIDO VERDE",
-				nombre: "José Antonio Diego Revilla",
-				nombreSuplente: "Default1",
-				logo: "logo2",
-			},
-		],
-	},
-];
-
-const estrucNoFormal = [
-	{
-		encabezado: "Elecciones del comité del estado de Nuevo León 2023",
-		modalidad: "comite",
-		maxOpciones: 3,
-		minOpciones: 2,
-		votoNulo: true,
-		candidaturaNoRegistrada: false,
-		asociaciones: [
-			{
-				id: 1,
-				nombreAsociacione: "asociacion 1",
-				idPartidos: [1, 2],
-			},
-			{
-				id: 2,
-				nombreAsociacione: "asociacion 2",
-				idPartidos: [3, 4],
-			},
-		],
-		candidatos: [
-			{
-				id: 1,
-				nombre: "Pedro Manuel Hernandez Perez ",
-				nombreSuplente: "Default1",
-				logo: "logo1",
-			},
-			{
-				id: 2,
-				nombre: "Ivan Antonio Diego Revilla",
-				nombreSuplente: "Default1",
-				logo: "logo2",
-			},
-			{
-				id: 3,
-				nombre: "Mauricio Paul González Pascual",
-				nombreSuplente: "Default1",
-				logo: "logo3",
-			},
-		],
-	},
-];

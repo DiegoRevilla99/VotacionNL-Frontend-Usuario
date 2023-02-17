@@ -18,7 +18,9 @@ import {
 import { VotoNulo } from "../components/VotoNulo";
 
 export const EditarBoleta = () => {
-	const { statusPeticion, boletaActual, votos } = useSelector((state) => state.votante);
+	const { statusPeticion, boletaActual, votos, jornadaActual } = useSelector(
+		(state) => state.votante
+	);
 	const params = useParams();
 	// const [noBoleta, setNoBoleta] = useState(params.noBoleta + 1);
 	const [candidaturaNoRegistrada, setCandidaturaNoRegistrada] = useState("");
@@ -34,7 +36,7 @@ export const EditarBoleta = () => {
 			dispatch(
 				onAddCandidaturaNoRegistrada({
 					candidaturaNoRegistrada,
-					noBoleta: parseInt(params.noBoleta + 1, 10),
+					noBoleta: parseInt(parseInt(params.noBoleta) + 1, 10),
 				})
 			);
 		}
@@ -206,6 +208,9 @@ export const EditarBoleta = () => {
 													seleccionados={seleccionados}
 													setSeleccionados={setSeleccionados}
 													max={boletaActual.maxOpciones}
+													tipoJornada={jornadaActual.tipoJornada}
+													tipoBoletaActual={boletaActual.modalidad}
+													candidatos={representante.candidatos}
 												/>
 											</Grid>
 										);
@@ -229,7 +234,7 @@ export const EditarBoleta = () => {
 												setCandidaturaNoRegistrada={
 													setCandidaturaNoRegistrada
 												}
-												// noBoleta={noBoleta}
+												noBoleta={parseInt(params.noBoleta, 10)}
 											/>
 										</Grid>
 									)}

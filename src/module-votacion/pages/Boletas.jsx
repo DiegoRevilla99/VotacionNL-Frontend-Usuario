@@ -1,7 +1,7 @@
 import { Box, Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-import { Button, Grid, IconButton, LinearProgress, TextField } from "@mui/material";
+import { Button, Divider, Grid, IconButton, LinearProgress, Modal, TextField } from "@mui/material";
 import { TarjetaRepresentante } from "../components/TarjetaRepresentante";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -16,6 +16,7 @@ import {
 	onSetBoletaActual,
 } from "../../store/votante/votanteSlice";
 import { VotoNulo } from "../components/VotoNulo";
+import ReactRouterPrompt from "@byungi/react-router-prompt";
 
 export const Boletas = () => {
 	const {
@@ -56,7 +57,6 @@ export const Boletas = () => {
 	};
 
 	useEffect(() => {
-		// dispatch(onGetBoletasDeVotante());
 		if (status === "noVotando") {
 			navigate("/votacion/inicio");
 		}
@@ -79,6 +79,17 @@ export const Boletas = () => {
 	else
 		return (
 			<>
+				<ReactRouterPrompt when={true}>
+					{({ isActive, onConfirm, onCancel }) => (
+						<Modal open={isActive}>
+							<div>
+								<p>Do you really want to leave?</p>
+								<button onClick={onCancel}>Cancel</button>
+								<button onClick={onConfirm}>Ok</button>
+							</div>
+						</Modal>
+					)}
+				</ReactRouterPrompt>
 				<Box
 					display={"flex"}
 					sx={{
@@ -105,6 +116,7 @@ export const Boletas = () => {
 										align="center"
 										color="base.main"
 										width="100%"
+										pb={1}
 									>
 										{/* PROCESO ELECTORAL ESTATAL 2022-2025 */}
 										{boletaActual.encabezado}
@@ -120,9 +132,13 @@ export const Boletas = () => {
 										pb={1}
 										sx={{ backgroundColor: "#423838" }}
 									>
-										{boletaActual.modalidad === "REPRESENTANTE"
+										{jornadaActual.tipoJornada !== "JornadaNoFormal"
+											? ""
+											: boletaActual.modalidad === "REPRESENTANTE"
 											? "REPRESENTANTE"
-											: "COMITÉ"}
+											: boletaActual.modalidad === "COMITE"
+											? "COMITÉ"
+											: "PLANILLA"}
 									</Typography>
 								</Box>
 								{jornadaActual.tipoJornada === "JornadaNoFormal" ? (
@@ -204,9 +220,29 @@ export const Boletas = () => {
 									</Grid>
 								)}
 
+								{jornadaActual.tipoJornada === "JornadaNoFormal" && (
+									<Box>
+										<Box display="flex" justifyContent="center" pb="1rem">
+											<Typography
+												variant="body1"
+												color="initial"
+												align="center"
+											>
+												{boletaActual.modalidad === "COMITE"
+													? `Seleccione ${boletaActual.maxOpciones} opciones`
+													: boletaActual.modalidad === "REPRESENTANTE"
+													? "Seleccione una opción"
+													: "Seleccione las planillas por las que desea votar"}
+											</Typography>
+										</Box>
+										<Divider />
+									</Box>
+								)}
+
 								<Grid
 									container
 									spacing={{ xs: 2, md: 3 }}
+									pt="1rem"
 									pb="2rem"
 									pl={"1rem"}
 									pr={"1rem"}
@@ -232,6 +268,8 @@ export const Boletas = () => {
 													setSeleccionados={setSeleccionados}
 													max={boletaActual.maxOpciones}
 													tipoJornada={jornadaActual.tipoJornada}
+													tipoBoletaActual={boletaActual.modalidad}
+													candidatos={representante.candidatos}
 												/>
 											</Grid>
 										);
@@ -429,7 +467,6 @@ export const Boletas = () => {
 						)}
 					</Box>
 				</Box>
-
 				{noBoleta !== 1 && (
 					<Box
 						display={{ xs: "none", lg: "flex" }}

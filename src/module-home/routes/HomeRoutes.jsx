@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { PasosPage } from "../../module-auth/pages/PasosPage";
 import { HomePage } from "../pages/HomePage";
 import { VerificacionPage } from "../../module-verificacion/pages/VerificacionPage";
@@ -15,18 +15,25 @@ export const HomeRoutes = () => {
 		<Routes>
 			<Route path="home" element={<HomePage />} />
 			<Route path="pasosVerificacion" element={<PasosPage />} />
-			<Route path="verificacion" element={<VerificacionPage/>} />
-			<Route path="verificacion/individual" element={<IndividualPage/>} />
-			<Route path="verificacion/individual/FoundFolio" element={<FolioFound/>}/>
+			<Route path="verificacion" element={<VerificacionPage />} />
+			<Route path="verificacion/individual" element={<IndividualPage />} />
+			<Route path="verificacion/individual/FoundFolio" element={<FolioFound />} />
 
 			{/* No Logueado */}
-			<Route path="verificacion/visualizacion" element={<Jornadas/>} />
-			<Route path="verificacion/visualizacion/boleta" element={<VisualizacionBoleta/>} />
-			<Route path="verificacion/visualizacion/boleta/group" element={<GroupPage/>} />
+			<Route path="verificacion/visualizacion" element={<Jornadas />} />
+			<Route path="verificacion/visualizacion/boleta" element={<VisualizacionBoleta />} />
+			<Route path="verificacion/visualizacion/boleta/group" element={<GroupPage />} />
 			{/*Logueado */}
-			<Route path="verificacion/visualizacionnf" element={<JornadasNoFormales/>} />
-			<Route path="verificacion/visualizacionnf/boletanf" element={<VisualizacionBoletaNoFormal/>} />
-			<Route path="verificacion/visualizacionnf/boletanf/groupnf" element={<GroupPageLogged/>} />
+			<Route path="verificacion/visualizacionnf" element={<JornadasNoFormales />} />
+			<Route
+				path="verificacion/visualizacionnf/boletanf"
+				element={<VisualizacionBoletaNoFormal />}
+			/>
+			<Route
+				path="verificacion/visualizacionnf/boletanf/groupnf"
+				element={<GroupPageLogged />}
+			/>
+			<Route path="/*" element={<Navigate to="/home" />} />
 		</Routes>
 	);
 };

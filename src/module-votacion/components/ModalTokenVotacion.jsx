@@ -36,12 +36,12 @@ const style = {
 
 const validationSchema = object({
 	token: string("")
-		.min(6, "El token debe tener un tamaño de 6 digitos")
-		.max(6, "El token debe tener un tamaño máximo de 6 digitos")
+		.min(6, "El código debe tener un tamaño de 6 digitos")
+		.max(6, "El código debe tener un tamaño máximo de 6 digitos")
 		.required("Este campo es requerido"),
 });
 
-const tiempo = 65;
+const tiempo = 120;
 
 export const ModalTokenVotacion = ({ statusModal, handleCloseModal, isOnModalToken }) => {
 	let time = new Date();
@@ -113,13 +113,14 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal, isOnModalTok
 			<Container maxWidth="sm" sx={style}>
 				<Box sx={{ overflowY: "auto", height: "100%" }}>
 					<Typography id="modal-modal-title" variant="h5" color="initial" align="center">
-						INGRESA TU TOKEN DE VERIFICACIÓN
+						INGRESA TU CÓDIGO DE VERIFICACIÓN
 					</Typography>
 					<Box m={"2rem"}>
 						<Typography variant="subtitle2" align="justify">
-							El token de verificación es una pequeña secuencia de numeros que ha sido
-							enviada a como mensaje a tu teléfono. Para poder ingresar al módulo de
-							votación, deberás copiar el token de verificación en el siguiente campo
+							El código de verificación es una pequeña secuencia de numeros que ha
+							sido enviada como mensaje a tu teléfono. Para poder ingresar al módulo
+							de votación, deberás copiar el código de verificación en el siguiente
+							campo.
 						</Typography>
 
 						<Formik
@@ -134,7 +135,7 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal, isOnModalTok
 							{({ values, handleSubmit, handleChange, errors, touched }) => (
 								<form onSubmit={handleSubmit}>
 									<TextField
-										label="Token de verificación"
+										label="Código de verificación"
 										name="token"
 										onChange={handleChange}
 										values={values.token}
@@ -146,17 +147,21 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal, isOnModalTok
 										helperText={touched.token && errors.token}
 										sx={{ marginTop: "2rem" }}
 									/>
-									{errorMessage === "El token es incorrecto o ha caducado." ? (
+									{errorMessage === "El código es incorrecto o ha caducado." ? (
 										<Box pt={2}>
 											<Alert severity="error">
-												El token es incorrecto o ha caducado.
+												El código es incorrecto o ha caducado.
 											</Alert>
 										</Box>
 									) : (
 										<></>
 									)}
 
-									<Grid container pt={4}>
+									<Grid
+										container
+										pt={4}
+										direction={{ xs: "column", md: "row-reverse" }}
+									>
 										<Grid item xs={12} md={5} pb={{ xs: "2rem", md: "0" }}>
 											<Button
 												color="darkButton"
@@ -197,18 +202,18 @@ export const ModalTokenVotacion = ({ statusModal, handleCloseModal, isOnModalTok
 												sx={{ flexGrow: "1" }}
 												onClick={reenviarToken}
 											>
-												{`Reenviar Token`}
-												{/* {isRunning ? `(${minutes}:${seconds})` : ""} */}
+												{`Reenviar código`}
 												{minutes > 0 && minutes < 10
 													? ` 0${minutes}:`
 													: minutes > 10
-													? `${minutes}:`
+													? ` ${minutes}:`
 													: ""}
-												{/* {seconds > 0 && minutes === 0 ? `${minutes + 1} minuto ` : ""} */}
-												{seconds > 0 && seconds < 10
+												{seconds === 0 && seconds === 0
+													? ""
+													: seconds >= 0 && seconds < 10
 													? ` 0${seconds}`
 													: seconds > 10
-													? `${seconds}`
+													? ` ${seconds}`
 													: ""}
 											</Button>
 										</Grid>

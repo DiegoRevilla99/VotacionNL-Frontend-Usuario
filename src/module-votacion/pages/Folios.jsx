@@ -94,12 +94,13 @@ export const Folios = () => {
 								}}
 							>
 								Su voto no guardará ningún tipo de relación con su cuenta o su
-								nombre, es decir, será completamente anónimo, por esta razón, favor
-								de tomar nota de los siguientes folios, los cuales únicamente usted
-								conocerá y podrá ingresar en el módulo de verificación para poder
-								corroborar que el sentido de su voto es el mismo que al momento de
-								su emisión. Estos folios solo se mostrarán por esta única ocación,
-								por eso es importante que los guarde de manera adecuada.
+								nombre, es decir, será completamente anónimo. Por esta razón, le
+								pedimos que tome nota de los siguientes folios, los cuales
+								únicamente usted conocerá y podrá ingresar en el módulo de
+								verificación para poder corroborar que el sentido de su voto es el
+								mismo que al momento de su emisión. Estos folios solo se mostrarán
+								por esta única ocasión, por lo que es importante que los guarde
+								adecuadamente y no los comparta con nadie.
 							</Typography>
 							{folios.map((folio, index) => (
 								<React.Fragment key={folio.folioBoleta}>
