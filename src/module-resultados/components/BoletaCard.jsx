@@ -16,7 +16,7 @@ export const BoletaCard = () => {
       <Typography sx={{fontSize:"18px", mt:2,mb:1,fontWeight:"bold"}} textAlign={"center"}>GOBERNATURA 2023-2024</Typography>
        <Box display={"flex"} flexDirection="column"  alignItems={"center"} sx={{p:3}}>
        <Typography textAlign={"center"} >Entra para ver los resultados</Typography>
-       <Button  sx={{mt:2,background:"#2D2B28", color:"#fff"}}  onClick={()=>{goTo("/resultados/result-formales")}} variant="contained">Ver resultados</Button>
+       <Button  sx={{mt:2,background:"#2D2B28", color:"#fff"}}  onClick={()=>{goTo("/resultados/result-formales/")}} variant="contained">Ver resultados</Button>
        </Box>
 
       </Box>

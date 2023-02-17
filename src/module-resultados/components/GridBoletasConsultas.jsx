@@ -4,12 +4,12 @@ import { BoletaCard } from './BoletaCard'
 import { BoletaConsultaCard } from './BoletaConsultaCard'
 import { EleccionCard } from './EleccionCard'
 
-export const GridBoletasConsultas = ({more=false ,jornada=[1,2]}) => {
+export const GridBoletasConsultas = ({more=false ,papeletas=[]}) => {
   return (
     <Box  display={"flex"} gap="60px" flexWrap="wrap" justifyContent={"center"} width={"100%"}>
 {
-    jornada.map(()=>(
-        <BoletaConsultaCard/>
+    papeletas.map((papeleta)=>(
+        <BoletaConsultaCard papeleta={papeleta}/>
     ))
 }
     </Box>

@@ -10,6 +10,7 @@ import { BoletasFormales } from "../pages/BoletasFormales";
 import { BoletasConsultas } from "../pages/BoletasConsultas";
 import { BoletasNoFormales } from "../pages/BoletasNoFormales";
 import { ResultadosFormal } from "../pages/ResultadosFomal";
+import { ResultadosConsulta } from "../pages/ResultadosConsulta";
 
 
 
@@ -37,8 +38,9 @@ export const ResultadosRoutes = () => {
 						<Route path="inicio" element={<IniciosResultados />} />
 						<Route path="formales" element={<Formales />} />
 						<Route path="result-formales" element={<ResultadosFormal />} />
+						<Route path="result-consulta/:jornada/:id" element={<ResultadosConsulta />} />
 						<Route path="boletas-formales" element={<BoletasFormales />} />
-						<Route path="boletas-consultas" element={<BoletasConsultas />} />
+						<Route path="boletas-consultas/:id" element={<BoletasConsultas />} />
 						<Route path="boletas-noformales" element={<BoletasNoFormales />} />
 						<Route path="noFormales" element={<NoFormales />} />
 						<Route path="consultas" element={<Consultas />} />
