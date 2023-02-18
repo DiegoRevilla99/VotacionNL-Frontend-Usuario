@@ -20,15 +20,7 @@ import { Intermedio } from "../components/Intermedio";
 import { useDispatch, useSelector } from "react-redux";
 import { getResult } from "../../store/resultados-consultas/consultasThunks";
 
-export const ResultadosConsulta = ({
-  chartData = [
-    { votos: 50 },
-    { votos: 10 },
-    { votos: 100 },
-    { votos: 140 },
-    { votos: 80 },
-  ],
-}) => {
+export const ResultadosRepFormal = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados } = useSelector(
@@ -37,7 +29,7 @@ export const ResultadosConsulta = ({
   const [etiquetas, setetiquetas] = useState([]);
   const [datosN, setDatosN] = useState([]);
   const [titulo, settitulo] = useState("");
-  const [update, setUpdate] = useState(false);
+  const [update, setUpdate] = useState(true);
   const [winer, setWiner] = useState("");
   const labels = [
     "January",
@@ -59,14 +51,14 @@ export const ResultadosConsulta = ({
     "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
   ];
 
-  useEffect(() => {
+  /* useEffect(() => {
     setUpdate(true);
     console.log("jornada:", jornada);
     console.log("consulta:", id);
     dispatch(getResult(jornada, id));
-  }, []);
+  }, []); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("Resultados:", resultados);
     if (resultados) {
       console.log(resultados.resultados.lista);
@@ -79,7 +71,7 @@ export const ResultadosConsulta = ({
       setUpdate(false);
     }
     console.log("cambio");
-  }, [resultados]);
+  }, [resultados]); */
 
   return (
     <>
@@ -121,7 +113,7 @@ export const ResultadosConsulta = ({
             }}
             textAlign={"center"}
           >
-            {resultados.papeleta?.nombre}
+            nombre
           </Typography>
           <Box
             display={"flex"}
@@ -146,7 +138,7 @@ export const ResultadosConsulta = ({
                   wordBreak: "break-word",
                 }}
               >
-                {titulo}
+                titulo
               </Typography>
               <Typography
                 variant="body2"
@@ -158,7 +150,7 @@ export const ResultadosConsulta = ({
                 Respuesta(s) ganadoras
               </Typography>
 
-              {resultados.ganadores?.map((gan, index) => {
+              {/* {resultados.ganadores?.map((gan, index) => {
                 return (
                   <Typography
                     sx={{ fontSize: { md: "15px", xs: "9px" } }}
@@ -168,7 +160,7 @@ export const ResultadosConsulta = ({
                     {index + 1}.- {gan.question}
                   </Typography>
                 );
-              })}
+              })} */}
 
               <Box
                 borderRight="1px solid"
@@ -226,9 +218,7 @@ export const ResultadosConsulta = ({
                   >
                     VOTOS ACUMULADOS
                   </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>
-                    {resultados?.acumulados}
-                  </Typography>
+                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>0</Typography>
                 </Box>
                 <Box sx={{ p: 3 }}>+</Box>
                 <Box
@@ -245,9 +235,7 @@ export const ResultadosConsulta = ({
                   >
                     VOTOS NULOS
                   </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>
-                    {resultados?.nulos}
-                  </Typography>
+                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>0</Typography>
                 </Box>
                 <Box sx={{ p: 3 }}>=</Box>
                 <Box
@@ -264,9 +252,7 @@ export const ResultadosConsulta = ({
                   >
                     TOTAL
                   </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>
-                    {resultados?.acumulados + resultados?.nulos}
-                  </Typography>
+                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>0</Typography>
                 </Box>
               </Box>
             </Box>
@@ -299,7 +285,7 @@ export const ResultadosConsulta = ({
               textAlign={"center"}
               sx={{}}
             >
-              RESULTADOS POR RESPUESTAS
+              RESULTADOS
             </Typography>
             <Box
               display={"flex"}
@@ -317,9 +303,9 @@ export const ResultadosConsulta = ({
               ) : (
                 update && (
                   <Intermedio
-                    titulo={titulo}
-                    datos={datosN}
-                    labels={etiquetas}
+                    titulo={"Titulo"}
+                    datos={datos}
+                    labels={labels}
                     img={[]}
                   ></Intermedio>
                 )

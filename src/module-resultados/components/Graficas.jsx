@@ -35,7 +35,7 @@ export function Graficas({ titulo, resultados, etiquetas, img }) {
   const options = {
     indexAxis: "x",
     maintainAspectRatio: false,
-    responsive: false,
+    responsive: true,
     elements: {
       bar: {
         borderWidth: 2,
@@ -45,6 +45,7 @@ export function Graficas({ titulo, resultados, etiquetas, img }) {
     plugins: {
       legend: {
         position: "bottom",
+        display: false,
       },
       title: {
         display: true,
@@ -77,14 +78,20 @@ export function Graficas({ titulo, resultados, etiquetas, img }) {
   };
 
   const [data, setData] = useState({
-    // labels: chartData.map((data) => data.nombre),
     labels: etiquetas.map((data) => "                   " + data + ""),
     datasets: [
       {
         label: "Votos",
         data: resultados.map((data) => data),
-        backgroundColor: ["#D6B1F7"],
-        color: ["#fff"],
+        backgroundColor: [
+          "#ff85d5",
+          "#e79eff",
+          "#b8e4ff",
+          "#ff94a2",
+          "#ffe180",
+          "#fcb7af",
+        ],
+        borderColor: "#A5A4A4",
         image: img,
         labels: etiquetas.map((data) => ""),
       },
@@ -119,19 +126,8 @@ export function Graficas({ titulo, resultados, etiquetas, img }) {
   };
   return (
     <Bar
-      className="canvas-continer"
-      width={
-        xssize
-          ? "300px"
-          : smsize
-          ? "550px"
-          : mdsize
-          ? "750px"
-          : lgsize
-          ? "1100px"
-          : "1100px"
-      }
-      height={600}
+      width={"80%"}
+      height={500}
       plugins={[ChartDataLabels, imageItems]}
       options={options}
       data={data}

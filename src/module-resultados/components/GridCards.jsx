@@ -1,15 +1,20 @@
-import { Box } from '@mui/material'
-import React from 'react'
-import { EleccionCard } from './EleccionCard'
+import { Box } from "@mui/material";
+import React from "react";
+import { EleccionCard } from "./EleccionCard";
 
-export const GridCards = ({more=false ,jornada=[1,2,3,4]}) => {
+export const GridCards = ({ more = false, jornadas = [] }) => {
   return (
-    <Box  display={"flex"} gap="50px" flexWrap="wrap" justifyContent={"space-around"} width={"100%"}>
-{
-    jornada.map(()=>(
-        <EleccionCard/>
-    ))
-}
+    <Box
+      className="animate__animated animate__fadeInUp"
+      display={"flex"}
+      gap="50px"
+      flexWrap="wrap"
+      justifyContent={"space-around"}
+      width={"100%"}
+    >
+      {jornadas.map((jornada) => (
+        <EleccionCard jornada={jornada} />
+      ))}
     </Box>
-  )
-}
+  );
+};

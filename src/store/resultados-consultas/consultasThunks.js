@@ -25,32 +25,70 @@ const convResult = (obj) => {
     tipo: obj.pregunta.tipoRespuesta,
     subtipo: obj.pregunta.subtipo,
   };
-  let listaPregu = [];
-  listaPregu.push(obj.pregunta.opcion1);
-  listaPregu.push(obj.pregunta.opcion2);
-  listaPregu.push(obj.pregunta.opcion3);
-  listaPregu.push(obj.pregunta.opcion4);
-  listaPregu.push(obj.pregunta.opcion5);
-  listaPregu.push("nulos");
-  pregunta.lista = listaPregu;
 
   let resultados = {
     idPregunta: obj.resultados.idPregunta,
     idPregunta: obj.resultados.idPregunta,
   };
   let listaResul = [];
-  listaResul.push(obj.resultados.opc1);
-  listaResul.push(obj.resultados.opc2);
-  listaResul.push(obj.resultados.opc3);
-  listaResul.push(obj.resultados.opc4);
-  listaResul.push(obj.resultados.opc5);
+  let listaPregu = [];
+
+  if (obj.pregunta.opcion1 !== "") {
+    listaPregu.push(obj.pregunta.opcion1);
+    listaResul.push(obj.resultados.opc1);
+  }
+  if (obj.pregunta.opcion2 !== "") {
+    listaPregu.push(obj.pregunta.opcion2);
+    listaResul.push(obj.resultados.opc2);
+  }
+  if (obj.pregunta.opcion3 !== "") {
+    listaPregu.push(obj.pregunta.opcion3);
+    listaResul.push(obj.resultados.opc3);
+  }
+  if (obj.pregunta.opcion4 !== "") {
+    listaPregu.push(obj.pregunta.opcion4);
+    listaResul.push(obj.resultados.opc4);
+  }
+  if (obj.pregunta.opcion5 !== "") {
+    listaPregu.push(obj.pregunta.opcion5);
+    listaResul.push(obj.resultados.opc5);
+  }
+
+  listaPregu.push("nulos");
+  pregunta.lista = listaPregu;
   listaResul.push(obj.resultados.nulos);
   resultados.lista = listaResul;
+
+  let resOrd = [...resultados.lista];
+
+  resOrd.sort(function (a, b) {
+    return b - a;
+  });
+
+  const ganadores = [];
+  const gan = resultados.lista.map((res, index) => {
+    if (res === resOrd[0]) {
+      const win = { question: pregunta.lista[index], result: res };
+      ganadores.push(win);
+      return win;
+    }
+  });
+  const nulos = obj.resultados.nulos;
+  let acumulados =
+    parseInt(obj.resultados.opc1, 10) +
+    parseInt(obj.resultados.opc2, 10) +
+    parseInt(obj.resultados.opc3, 10) +
+    parseInt(obj.resultados.opc4, 10) +
+    parseInt(obj.resultados.opc5, 10);
+  console.log("acumulados: ", acumulados);
 
   const data = {
     papeleta,
     pregunta,
     resultados,
+    ganadores,
+    nulos,
+    acumulados,
   };
 
   return data;
@@ -80,6 +118,7 @@ export const getPapletas = (id) => {
 
 export const getResult = (idJornada, idConsulta) => {
   return async (dispatch, getState) => {
+    dispatch(setResultados({ resultados: false }));
     dispatch(startLoadingResultados());
     const { ok, data, errorMessage } = await getResultadosProvider(idJornada);
 
