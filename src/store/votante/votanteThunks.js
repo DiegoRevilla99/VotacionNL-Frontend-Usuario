@@ -136,7 +136,7 @@ export const onEmitirRespuestaConsulta = (votos, idJornadaVotante, curp, navigat
 				navigate();
 			} else {
 				console.log("no se emitio el voto consulta");
-				const { ok1: ok3 } = await flagJornadaNoRealizada(idJornadaVotante);
+				const { ok1: ok3 } = await flagJornadaNoRealizada(idJornadaVotante, curp);
 				dispatch(onError("Fallo al emitir voto, intenta mas tarde."));
 				dispatch(onNoVotando());
 			}

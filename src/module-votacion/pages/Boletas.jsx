@@ -16,7 +16,7 @@ import {
 	onSetBoletaActual,
 } from "../../store/votante/votanteSlice";
 import { VotoNulo } from "../components/VotoNulo";
-import ReactRouterPrompt from "@byungi/react-router-prompt";
+// import ReactRouterPrompt from "react-router-prompt";
 
 export const Boletas = () => {
 	const {
@@ -79,9 +79,9 @@ export const Boletas = () => {
 	else
 		return (
 			<>
-				<ReactRouterPrompt when={true}>
+				{/* <ReactRouterPrompt when={true}>
 					{({ isActive, onConfirm, onCancel }) => (
-						<Modal open={isActive}>
+						<Modal show={isActive}>
 							<div>
 								<p>Do you really want to leave?</p>
 								<button onClick={onCancel}>Cancel</button>
@@ -89,7 +89,7 @@ export const Boletas = () => {
 							</div>
 						</Modal>
 					)}
-				</ReactRouterPrompt>
+				</ReactRouterPrompt> */}
 				<Box
 					display={"flex"}
 					sx={{

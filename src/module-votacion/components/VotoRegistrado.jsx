@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, modalidadBoleta }) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { candidaturaNoRegistrada } = useSelector((state) => state.votante);
+	const { candidaturaNoRegistrada, jornadaActual } = useSelector((state) => state.votante);
 	const handleEdit = () => {
 		dispatch(onSetBoletaActual(noBoleta + 1));
 		navigate("/votacion/editarBoleta/" + noBoleta);
@@ -33,18 +33,21 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 							borderRadius="1rem"
 							p="1rem"
 							align="center"
+							height="100%"
 							sx={{
 								width: "100%",
 								wordBreak: "break-word",
 							}}
 						>
 							{voto.map((seleccionado, index, row) => {
-								if (coalicionInvalida) {
+								if (
+									coalicionInvalida &&
+									jornadaActual.tipoJornada === "JornadaFormal"
+								) {
 									return (
 										<>
 											{boleta.candidatos.map((candidato, index) => {
 												if (candidato.id === seleccionado) {
-													console.log("ENCUENTRA CANDIDATO ");
 													return (
 														<React.Fragment key={candidato.id + index}>
 															<Typography
@@ -80,13 +83,48 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 													);
 												}
 											})}
+
+											{seleccionado === 100 && (
+												<>
+													{" "}
+													<Typography
+														sx={{
+															fontSize: {
+																xs: 7,
+																md: 11,
+															},
+															userSelect: "none",
+														}}
+														color="text.secondary"
+														gutterBottom
+														align="center"
+														pt={1}
+													>
+														CANDIDATURA NO REGISTRADA
+													</Typography>
+													<Typography
+														sx={{
+															fontSize: { xs: 12, md: 16 },
+														}}
+														color="initial"
+														gutterBottom
+														key={
+															boleta.encabezado + seleccionado + index
+														}
+													>
+														{candidaturaNoRegistrada[noBoleta]}
+													</Typography>
+												</>
+											)}
+
 											{index + 1 === row.length && (
 												<Typography
 													sx={{
-														fontSize: { xs: 12, md: 16 },
+														fontSize: { xs: 13, md: 16 },
 													}}
 													color="error"
 													gutterBottom
+													fontWeight="bold"
 													key={
 														boleta.encabezado +
 														seleccionado +
@@ -95,6 +133,75 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 													}
 												>
 													Voto nulo (Por coalición invalida)
+												</Typography>
+											)}
+										</>
+									);
+								} else if (
+									coalicionInvalida &&
+									jornadaActual.tipoJornada === "JornadaNoFormal"
+								) {
+									return (
+										<>
+											{boleta.candidatos.map((candidato, index) => {
+												if (candidato.id === seleccionado) {
+													return (
+														<React.Fragment key={candidato.id + index}>
+															<Typography
+																sx={{
+																	fontSize: { xs: 7, md: 11 },
+																	userSelect: "none",
+																}}
+																color="text.secondary"
+																gutterBottom
+																align="center"
+															>
+																{candidato.nombrePartido}
+															</Typography>
+
+															{candidato.candidatos.map(
+																(cand, index2) => {
+																	return (
+																		<Typography
+																			sx={{
+																				fontSize: {
+																					xs: 12,
+																					md: 16,
+																				},
+																			}}
+																			color="initial"
+																			gutterBottom
+																			key={
+																				cand.id +
+																				seleccionado +
+																				index2
+																			}
+																		>
+																			{cand.nombre}
+																		</Typography>
+																	);
+																}
+															)}
+														</React.Fragment>
+													);
+												}
+											})}
+											{index + 1 === row.length && (
+												<Typography
+													sx={{
+														fontSize: { xs: 13, md: 16 },
+													}}
+													color="error"
+													gutterBottom
+													fontWeight="bold"
+													key={
+														boleta.encabezado +
+														seleccionado +
+														"Invalida" +
+														index
+													}
+												>
+													VOTO NULO (POR COMBINACIÓN INVÁLIDA)
 												</Typography>
 											)}
 										</>

@@ -29,12 +29,14 @@ export const VotosRegistrados = () => {
 					if (idPartido === 100)
 						return {
 							clavePartido: "CANORE",
+							idCandidato: 99998,
 							nombrePartido: "Candidatura no registrada",
 							nombreCandidato: candidaturaNoRegistrada[indexBoleta],
 						};
 					else if (idPartido === 200)
 						return {
 							clavePartido: "NULO",
+							idCandidato: 99999,
 							nombrePartido: "Voto nulo",
 							nombreCandidato: "Voto nulo",
 						};
@@ -42,9 +44,10 @@ export const VotosRegistrados = () => {
 						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
 						// return boletaCurrent.candidatos[index];
 						return {
-							idSeleccion: boletaCurrent.candidatos[index].id,
+							// idSeleccion: boletaCurrent.candidatos[index].id,
 							claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
 							clavePartido: boletaCurrent.candidatos[index].clavePartido,
+							idCandidato: boletaCurrent.candidatos[index].idCandidato,
 							nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
 							nombreCandidato: boletaCurrent.candidatos[index].nombre,
 						};
@@ -64,8 +67,11 @@ export const VotosRegistrados = () => {
 
 			const votosObjectCoaliciones = verificarCoaliciones(votosObject);
 
+			// console.log("VOTOS CORREGIDOS FORMALES", JSON.stringify(votosObjectCoaliciones));
+			console.log("VOTOS CORREGIDOS FORMALES", votosObjectCoaliciones);
+
 			dispatch(
-				onEmitirVoto(votosObject, jornadaActual.idJornada, username, () =>
+				onEmitirVoto(votosObjectCoaliciones, jornadaActual.idJornada, username, () =>
 					navigate("/votacion/folios")
 				)
 			);
@@ -76,6 +82,116 @@ export const VotosRegistrados = () => {
 					if (idPartido === 100)
 						return {
 							idCandAso: "CANORE",
+							nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+						};
+					else if (idPartido === 200)
+						return {
+							idCandAso: "NULO",
+							nombreCandidato: "Voto nulo",
+						};
+					else {
+						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+						const nomCandidato = boletaCurrent.candidatos[index].nombre;
+						const nomPlanilla = boletaCurrent.candidatos[index].nombrePartido;
+						// console.log("Nombre partidooo")
+						return {
+							idCandAso: idPartido,
+							nombreCandidato:
+								boletaCurrent.modalidad === "PLANILLA" ? nomPlanilla : nomCandidato,
+						};
+					}
+				});
+				return {
+					boletaModel: {
+						jornadaElectoral: jornadaActual.nombreJornada,
+						idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
+						modalidad:
+							boletaCurrent.modalidad === "REPRESENTANTE"
+								? 1
+								: boletaCurrent.modalidad === "COMITE"
+								? 2
+								: 3,
+					},
+					selecciones: partidos,
+				};
+			});
+
+			// console.log("VOTOS NO FORMALES", votosObject);
+
+			const votosObjectCoaliciones = verificarAsociaciones(votosObject);
+
+			console.log("VOTOS FINALESSSSSSS NO FORMALES CORREGIDOS", votosObjectCoaliciones);
+
+			dispatch(
+				onEmitirVotoNoFormal(
+					votosObjectCoaliciones,
+					jornadaActual.idJornada,
+					username,
+					() => navigate("/votacion/folios")
+				)
+			);
+		}
+	};
+
+	useEffect(() => {
+		if (status === "noVotando") {
+			navigate("/votacion/inicio");
+		}
+	}, []);
+
+	useEffect(() => {
+		if (jornadaActual.tipoJornada === "JornadaFormal") {
+			const votosObject = votos.map((boleta, indexBoleta) => {
+				const boletaCurrent = boletas[indexBoleta];
+				const partidos = boleta.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							clavePartido: "CANORE",
+							idCandidato: 99998,
+							nombrePartido: "Candidatura no registrada",
+							nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+						};
+					else if (idPartido === 200)
+						return {
+							clavePartido: "NULO",
+							nombrePartido: "Voto nulo",
+							idCandidato: 99999,
+							nombreCandidato: "Voto nulo",
+						};
+					else {
+						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
+						return {
+							// idSeleccion: boletaCurrent.candidatos[index].id,
+							claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
+							clavePartido: boletaCurrent.candidatos[index].clavePartido,
+							idCandidato: boletaCurrent.candidatos[index].idCandidato,
+							nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
+							nombreCandidato: boletaCurrent.candidatos[index].nombre,
+						};
+					}
+				});
+				return {
+					boletaModel: {
+						nombreEleccion: boletaCurrent.encabezado,
+						municipio: boletaCurrent.municipio,
+						distrito: boletaCurrent.distritoElectoral,
+						jornadaElectoral: boletaCurrent.jornadaElectoral,
+						idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
+						// jornadaElectoral: boletaCurrent.jornadaElectoral,
+					},
+					partidos: partidos,
+				};
+			});
+
+			verificarCoalicionesPreEnvio(votosObject);
+		} else {
+			const votosObject = votos.map((boleta, indexBoleta) => {
+				const boletaCurrent = boletas[indexBoleta];
+				const partidos = boleta.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							idCandAso: "CANORE",
+							nombreCandidato: candidaturaNoRegistrada[indexBoleta],
 						};
 					else if (idPartido === 200)
 						return {
@@ -101,96 +217,8 @@ export const VotosRegistrados = () => {
 					selecciones: partidos,
 				};
 			});
-
-			console.log("VOTOS NO FORMALES", votosObject);
-
-			// const votosObjectCoaliciones = verificarCoaliciones(votosObject);
-
-			dispatch(
-				onEmitirVotoNoFormal(votosObject, jornadaActual.idJornada, username, () =>
-					navigate("/votacion/folios")
-				)
-			);
-		}
-	};
-
-	useEffect(() => {
-		if (status === "noVotando") {
-			navigate("/votacion/inicio");
-		}
-	}, []);
-
-	useEffect(() => {
-		if (jornadaActual.tipoJornada === "JornadaFormal") {
-			const votosObject = votos.map((boleta, indexBoleta) => {
-				const boletaCurrent = boletas[indexBoleta];
-				const partidos = boleta.map((idPartido) => {
-					if (idPartido === 100)
-						return {
-							clavePartido: "CANORE",
-							nombrePartido: "Candidatura no registrada",
-							nombreCandidato: candidaturaNoRegistrada[indexBoleta],
-						};
-					else if (idPartido === 200)
-						return {
-							clavePartido: "NULO",
-							nombrePartido: "Voto nulo",
-							nombreCandidato: "Voto nulo",
-						};
-					else {
-						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
-						return {
-							idSeleccion: boletaCurrent.candidatos[index].id,
-							claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
-							clavePartido: boletaCurrent.candidatos[index].clavePartido,
-							nombrePartido: boletaCurrent.candidatos[index].nombrePartido,
-							nombreCandidato: boletaCurrent.candidatos[index].nombre,
-						};
-					}
-				});
-				return {
-					boletaModel: {
-						nombreEleccion: boletaCurrent.encabezado,
-						municipio: boletaCurrent.municipio,
-						distrito: boletaCurrent.distritoElectoral,
-						jornadaElectoral: boletaCurrent.jornadaElectoral,
-						idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
-						// jornadaElectoral: boletaCurrent.jornadaElectoral,
-					},
-					partidos: partidos,
-				};
-			});
-			verificarCoalicionesPreEnvio(votosObject);
-		} else {
-			const votosObject = votos.map((boleta, indexBoleta) => {
-				const boletaCurrent = boletas[indexBoleta];
-				if (
-					boletaCurrent.modalidad === "COMITE" ||
-					boletaCurrent.modalidad === "REPRESENTANTE"
-				) {
-					return true;
-				}
-				const partidos = boleta.map((idPartido) => {
-					if (idPartido === 100)
-						return {
-							clavePartido: "CANORE",
-						};
-					else if (idPartido === 200)
-						return {
-							clavePartido: "NULO",
-						};
-					else {
-						const index = boletaCurrent.candidatos.findIndex((i) => i.id === idPartido);
-						return {
-							claveCoalicion: boletaCurrent.candidatos[index].claveCoalicion,
-						};
-					}
-				});
-				return {
-					partidos: partidos,
-				};
-			});
-			// verificarAsociacionesPreEnvio(votosObject);
+			console.log("VOTOS OBJECT USEEFFECT", votosObject);
+			verificarAsociacionesPreEnvio(votosObject);
 		}
 	}, []);
 
@@ -224,16 +252,27 @@ export const VotosRegistrados = () => {
 			if (nulo) {
 				nuevos.push({
 					boletaModel: voto.boletaModel,
-					partidos: {
-						clavePartido: "NULO",
+					partidos: [
+						{
+							clavePartido: "NULO",
+							idCandidato: 99999,
+							nombreCandidato: "Voto nulo",
+							nombrePartido: "Voto nulo",
+						},
+					],
+					seleccion: {
+						idCandidato: 99999,
 						nombreCandidato: "Voto nulo",
-						nombrePartido: "Voto nulo",
 					},
 				});
 			} else {
 				nuevos.push({
 					boletaModel: voto.boletaModel,
 					partidos: voto.partidos,
+					seleccion: {
+						idCandidato: voto.partidos[0].idCandidato,
+						nombreCandidato: voto.partidos[0].nombreCandidato,
+					},
 				});
 			}
 		});
@@ -243,19 +282,125 @@ export const VotosRegistrados = () => {
 	const verificarAsociacionesPreEnvio = (votos) => {
 		const nuevos = [];
 		const array = [];
-		votos.forEach((voto) => {
-			const numero = voto.partidos[0].claveCoalicion;
-			let nulo = voto.partidos.some((partido) => {
-				return partido.claveCoalicion !== numero;
-			});
+		votos.forEach((voto, index) => {
+			if (voto.boletaModel.modalidad != 3) array.push(false);
+			else {
+				if (voto.selecciones[0].idCandAso === "CANORE") {
+					array.push(false);
+					return;
+				}
+				console.log("VOTO QUE LLEGA CANORE", voto);
+				const idBoleta = voto.boletaModel.idEstructuraBoleta;
 
-			if (nulo) {
-				array.push(true);
-			} else {
-				array.push(false);
+				const boletaCurrent = boletas.find(
+					(boleta) => boleta.idEstructuraBoleta === idBoleta
+				);
+
+				const planillaCurrent = boletaCurrent.candidatos.find(
+					(planilla) => planilla.id === voto.selecciones[0].idCandAso
+				);
+
+				const candidatosId = planillaCurrent.candidatos.map((candidato) => candidato.id);
+
+				voto.selecciones.every((seleccion, indexSeleccion) => {
+					const planillaAComparar = boletaCurrent.candidatos.find(
+						(planilla) => planilla.id === seleccion.idCandAso
+					);
+
+					const candidatosAComparar = planillaAComparar.candidatos.map(
+						(candidato) => candidato.id
+					);
+
+					console.log(`candidatosAComparar ${indexSeleccion}`, candidatosAComparar);
+
+					candidatosId.every((candidato) => {
+						const result = candidatosAComparar.some((candidatoX) => {
+							return candidatoX == candidato;
+						});
+
+						if (result) {
+							array[index] = false;
+						} else {
+							array[index] = true;
+							return false;
+						}
+					});
+
+					return !array[index];
+				});
 			}
 		});
 		setCoalicionInvalida(array);
+	};
+	const verificarAsociaciones = (votos) => {
+		const nuevos = [];
+		const array = [];
+		votos.forEach((voto, index) => {
+			if (voto.boletaModel.modalidad !== 3) nuevos[index] = voto;
+			else {
+				if (voto.selecciones[0].idCandAso === "CANORE") {
+					nuevos[index] = voto;
+					return;
+				}
+				const idBoleta = voto.boletaModel.idEstructuraBoleta;
+
+				const boletaCurrent = boletas.find(
+					(boleta) => boleta.idEstructuraBoleta === idBoleta
+				);
+
+				const planillaCurrent = boletaCurrent.candidatos.find(
+					(planilla) => planilla.id === voto.selecciones[0].idCandAso
+				);
+
+				const candidatosId = planillaCurrent.candidatos.map((candidato) => candidato.id);
+
+				voto.selecciones.every((seleccion, indexSeleccion) => {
+					const planillaAComparar = boletaCurrent.candidatos.find(
+						(planilla) => planilla.id === seleccion.idCandAso
+					);
+
+					const candidatosAComparar = planillaAComparar.candidatos.map(
+						(candidato) => candidato.id
+					);
+
+					console.log(`candidatosAComparar ${indexSeleccion}`, candidatosAComparar);
+
+					candidatosId.every((candidato) => {
+						const result = candidatosAComparar.some((candidatoX) => {
+							return candidatoX == candidato;
+						});
+
+						if (result) {
+							console.log("ENTRA A GUARDAR VALIDA");
+							nuevos[index] = {
+								boletaModel: voto.boletaModel,
+								selecciones: voto.selecciones,
+							};
+							array[index] = false;
+						} else {
+							console.log("ENTRA A GUARDAR INVALIDA");
+							(nuevos[index] = {
+								boletaModel: voto.boletaModel,
+								selecciones: [
+									{
+										// clavePartido: "NULO",
+										// idCandAso: 99999,
+										idCandAso: "NULO",
+										nombreCandidato: "Voto nulo",
+										// nombrePartido: "Voto nulo",
+									},
+								],
+							}),
+								(array[index] = true);
+							return false;
+						}
+					});
+
+					return !array[index];
+				});
+			}
+		});
+
 		return nuevos;
 	};
 
@@ -366,4 +511,97 @@ export const VotosRegistrados = () => {
 			<ModalEmitirVotos modalStatus={modalStatus} />
 		</Box>
 	);
+};
+
+const f = [
+	{
+		boletaModel: {
+			nombreEleccion: "GOBERNADOR DEL ESTADO DE OAXACA",
+			municipio: "SANTA LUCIA DEL CAMINO",
+			distrito: "33",
+			jornadaElectoral: "JORNADA ELECTORAL 2022",
+			idEstructuraBoleta: 2,
+		},
+		partidos: [
+			{
+				claveCoalicion: 92,
+				clavePartido: "PRD-01",
+				idCandidato: 9,
+				nombrePartido: "PARTIDO REVOLUCIONARIO DEMOCRATA",
+				nombreCandidato: "ALEJANDRO AVILES ALVAREZ",
+			},
+			{
+				claveCoalicion: 92,
+				clavePartido: "PRD-99",
+				idCandidato: 9,
+				nombrePartido: "PARTIDO REVOLUCIONARIO DEMOCRATA",
+				nombreCandidato: "ALEJANDRO AVILES ALVAREZ",
+			},
+		],
+		seleccion: { idCandidato: 9, nombreCandidato: "ALEJANDRO AVILES ALVAREZ" },
+	},
+	{
+		boletaModel: {
+			nombreEleccion: "PRESIDENTE MUNICIPAL DE LA CIUDAD DE OAXACA DE JUAREZ",
+			municipio: "OAXACA DE JUAREZ",
+			distrito: "1",
+			jornadaElectoral: "JORNADA ELECTORAL 2022",
+			idEstructuraBoleta: 108,
+		},
+		partidos: [
+			{
+				clavePartido: "CANORE",
+				idCandidato: 99998,
+				nombrePartido: "Candidatura no registrada",
+				nombreCandidato: "Pepe",
+			},
+		],
+		seleccion: { idCandidato: 99998, nombreCandidato: "Pepe" },
+	},
+];
+
+const f1 = {
+	boletaModel: {
+		nombreEleccion: "GOBERNADOR DEL ESTADO DE OAXACA",
+		municipio: "SANTA LUCIA DEL CAMINO",
+		distrito: "33",
+		jornadaElectoral: "JORNADA ELECTORAL 2022",
+		idEstructuraBoleta: 2,
+	},
+	partidos: [
+		{
+			claveCoalicion: 92,
+			clavePartido: "PRD-01",
+			idCandidato: 9,
+			nombrePartido: "PARTIDO REVOLUCIONARIO DEMOCRATA",
+			nombreCandidato: "ALEJANDRO AVILES ALVAREZ",
+		},
+		{
+			claveCoalicion: 92,
+			clavePartido: "PRD-99",
+			idCandidato: 9,
+			nombrePartido: "PARTIDO REVOLUCIONARIO DEMOCRATA",
+			nombreCandidato: "ALEJANDRO AVILES ALVAREZ",
+		},
+	],
+	seleccion: { idCandidato: 9, nombreCandidato: "ALEJANDRO AVILES ALVAREZ" },
+};
+
+const f2 = {
+	boletaModel: {
+		nombreEleccion: "PRESIDENTE MUNICIPAL DE LA CIUDAD DE OAXACA DE JUAREZ",
+		municipio: "OAXACA DE JUAREZ",
+		distrito: "1",
+		jornadaElectoral: "JORNADA ELECTORAL 2022",
+		idEstructuraBoleta: 108,
+	},
+	partidos: [
+		{
+			clavePartido: "CANORE",
+			idCandidato: 99998,
+			nombrePartido: "Candidatura no registrada",
+			nombreCandidato: "Pepe",
+		},
+	],
+	seleccion: { idCandidato: 99998, nombreCandidato: "Pepe" },
 };

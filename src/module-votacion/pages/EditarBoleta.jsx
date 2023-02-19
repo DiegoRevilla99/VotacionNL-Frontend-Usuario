@@ -315,12 +315,20 @@ export const EditarBoleta = () => {
 							<IconButton
 								sx={{ display: "flex", flexDirection: "column" }}
 								onClick={handleSubmit}
-								disabled={!(seleccionados.length >= boletaActual.minOpciones)}
+								color={
+									seleccionados.includes(100) && candidaturaNoRegistrada === ""
+										? "#f0f0f0"
+										: "#388452"
+								}
+								disabled={
+									!(seleccionados.length >= boletaActual.minOpciones) ||
+									(seleccionados.includes(100) && candidaturaNoRegistrada === "")
+								}
 							>
 								<>
 									<CheckCircleOutlineOutlinedIcon
 										sx={{
-											color: "#388452",
+											// color: "#388452",
 											height: {
 												xs: "7rem",
 												sm: "8rem",

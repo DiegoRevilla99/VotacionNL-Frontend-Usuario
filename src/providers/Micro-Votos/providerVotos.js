@@ -9,6 +9,7 @@ import { votosAPI, votosConsultaAPI, votosNoFormalAPI } from "./configVotos";
 export const emitirVoto = async (values) => {
 	try {
 		let folios = [];
+		console.log("VOTOS QUE LLEGAN A PROV FORMALES", values);
 		for (const voto of values) {
 			const { data } = await votosAPI.post("votos_seguros/registrar/boleta", voto);
 			const { boletaModel } = data;
@@ -44,7 +45,7 @@ export const flagJornadaRealizada = async (idJornadaVotante, curp) => {
 		const { data } = await votanteJornadaAPI.put(
 			`jornadavotante/${curp}/jornada/${idJornadaVotante}/update/realizacion`,
 			{
-				flag: true,
+				flag: false,
 			}
 		);
 
@@ -57,7 +58,7 @@ export const flagJornadaRealizada = async (idJornadaVotante, curp) => {
 		return { ok1: false };
 	}
 };
-export const flagJornadaNoRealizada = async (idJornadaVotante) => {
+export const flagJornadaNoRealizada = async (idJornadaVotante, curp) => {
 	try {
 		const { data } = await votanteJornadaAPI.put(
 			`jornadavotante/${curp}/jornada/${idJornadaVotante}/update/realizacion`,
@@ -81,6 +82,7 @@ export const emitirRespuestaConsulta = async (votos) => {
 		let folios = [];
 		for (const voto of votos) {
 			console.log("VOTO FOR", voto);
+			console.log("VOTO FOR STRING", JSON.stringify(voto));
 			const { data } = await votosConsultaAPI.post("votos/consulta/registrar/boleta", voto);
 
 			console.log("DATA EMITIR RESP", data);
@@ -133,6 +135,7 @@ export const getBoletasDeVotante = async (idJornada) => {
 			let partidos = [];
 			boleta.partidos.forEach((partido, indexPartido) => {
 				partidos.push({
+					idCandidato: partido.candidato.idCandidato,
 					id: partido.partido.clavePartido,
 					claveCoalicion: partido.coalicion.claveCoalicion,
 					nombrePartido: partido.partido.nombre,
