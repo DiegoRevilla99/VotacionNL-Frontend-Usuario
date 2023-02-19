@@ -101,6 +101,7 @@ export const getJornadasConsultas = () => {
     if (ok) {
       dispatch(setJornadas({ jornadas: data }));
     } else {
+      dispatch(setJornadas({ jornadas: [] }));
     }
   };
 };
@@ -112,6 +113,7 @@ export const getPapletas = (id) => {
     if (ok) {
       dispatch(setPapeletas({ papeletas: data }));
     } else {
+      dispatch(setPapeletas({ papeletas: [] }));
     }
   };
 };

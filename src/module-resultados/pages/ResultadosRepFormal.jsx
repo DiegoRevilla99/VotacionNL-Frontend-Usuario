@@ -12,13 +12,16 @@ import {
   Stack,
   ThemeProvider,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Graficas } from "../components/Graficas";
 import "../../styles/generalContainer.css";
 import { purpleTheme } from "../../theme/purpleTheme";
 import { Intermedio } from "../components/Intermedio";
 import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "@mui/material/styles";
 import { getResult } from "../../store/resultados-consultas/consultasThunks";
+import { CardCandidatos } from "../components/formales/CardCandidatos";
 
 export const ResultadosRepFormal = ({}) => {
   const { jornada, id } = useParams();
@@ -26,6 +29,12 @@ export const ResultadosRepFormal = ({}) => {
   const { resultados, isLoadingResultados } = useSelector(
     (state) => state.consultas
   );
+  const theme = useTheme();
+  const xssize = useMediaQuery(theme.breakpoints.only("xs"));
+  const smsize = useMediaQuery(theme.breakpoints.only("sm"));
+  const mdsize = useMediaQuery(theme.breakpoints.only("md"));
+  const lgsize = useMediaQuery(theme.breakpoints.only("lg"));
+  const xlsize = useMediaQuery(theme.breakpoints.only("xl"));
   const [etiquetas, setetiquetas] = useState([]);
   const [datosN, setDatosN] = useState([]);
   const [titulo, settitulo] = useState("");
@@ -147,7 +156,7 @@ export const ResultadosRepFormal = ({}) => {
                 color="initial"
                 align="center"
               >
-                Respuesta(s) ganadoras
+                CANDIDATO GANADOR
               </Typography>
 
               {/* {resultados.ganadores?.map((gan, index) => {
@@ -283,7 +292,7 @@ export const ResultadosRepFormal = ({}) => {
               color="initial"
               fontWeight="bold"
               textAlign={"center"}
-              sx={{}}
+              sx={{ mb: 10 }}
             >
               RESULTADOS
             </Typography>
@@ -295,11 +304,12 @@ export const ResultadosRepFormal = ({}) => {
               alignItems={"center"}
               sx={{
                 height: "auto",
-                overflowX: "scroll",
               }}
             >
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
+              ) : xssize ? (
+                <CardCandidatos />
               ) : (
                 update && (
                   <Intermedio

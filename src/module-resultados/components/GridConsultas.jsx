@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { ConsultasCard } from "./ConsultaCard";
 import { EleccionCard } from "./EleccionCard";
@@ -13,9 +13,11 @@ export const GridConsultas = ({ more = false, jornadas = [] }) => {
       justifyContent={"space-around"}
       width={"100%"}
     >
-      {jornadas.map((jornada) => (
-        <ConsultasCard jornada={jornada} />
-      ))}
+      {jornadas?.length > 0 ? (
+        jornadas?.map((jornada) => <ConsultasCard jornada={jornada} />)
+      ) : (
+        <Typography>No se encontró informacón</Typography>
+      )}
     </Box>
   );
 };

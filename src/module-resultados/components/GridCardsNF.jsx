@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { EleccionCard } from "./EleccionCard";
 import { EleccionCardNF } from "./EleccionCardNF";
@@ -13,9 +13,11 @@ export const GridCardsNF = ({ more = false, jornadas = [] }) => {
       justifyContent={"space-around"}
       width={"100%"}
     >
-      {jornadas.map((jornada) => (
-        <EleccionCardNF jornada={jornada} />
-      ))}
+      {jornadas?.length > 0 ? (
+        jornadas?.map((jornada) => <EleccionCardNF jornada={jornada} />)
+      ) : (
+        <Typography>No encontró resultados</Typography>
+      )}
     </Box>
   );
 };
