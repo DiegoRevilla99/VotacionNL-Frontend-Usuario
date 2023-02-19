@@ -2,11 +2,12 @@ import {
   Box,
   Button,
   CircularProgress,
+  Divider,
   IconButton,
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GridCards } from "../components/GridCards";
 import { SearchCustome } from "../components/SearchCustome";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
@@ -18,6 +19,25 @@ export const Formales = () => {
   const { jornadas, isLoadingJornadas } = useSelector(
     (state) => state.formales
   );
+  const [buscador, setBuscador] = useState("");
+  const [dataSearch, setDataSearch] = useState([]);
+  const handleSearch = (event) => {
+    setBuscador(event.target.value);
+    searching(jornadas, event.target.value);
+  };
+
+  const searching = (data, buscador) => {
+    const newData = data.filter((jornada) => {
+      if (jornada.nombreJornada.toUpperCase().includes(buscador.toUpperCase()))
+        return jornada;
+    });
+
+    setDataSearch(newData);
+  };
+
+  useEffect(() => {
+    setDataSearch(jornadas);
+  }, [jornadas]);
 
   useEffect(() => {
     dispatch(getJornadasFormales());
@@ -34,7 +54,12 @@ export const Formales = () => {
       <Typography sx={{ mb: 5, fontSize: "20px", fontWeight: "bold" }}>
         Busque la elección
       </Typography>
-      <SearchCustome></SearchCustome>
+
+      <SearchCustome
+        buscador={buscador}
+        handleSearch={handleSearch}
+      ></SearchCustome>
+
       <Box
         display={"flex"}
         flexDirection="column"
@@ -49,7 +74,10 @@ export const Formales = () => {
           // boxShadow: 2,
         }}
       >
-        <Typography sx={{ fontSize: "25px", fontWeight: "bold" }}>
+        <Typography
+          textAlign={"center"}
+          sx={{ fontSize: "25px", fontWeight: "bold" }}
+        >
           Resultados encontrados:
         </Typography>
         <Box sx={{ width: "100%", p: 3, mt: 3 }}>
@@ -63,7 +91,7 @@ export const Formales = () => {
               <CircularProgress color="primary" />
             </Stack>
           ) : (
-            <GridCards jornadas={jornadas} />
+            <GridCards jornadas={dataSearch} />
           )}
         </Box>
 

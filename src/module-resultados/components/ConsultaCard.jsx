@@ -32,7 +32,13 @@ export const ConsultasCard = ({ jornada = {} }) => {
         }}
       ></Box>
       <Typography
-        sx={{ fontSize: "15px", p: 1, mt: 2, mb: 1, fontWeight: "bold" }}
+        sx={{
+          fontSize: { lg: "20px", xs: "15px" },
+          p: 1,
+          mt: 2,
+          mb: 1,
+          fontWeight: "bold",
+        }}
         textAlign={"center"}
       >
         {jornada?.nombreJornada}

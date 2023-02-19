@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { BoletaCard } from "./BoletaCard";
 import { BoletaConsultaCard } from "./BoletaConsultaCard";
@@ -14,9 +14,11 @@ export const GridBoletasConsultas = ({ more = false, papeletas = [] }) => {
       justifyContent={"center"}
       width={"100%"}
     >
-      {papeletas.map((papeleta) => (
-        <BoletaConsultaCard papeleta={papeleta} />
-      ))}
+      {papeletas?.length > 0 ? (
+        papeletas.map((papeleta) => <BoletaConsultaCard papeleta={papeleta} />)
+      ) : (
+        <Typography> No se encontró información</Typography>
+      )}
     </Box>
   );
 };

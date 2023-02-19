@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { BoletaCard } from "./BoletaCard";
 import { BoletaNFCard } from "./BoletaNFCard";
@@ -14,9 +14,11 @@ export const GridBoletasNF = ({ more = false, boletas = [] }) => {
       justifyContent={"center"}
       width={"100%"}
     >
-      {boletas.map((boleta) => (
-        <BoletaNFCard boleta={boleta} />
-      ))}
+      {boletas?.length > 0 ? (
+        boletas.map((boleta) => <BoletaNFCard boleta={boleta} />)
+      ) : (
+        <Typography>No se encontró información</Typography>
+      )}
     </Box>
   );
 };

@@ -22,6 +22,26 @@ export const BoletasConsultas = () => {
     (state) => state.consultas
   );
 
+  const [buscador, setBuscador] = useState("");
+  const [dataSearch, setDataSearch] = useState([]);
+  const handleSearch = (event) => {
+    setBuscador(event.target.value);
+    searching(papeletas, event.target.value);
+  };
+
+  const searching = (data, buscador) => {
+    const newData = data.filter((jornada) => {
+      if (jornada.nombre.toUpperCase().includes(buscador.toUpperCase()))
+        return jornada;
+    });
+
+    setDataSearch(newData);
+  };
+
+  useEffect(() => {
+    setDataSearch(papeletas);
+  }, [papeletas]);
+
   const getJornada = (id) => {
     return jornadas.find((jornada) => {
       console.log(jornada);
@@ -44,40 +64,69 @@ export const BoletasConsultas = () => {
       justifyContent="center"
       sx={{ mt: 5, width: "100%", height: "auto" }}
     >
-      <Typography sx={{ mb: 5, fontSize: "20px", fontWeight: "bold" }}>
-        {jornada?.nombreJornada ? jornada.nombreJornada : "Elige"}
-      </Typography>
-      <SearchCustome></SearchCustome>
       <Box
         display={"flex"}
         flexDirection="column"
         alignItems={"center"}
+        justifyContent="center"
         sx={{
-          p: 2,
-          pt: 4,
-          mt: 5,
           width: "90%",
-          borderRadius: "20px",
-          height: "auto",
+          background: "#fff",
+          boxShadow: 5,
+          pt: 5,
+          pb: 5,
+          mb: 5,
+          borderRadius: "15px",
         }}
       >
-        <Typography sx={{ fontSize: "25px", fontWeight: "bold" }}>
-          Resultados encontrados:
+        <Typography
+          textAlign={"center"}
+          sx={{
+            mb: 5,
+            fontSize: { lg: "22px", sm: "18px", xs: "15px" },
+            fontWeight: "bold",
+          }}
+        >
+          {jornada?.nombreJornada ? jornada.nombreJornada : "Elige"}
         </Typography>
-        {isLoadingPapeletas ? (
-          <Stack
-            justifyContent="center"
-            sx={{ color: "grey.500" }}
-            spacing={2}
-            direction="row"
+        <SearchCustome
+          buscador={buscador}
+          handleSearch={handleSearch}
+        ></SearchCustome>
+        <Box
+          display={"flex"}
+          flexDirection="column"
+          alignItems={"center"}
+          sx={{
+            p: 2,
+            pt: 4,
+            mt: 5,
+            width: "90%",
+            borderRadius: "20px",
+            height: "auto",
+          }}
+        >
+          <Typography
+            textAlign={"center"}
+            sx={{ fontSize: "25px", fontWeight: "bold" }}
           >
-            <CircularProgress color="primary" />
-          </Stack>
-        ) : (
-          <Box sx={{ width: "100%", p: 3, mt: 3 }}>
-            <GridBoletasConsultas papeletas={papeletas} />
-          </Box>
-        )}
+            Resultados encontrados:
+          </Typography>
+          {isLoadingPapeletas ? (
+            <Stack
+              justifyContent="center"
+              sx={{ color: "grey.500" }}
+              spacing={2}
+              direction="row"
+            >
+              <CircularProgress color="primary" />
+            </Stack>
+          ) : (
+            <Box sx={{ width: "100%", p: 3, mt: 3 }}>
+              <GridBoletasConsultas papeletas={dataSearch} />
+            </Box>
+          )}
+        </Box>
       </Box>
     </Box>
   );

@@ -8,9 +8,9 @@ export const GridConsultas = ({ more = false, jornadas = [] }) => {
     <Box
       className="animate__animated animate__fadeInUp"
       display={"flex"}
-      gap="50px"
+      justifyContent={"center"}
+      gap="60px"
       flexWrap="wrap"
-      justifyContent={"space-around"}
       width={"100%"}
     >
       {jornadas?.length > 0 ? (

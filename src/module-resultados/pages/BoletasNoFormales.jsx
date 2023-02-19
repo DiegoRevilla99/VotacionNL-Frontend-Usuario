@@ -21,6 +21,29 @@ export const BoletasNoFormales = () => {
   const { jornadas, boletas, isLoadingBoletas } = useSelector(
     (state) => state.noformales
   );
+
+  const [buscador, setBuscador] = useState("");
+  const [dataSearch, setDataSearch] = useState([]);
+  const handleSearch = (event) => {
+    setBuscador(event.target.value);
+    searching(boletas, event.target.value);
+  };
+
+  const searching = (data, buscador) => {
+    const newData = data.filter((jornada) => {
+      if (
+        jornada.encabezadoBoleta.toUpperCase().includes(buscador.toUpperCase())
+      )
+        return jornada;
+    });
+
+    setDataSearch(newData);
+  };
+
+  useEffect(() => {
+    setDataSearch(boletas);
+  }, [boletas]);
+
   const getJornada = (id) => {
     return jornadas.find((jornada) => {
       console.log(jornada.idEleccion);
@@ -44,44 +67,71 @@ export const BoletasNoFormales = () => {
       justifyContent="center"
       sx={{ mt: 5, width: "100%", height: "auto" }}
     >
-      <Typography sx={{ mb: 5, fontSize: "20px", fontWeight: "bold" }}>
-        Elige
-      </Typography>
-      <SearchCustome></SearchCustome>
       <Box
         display={"flex"}
         flexDirection="column"
         alignItems={"center"}
+        justifyContent="center"
         sx={{
-          p: 2,
-          mt: 5,
           width: "90%",
-          borderRadius: "20px",
-          height: "auto",
-          // background: "#fff",
-          // boxShadow: 3,
+          background: "#fff",
+          boxShadow: 5,
+          pt: 5,
+          pb: 5,
+          mb: 5,
+          borderRadius: "15px",
         }}
       >
         <Typography
           textAlign={"center"}
-          sx={{ fontSize: "25px", fontWeight: "bold" }}
+          sx={{
+            mb: 5,
+            p: 2,
+            fontSize: { lg: "20px", sm: "18px", xs: "15px" },
+            fontWeight: "bold",
+          }}
         >
-          Resultados encontrados:
+          {jornada?.nombreEleccion ? jornada.nombreEleccion : "Elige"}
         </Typography>
-        {isLoadingBoletas ? (
-          <Stack
-            justifyContent="center"
-            sx={{ color: "grey.500" }}
-            spacing={2}
-            direction="row"
+        <SearchCustome
+          buscador={buscador}
+          handleSearch={handleSearch}
+        ></SearchCustome>
+        <Box
+          display={"flex"}
+          flexDirection="column"
+          alignItems={"center"}
+          sx={{
+            p: 2,
+            mt: 5,
+            width: "90%",
+            borderRadius: "20px",
+            height: "auto",
+            // background: "#fff",
+            // boxShadow: 3,
+          }}
+        >
+          <Typography
+            textAlign={"center"}
+            sx={{ fontSize: "25px", fontWeight: "bold" }}
           >
-            <CircularProgress color="primary" />
-          </Stack>
-        ) : (
-          <Box sx={{ width: "100%", p: 3, mt: 3 }}>
-            <GridBoletasNF boletas={boletas} />
-          </Box>
-        )}
+            Resultados encontrados:
+          </Typography>
+          {isLoadingBoletas ? (
+            <Stack
+              justifyContent="center"
+              sx={{ color: "grey.500" }}
+              spacing={2}
+              direction="row"
+            >
+              <CircularProgress color="primary" />
+            </Stack>
+          ) : (
+            <Box sx={{ width: "100%", p: 3, mt: 3 }}>
+              <GridBoletasNF boletas={dataSearch} />
+            </Box>
+          )}
+        </Box>
       </Box>
     </Box>
   );

@@ -24,12 +24,13 @@ import { getResult } from "../../store/resultados-consultas/consultasThunks";
 import { CardCandidatos } from "../components/formales/CardCandidatos";
 import { NoDisponible } from "../components/NoDisponible";
 import { getBoletaBYIDFormales } from "../../store/resultados-formales/formalesThunks";
+import { getBoletaBYIDNF } from "../../store/resultados-noformales/noformalesThunks";
 
-export const ResultadosRepFormal = ({}) => {
+export const ResultadosRepNoFormal = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados, boleta } = useSelector(
-    (state) => state.formales
+    (state) => state.noformales
   );
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
@@ -67,7 +68,7 @@ export const ResultadosRepFormal = ({}) => {
     // console.log("jornada:", jornada);
     // console.log("consulta:", id);
     // dispatch(getResult(jornada, id));
-    dispatch(getBoletaBYIDFormales(id));
+    dispatch(getBoletaBYIDNF(id));
   }, []);
 
   useEffect(() => {
@@ -331,7 +332,7 @@ export const ResultadosRepFormal = ({}) => {
           </Box>
         </Box>
       ) : (
-        <NoDisponible titulo={boleta?.nombreEstructuraBoleta} />
+        <NoDisponible titulo={boleta?.encabezadoBoleta} />
       )}
     </>
   );

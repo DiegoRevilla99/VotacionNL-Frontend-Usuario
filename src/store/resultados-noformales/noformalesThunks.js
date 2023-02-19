@@ -1,10 +1,13 @@
 import {
+  getBoletaNFProvider,
   getBoletasNFProvider,
   getJornadasNFProvider,
 } from "../../providers/Micro-JornadaNoFormal/providerNoFormal";
 import {
+  setBoleta,
   setBoletas,
   setJornadas,
+  startLoadingBoleta,
   startLoadingBoletas,
   startLoadingJornadas,
 } from "./noformalesSlice";
@@ -109,6 +112,18 @@ export const getBoletasNF = (id) => {
     if (ok) {
       dispatch(setBoletas({ boletas: data }));
     } else {
+    }
+  };
+};
+
+export const getBoletaBYIDNF = (id) => {
+  return async (dispatch, getState) => {
+    dispatch(startLoadingBoleta());
+    const { ok, data, errorMessage } = await getBoletaNFProvider(id);
+    if (ok) {
+      dispatch(setBoleta({ boleta: data }));
+    } else {
+      dispatch(setBoleta({ boleta: false }));
     }
   };
 };

@@ -24,7 +24,13 @@ ChartJS.register(
   Legend
 );
 
-export function Intermedio({ titulo = "", datos = [], labels = [], img = [] }) {
+export function Intermedio({
+  titulo = "",
+  datos = [],
+  labels = [],
+  img = [],
+  resultados,
+}) {
   const navigate = useNavigate();
   let location = useLocation();
   const theme = useTheme();
@@ -47,6 +53,7 @@ export function Intermedio({ titulo = "", datos = [], labels = [], img = [] }) {
         <Graficas
           titulo={titulo}
           resultados={datos}
+          result={resultados}
           etiquetas={labels}
           img={img}
         />
@@ -56,6 +63,7 @@ export function Intermedio({ titulo = "", datos = [], labels = [], img = [] }) {
           titulo={titulo}
           resultados={datos}
           etiquetas={labels}
+          result={resultados}
           img={img}
         />
       )}
@@ -64,6 +72,7 @@ export function Intermedio({ titulo = "", datos = [], labels = [], img = [] }) {
           titulo={titulo}
           resultados={datos}
           etiquetas={labels}
+          result={resultados}
           img={img}
         />
       )}
@@ -72,6 +81,7 @@ export function Intermedio({ titulo = "", datos = [], labels = [], img = [] }) {
           titulo={titulo}
           resultados={datos}
           etiquetas={labels}
+          result={resultados}
           img={img}
         />
       )}
@@ -80,6 +90,7 @@ export function Intermedio({ titulo = "", datos = [], labels = [], img = [] }) {
           titulo={titulo}
           resultados={datos}
           etiquetas={labels}
+          result={resultados}
           img={img}
         />
       )}

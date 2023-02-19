@@ -18,7 +18,12 @@ import "../../styles/generalContainer.css";
 import { purpleTheme } from "../../theme/purpleTheme";
 import { Intermedio } from "../components/Intermedio";
 import { useDispatch, useSelector } from "react-redux";
-import { getResult } from "../../store/resultados-consultas/consultasThunks";
+import {
+  getPapletas,
+  getPapletasByID,
+  getResult,
+} from "../../store/resultados-consultas/consultasThunks";
+import { NoDisponible } from "../components/NoDisponible";
 
 export const ResultadosConsulta = ({
   chartData = [
@@ -31,7 +36,7 @@ export const ResultadosConsulta = ({
 }) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
-  const { resultados, isLoadingResultados } = useSelector(
+  const { resultados, isLoadingResultados, papeleta } = useSelector(
     (state) => state.consultas
   );
   const [etiquetas, setetiquetas] = useState([]);
@@ -60,6 +65,7 @@ export const ResultadosConsulta = ({
   ];
 
   useEffect(() => {
+    dispatch(getPapletasByID(id));
     setUpdate(true);
     console.log("jornada:", jornada);
     console.log("consulta:", id);
@@ -98,7 +104,7 @@ export const ResultadosConsulta = ({
           </Typography>
           <CircularProgress color="primary" />
         </Stack>
-      ) : (
+      ) : resultados ? (
         <Box
           display={"flex"}
           width={"100%"}
@@ -273,6 +279,7 @@ export const ResultadosConsulta = ({
           </Box>
 
           <Divider sx={{ paddingTop: "1.5rem" }} />
+
           <Box
             display={"flex"}
             width={{ lg: "90%", md: "97%", xs: "100%" }}
@@ -327,6 +334,8 @@ export const ResultadosConsulta = ({
             </Box>
           </Box>
         </Box>
+      ) : (
+        <NoDisponible titulo={papeleta?.nombre?.toUpperCase()} />
       )}
     </>
   );

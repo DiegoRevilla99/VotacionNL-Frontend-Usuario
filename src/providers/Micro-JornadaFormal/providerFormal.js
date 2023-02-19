@@ -24,6 +24,40 @@ export const getBoletasFormalesProvider = async (idJornada) => {
   }
 };
 
+export const getEleccionFormalByID = async (id) => {
+  return jornadaFormalApi
+    .get(`jornada/electoral/${id}`)
+    .then((response) => {
+      console.log(response);
+      return { ok: true, data: response.data.data, errorMessage: "" };
+    })
+    .catch((error) => {
+      console.log(error);
+      return { ok: false, data: "", errorMessage: error.message };
+    });
+};
+
+export const getBoletabyIDProvider = async (idBoleta) => {
+  //ENDPOINT REAL
+  return jornadaFormalApi
+    .get(`jornada/electoral/estructuraboleta/${idBoleta}`)
+    .then((response) => {
+      const { httpCode } = response.data;
+      if (httpCode === "NOT_FOUND") {
+        return { ok: true, data: "", errorMessage: "NOT_FOUND" };
+      } else {
+        return { ok: true, data: response.data.data, errorMessage: "" };
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return { ok: false, data: "", errorMessage: error.message };
+    });
+
+  //ENDPOINT FAKE
+  // const { data } = await getBoletaAPI(idBoleta);
+};
+
 /* export const getResultadosFormalesProvider = async (idJornada) => {
   try {
     // **FETCH

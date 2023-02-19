@@ -34,3 +34,17 @@ export const getResultadosProvider = async (idJornada) => {
     return { ok: false };
   }
 };
+
+export const getPapeletaByIDProvider = async (idBallot) => {
+  try {
+    // **FETCH
+
+    const { data } = await consultasAPI.get(
+      "jornada/consulta/estructurapapeleta/" + idBallot
+    );
+
+    return { ok: true, data: data.data };
+  } catch (error) {
+    return { ok: false, errorMessage: error.message };
+  }
+};

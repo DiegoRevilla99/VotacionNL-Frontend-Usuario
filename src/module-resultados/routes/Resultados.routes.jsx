@@ -11,6 +11,7 @@ import { BoletasConsultas } from "../pages/BoletasConsultas";
 import { BoletasNoFormales } from "../pages/BoletasNoFormales";
 import { ResultadosConsulta } from "../pages/ResultadosConsulta";
 import { ResultadosRepFormal } from "../pages/ResultadosRepFormal";
+import { ResultadosRepNoFormal } from "../pages/ResultadosRepNoFormal";
 
 const statusVotante = "novotando";
 
@@ -44,7 +45,7 @@ export const ResultadosRoutes = () => {
             />
             <Route
               path="result-noformal/:jornada/:id"
-              element={<ResultadosRepFormal />}
+              element={<ResultadosRepNoFormal />}
             />
             <Route path="boletas-formales/:id" element={<BoletasFormales />} />
             <Route

@@ -1,10 +1,13 @@
 import {
+  getBoletabyIDProvider,
   getBoletasFormalesProvider,
   getJornadasFormalesProvider,
 } from "../../providers/Micro-JornadaFormal/providerFormal";
 import {
+  setBoleta,
   setBoletas,
   setJornadas,
+  startLoadingBoleta,
   startLoadingBoletas,
   startLoadingJornadas,
 } from "./formalesSlice";
@@ -109,6 +112,18 @@ export const getBoletasFormales = (id) => {
     if (ok) {
       dispatch(setBoletas({ boletas: data }));
     } else {
+    }
+  };
+};
+
+export const getBoletaBYIDFormales = (id) => {
+  return async (dispatch, getState) => {
+    dispatch(startLoadingBoleta());
+    const { ok, data, errorMessage } = await getBoletabyIDProvider(id);
+    if (ok) {
+      dispatch(setBoleta({ boleta: data }));
+    } else {
+      dispatch(setBoleta({ boleta: false }));
     }
   };
 };

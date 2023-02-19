@@ -32,7 +32,13 @@ export const EleccionCard = ({ jornada = {} }) => {
         }}
       ></Box>
       <Typography
-        sx={{ fontSize: "20px", mt: 2, mb: 1, fontWeight: "bold" }}
+        sx={{
+          fontSize: { lg: "20px", xs: "15px" },
+          mt: 2,
+          mb: 1,
+          p: 2,
+          fontWeight: "bold",
+        }}
         textAlign={"center"}
       >
         {jornada?.nombreJornada}

@@ -4,8 +4,10 @@ export const consultasSlice = createSlice({
   name: "consultas",
   initialState: {
     jornadas: [],
+    papeleta: false,
     isLoadingJornadas: false,
     isLoadingPapeletas: false,
+    isLoadingPapeleta: false,
     isLoadingResultados: false,
     resultados: false,
     papeletas: [],
@@ -21,6 +23,15 @@ export const consultasSlice = createSlice({
       state.jornadas = action.payload.jornadas;
       state.isLoadingJornadas = false;
     },
+
+    startLoadingPapeleta: (state /* action */) => {
+      state.isLoadingPapeleta = true;
+    },
+    setPapeleta: (state, action) => {
+      state.papeleta = action.payload.papeleta;
+      state.isLoadingPapeleta = false;
+    },
+
     startLoadingResultados: (state /* action */) => {
       state.isLoadingResultados = true;
     },
@@ -55,6 +66,8 @@ export const {
   setJornadas,
   startLoadingResultados,
   setResultados,
+  startLoadingPapeleta,
+  setPapeleta,
 } = consultasSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

@@ -5,7 +5,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { GridCards } from "../components/GridCards";
 import { SearchCustome } from "../components/SearchCustome";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
@@ -19,6 +19,26 @@ export const Consultas = () => {
   const { jornadas, isLoadingJornadas } = useSelector(
     (state) => state.consultas
   );
+
+  const [buscador, setBuscador] = useState("");
+  const [dataSearch, setDataSearch] = useState([]);
+  const handleSearch = (event) => {
+    setBuscador(event.target.value);
+    searching(jornadas, event.target.value);
+  };
+
+  const searching = (data, buscador) => {
+    const newData = data.filter((jornada) => {
+      if (jornada.nombreJornada.toUpperCase().includes(buscador.toUpperCase()))
+        return jornada;
+    });
+
+    setDataSearch(newData);
+  };
+
+  useEffect(() => {
+    setDataSearch(jornadas);
+  }, [jornadas]);
 
   useEffect(() => {
     dispatch(getJornadasConsultas());
@@ -35,7 +55,10 @@ export const Consultas = () => {
       <Typography sx={{ mt: 3, mb: 5, fontSize: "20px", fontWeight: "bold" }}>
         Busque la consulta
       </Typography>
-      <SearchCustome></SearchCustome>
+      <SearchCustome
+        buscador={buscador}
+        handleSearch={handleSearch}
+      ></SearchCustome>
       <Box
         display={"flex"}
         flexDirection="column"
@@ -66,7 +89,7 @@ export const Consultas = () => {
               <CircularProgress color="primary" />
             </Stack>
           ) : (
-            <GridConsultas jornadas={jornadas} />
+            <GridConsultas jornadas={dataSearch} />
           )}
         </Box>
 

@@ -1,13 +1,16 @@
 import {
   getConsultasCiudadanasProvider,
+  getPapeletaByIDProvider,
   getPapeletasProvider,
   getResultadosProvider,
 } from "../../providers/Micro-ConsultasCiudadanas/providerConsultas";
 import {
   setJornadas,
+  setPapeleta,
   setPapeletas,
   setResultados,
   startLoadingJornadas,
+  startLoadingPapeleta,
   startLoadingPapeletas,
   startLoadingResultados,
 } from "./consultasSlice";
@@ -114,6 +117,18 @@ export const getPapletas = (id) => {
       dispatch(setPapeletas({ papeletas: data }));
     } else {
       dispatch(setPapeletas({ papeletas: [] }));
+    }
+  };
+};
+
+export const getPapletasByID = (id) => {
+  return async (dispatch, getState) => {
+    dispatch(startLoadingPapeleta());
+    const { ok, data, errorMessage } = await getPapeletaByIDProvider(id);
+    if (ok) {
+      dispatch(setPapeleta({ papeleta: data }));
+    } else {
+      dispatch(setPapeleta({ papeleta: false }));
     }
   };
 };

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { BoletaCard } from "./BoletaCard";
 import { EleccionCard } from "./EleccionCard";
@@ -13,9 +13,11 @@ export const GridBoletas = ({ more = false, boletas = [] }) => {
       justifyContent={"center"}
       width={"100%"}
     >
-      {boletas.map((boleta) => (
-        <BoletaCard boleta={boleta}></BoletaCard>
-      ))}
+      {boletas?.length > 0 ? (
+        boletas?.map((boleta) => <BoletaCard boleta={boleta}></BoletaCard>)
+      ) : (
+        <Typography>No se encontró información</Typography>
+      )}
     </Box>
   );
 };

@@ -10,7 +10,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { useMediaQuery } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useRef } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
@@ -32,6 +32,7 @@ export function Graficas({ titulo, resultados, etiquetas, img }) {
   const mdsize = useMediaQuery(theme.breakpoints.only("md"));
   const lgsize = useMediaQuery(theme.breakpoints.only("lg"));
 
+  useEffect(() => {}, []);
   const options = {
     indexAxis: "x",
     maintainAspectRatio: false,
@@ -124,6 +125,7 @@ export function Graficas({ titulo, resultados, etiquetas, img }) {
       });
     },
   };
+
   return (
     <Bar
       width={"80%"}

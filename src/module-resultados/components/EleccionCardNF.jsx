@@ -39,7 +39,7 @@ export const EleccionCardNF = (jornada = {}) => {
         sx={{
           pl: 1,
           pr: 1,
-          fontSize: "20px",
+          fontSize: { lg: "20px", xs: "15px" },
           mt: 2,
           mb: 1,
           fontWeight: "bold",

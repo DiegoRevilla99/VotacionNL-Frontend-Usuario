@@ -37,7 +37,7 @@ export const BoletaCard = ({ boleta }) => {
           sx={{ fontSize: "18px", mt: 2, mb: 1, fontWeight: "bold" }}
           textAlign={"center"}
         >
-          {boleta?.nombreEleccion}
+          {boleta?.nombreEstructuraBoleta}
         </Typography>
         <Box
           display={"flex"}

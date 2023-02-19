@@ -5,7 +5,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GridCardsNF } from "../components/GridCardsNF";
 import { SearchCustome } from "../components/SearchCustome";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
@@ -16,6 +16,26 @@ export const NoFormales = () => {
   const { jornadas, isLoadingJornadas } = useSelector(
     (state) => state.noformales
   );
+
+  const [buscador, setBuscador] = useState("");
+  const [dataSearch, setDataSearch] = useState([]);
+  const handleSearch = (event) => {
+    setBuscador(event.target.value);
+    searching(jornadas, event.target.value);
+  };
+
+  const searching = (data, buscador) => {
+    const newData = data.filter((jornada) => {
+      if (jornada.nombreEleccion.toUpperCase().includes(buscador.toUpperCase()))
+        return jornada;
+    });
+
+    setDataSearch(newData);
+  };
+
+  useEffect(() => {
+    setDataSearch(jornadas);
+  }, [jornadas]);
 
   useEffect(() => {
     dispatch(getJornadasNF());
@@ -32,7 +52,10 @@ export const NoFormales = () => {
       <Typography sx={{ mb: 5, fontSize: "20px", fontWeight: "bold" }}>
         Busque la elección
       </Typography>
-      <SearchCustome></SearchCustome>
+      <SearchCustome
+        buscador={buscador}
+        handleSearch={handleSearch}
+      ></SearchCustome>
       <Box
         display={"flex"}
         flexDirection="column"
@@ -60,7 +83,7 @@ export const NoFormales = () => {
               <CircularProgress color="primary" />
             </Stack>
           ) : (
-            <GridCardsNF jornadas={jornadas} />
+            <GridCardsNF jornadas={dataSearch} />
           )}
         </Box>
 

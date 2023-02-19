@@ -7,9 +7,9 @@ export const GridCards = ({ more = false, jornadas = [] }) => {
     <Box
       className="animate__animated animate__fadeInUp"
       display={"flex"}
-      gap="50px"
+      gap="60px"
       flexWrap="wrap"
-      justifyContent={"space-around"}
+      justifyContent={"center"}
       width={"100%"}
     >
       {jornadas?.length > 0 ? (
