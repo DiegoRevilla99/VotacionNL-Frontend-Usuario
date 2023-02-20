@@ -132,7 +132,8 @@ export const ResultadosRepNF = ({}) => {
             }}
             textAlign={"center"}
           >
-            {boleta?.nombreEstructuraBoleta}
+            Nombre boleta
+            {/* {boleta?.nombreEstructuraBoleta} */}
           </Typography>
           <Box
             display={"flex"}

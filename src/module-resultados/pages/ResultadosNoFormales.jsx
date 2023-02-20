@@ -7,22 +7,22 @@ import { ResultadosComiteNF } from "./ResultadosComiteNF";
 import { ResultadosPlanillaNF } from "./ResultadosPlanillaNF";
 import { ResultadosRepNF } from "./ResultadosRepNF";
 
-export const ResultadosNoFormales = ({ tipo = "planilla" }) => {
+export const ResultadosNoFormales = ({ tipo = "REPRESENTANTE" }) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados, boleta } = useSelector(
     (state) => state.noformales
   );
   useEffect(() => {
-    dispatch(getResultNoFormal(jornada, id));
+    // dispatch(getResultNoFormal(jornada, id));
   }, []);
   return (
     <>
       {isLoadingResultados ? (
         <Typography>Cargando...</Typography>
-      ) : boleta?.modalidad === "REPRESENTANTE" ? (
+      ) : tipo === "REPRESENTANTE" ? (
         <ResultadosRepNF />
-      ) : boleta?.modalidad === "COMITE" ? (
+      ) : tipo === "COMITE" ? (
         <ResultadosComiteNF />
       ) : (
         <ResultadosPlanillaNF />

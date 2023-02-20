@@ -76,7 +76,8 @@ export const CardCandidatos = ({ candidato }) => {
           />
         </Box>
         <Typography textAlign={"center"} sx={{ p: 0 }}>
-          {candidato.nombreCandidato}
+          {/* {candidato.nombreCandidato} */}
+          Laura Yessenia Sanchez Lopez
         </Typography>
       </Box>
       <Box sx={{ padding: "20px" }} className="body">
