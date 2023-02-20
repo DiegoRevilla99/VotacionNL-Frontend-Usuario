@@ -1,4 +1,5 @@
 import { jornadaNoFormalApi } from "./configNoFormal";
+import { jornadaNoFormalVotosApi } from "./configNoFormalVotos";
 
 export const getJornadasNFProvider = async () => {
   return jornadaNoFormalApi
@@ -44,14 +45,14 @@ export const getBoletaNFProvider = async (idBoleta) => {
     });
 };
 
-/* export const getResultadosFormalesProvider = async (idJornada) => {
+export const getResultadosNFProvider = async (idJornada) => {
   try {
     // **FETCH
-    const response = await jornadaFormalApi.get(
-      "votos/consulta/jornada/" + idJornada + "/resultados"
+    const response = await jornadaNoFormalVotosApi.get(
+      "votos/no/formal/jornada/" + idJornada + "/resultados"
     );
     return { ok: true, data: response.data };
   } catch (error) {
     return { ok: false };
   }
-}; */
+};

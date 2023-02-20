@@ -26,6 +26,24 @@ export const convResult = (obj) => {
 
     listaPregu.push("NO");
     listaResul.push(obj.resultados.opc2);
+  } else if (obj.pregunta.subtipo === "3respuestas") {
+    listaPregu.push("EN DESACUERDO");
+    listaResul.push(obj.resultados.opc1);
+    listaPregu.push("NEUTRAL");
+    listaResul.push(obj.resultados.opc2);
+    listaPregu.push("DE ACUERDO");
+    listaResul.push(obj.resultados.opc3);
+  } else if (obj.pregunta.subtipo === "escaladelikert") {
+    listaPregu.push("Totalmente en desacuerdo");
+    listaResul.push(obj.resultados.opc1);
+    listaPregu.push("En desacuerdo");
+    listaResul.push(obj.resultados.opc2);
+    listaPregu.push("Neutral");
+    listaResul.push(obj.resultados.opc3);
+    listaPregu.push("De acuerdo");
+    listaResul.push(obj.resultados.opc4);
+    listaPregu.push("Totalmente de acuerdo");
+    listaResul.push(obj.resultados.opc5);
   } else {
     if (obj.pregunta.opcion1 !== "") {
       listaPregu.push(obj.pregunta.opcion1);
@@ -87,4 +105,40 @@ export const convResult = (obj) => {
   };
 
   return data;
+};
+
+export const toNoFormal = (data) => {
+  console.log(data);
+  const modalidad = data?.boletaCandidatos.modalidad.modalidad;
+  const cantWin = data?.boletaCandidatos.modalidad.maxOpciones;
+  const candidatos = data.boletaCandidatos.candidatoModels.map((candidato) => {
+    // console.log(data.representanteResultado);
+    const result = data.representanteResultado.find((res) => {
+      // console.log(res);
+      if (candidato.claveCandidato === res.id) return res;
+    });
+    return { ...candidato, votos: result.candidad };
+  });
+
+  let newArray = data.representanteResultado;
+  newArray.sort((a, b) => {
+    return b.candidad - a.candidad;
+  });
+
+  let winers = [];
+
+  for (let i = 0; i < cantWin; i++) {
+    const ganador = data.boletaCandidatos.candidatoModels.find((gan) => {
+      if (gan.claveCandidato === newArray[i].id) return gan;
+    });
+    winers.push({ ...ganador, votos: newArray[i].candidad });
+  }
+
+  console.log(candidatos);
+  return {
+    modalidad,
+    cantWin,
+    candidatos,
+    winers,
+  };
 };
