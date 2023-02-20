@@ -48,7 +48,7 @@ export function Intermedio({
   }, [xssize]);
 
   return (
-    <Box sx={{}} width={xssize ? "350px" : "100%"}>
+    <Box sx={{ p: 3 }} width={xssize ? "350px" : "100%"}>
       {xssize && (
         <Graficas
           titulo={titulo}

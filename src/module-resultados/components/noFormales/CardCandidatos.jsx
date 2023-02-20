@@ -57,10 +57,15 @@ const userPhoto = {
   justifyContent: "center",
 };
 
-export const CardCandidatos = () => {
+export const CardCandidatos = ({ candidato }) => {
   return (
     <Box sx={card}>
-      <Box sx={header} className="header">
+      <Box
+        alignItems={"center"}
+        justifyContent={"space-around"}
+        sx={header}
+        className="header"
+      >
         <Box sx={userPhoto} className="header">
           <img
             width={"100%"}
@@ -70,7 +75,9 @@ export const CardCandidatos = () => {
             class="photo"
           />
         </Box>
-        <Typography sx={{ m: 1 }}>Laura Yessenia Sanchez Lopez</Typography>
+        <Typography textAlign={"center"} sx={{ p: 0 }}>
+          {candidato.nombreCandidato}
+        </Typography>
       </Box>
       <Box sx={{ padding: "20px" }} className="body">
         <Box sx={skill}>

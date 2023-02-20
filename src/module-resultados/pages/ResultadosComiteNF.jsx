@@ -32,7 +32,7 @@ export const ResultadosComiteNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados, boleta } = useSelector(
-    (state) => state.formales
+    (state) => state.noformales
   );
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
@@ -248,10 +248,10 @@ export const ResultadosComiteNF = ({}) => {
                 height: "auto",
               }}
             >
-              {isLoadingResultados ? (
+              {/* {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
               ) : xssize ? (
-                <GridCandNoFormales candidatos={[1, 2, 3]} />
+                <GridCandNoFormales candidatos={boleta.candidatos} />
               ) : (
                 update && (
                   <Intermedio
@@ -261,6 +261,12 @@ export const ResultadosComiteNF = ({}) => {
                     img={[]}
                   ></Intermedio>
                 )
+              )} */}
+
+              {isLoadingResultados ? (
+                <Typography>Esperando</Typography>
+              ) : (
+                <GridCandNoFormales candidatos={boleta.candidatos} />
               )}
             </Box>
           </Box>
