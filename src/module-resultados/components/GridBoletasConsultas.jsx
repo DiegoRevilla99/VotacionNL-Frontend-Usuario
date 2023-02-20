@@ -1,17 +1,24 @@
-import { Box } from '@mui/material'
-import React from 'react'
-import { BoletaCard } from './BoletaCard'
-import { BoletaConsultaCard } from './BoletaConsultaCard'
-import { EleccionCard } from './EleccionCard'
+import { Box, Typography } from "@mui/material";
+import React from "react";
+import { BoletaCard } from "./BoletaCard";
+import { BoletaConsultaCard } from "./BoletaConsultaCard";
+import { EleccionCard } from "./EleccionCard";
 
-export const GridBoletasConsultas = ({more=false ,jornada=[1,2]}) => {
+export const GridBoletasConsultas = ({ more = false, papeletas = [] }) => {
   return (
-    <Box  display={"flex"} gap="60px" flexWrap="wrap" justifyContent={"center"} width={"100%"}>
-{
-    jornada.map(()=>(
-        <BoletaConsultaCard/>
-    ))
-}
+    <Box
+      className="animate__animated animate__fadeInUp"
+      display={"flex"}
+      gap="60px"
+      flexWrap="wrap"
+      justifyContent={"center"}
+      width={"100%"}
+    >
+      {papeletas?.length > 0 ? (
+        papeletas.map((papeleta) => <BoletaConsultaCard papeleta={papeleta} />)
+      ) : (
+        <Typography> No se encontró información</Typography>
+      )}
     </Box>
-  )
-}
+  );
+};

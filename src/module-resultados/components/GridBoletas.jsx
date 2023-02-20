@@ -1,16 +1,23 @@
-import { Box } from '@mui/material'
-import React from 'react'
-import { BoletaCard } from './BoletaCard'
-import { EleccionCard } from './EleccionCard'
+import { Box, Typography } from "@mui/material";
+import React from "react";
+import { BoletaCard } from "./BoletaCard";
+import { EleccionCard } from "./EleccionCard";
 
-export const GridBoletas = ({more=false ,jornada=[1,2]}) => {
+export const GridBoletas = ({ more = false, boletas = [] }) => {
   return (
-    <Box  display={"flex"} gap="60px" flexWrap="wrap" justifyContent={"center"} width={"100%"}>
-{
-    jornada.map(()=>(
-        <BoletaCard></BoletaCard>
-    ))
-}
+    <Box
+      className="animate__animated animate__fadeInUp"
+      display={"flex"}
+      gap="60px"
+      flexWrap="wrap"
+      justifyContent={"center"}
+      width={"100%"}
+    >
+      {boletas?.length > 0 ? (
+        boletas?.map((boleta) => <BoletaCard boleta={boleta}></BoletaCard>)
+      ) : (
+        <Typography>No se encontró información</Typography>
+      )}
     </Box>
-  )
-}
+  );
+};

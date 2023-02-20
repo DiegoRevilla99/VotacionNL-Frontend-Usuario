@@ -1,24 +1,133 @@
-import { Box, IconButton, Typography } from '@mui/material'
-import React from 'react'
-import { SearchCustome } from '../components/SearchCustome'
-import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
-import { GridBoletas } from '../components/GridBoletas';
-import { GridBoletasConsultas } from '../components/GridBoletasConsultas';
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { SearchCustome } from "../components/SearchCustome";
+import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
+import { GridBoletas } from "../components/GridBoletas";
+import { GridBoletasConsultas } from "../components/GridBoletasConsultas";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getPapletas } from "../../store/resultados-consultas/consultasThunks";
 
 export const BoletasConsultas = () => {
-  return (
-    <Box display={"flex"} flexDirection="column" alignItems={"center"} justifyContent="center" sx={{mt:5,width:"100%", height:"auto" }}>
-          <Typography sx={{ mb:5 ,fontSize:"20px",fontWeight:"bold"}}>Elige</Typography>
-          <SearchCustome></SearchCustome>
-          <Box display={"flex"} flexDirection="column" alignItems={"center"} sx={{p:2, mt:5,width:"90%", borderRadius:"20px", height:"auto", background:"#fff", boxShadow:3 }}>
-                    {/* <Typography sx={{ mb:2 ,}}>Elecciones recientes</Typography> */}
-                    <Box sx={{width:"100%" ,p:3,mt:3 }}>
-                            <GridBoletasConsultas/>          
-                    </Box>
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const [jornada, setjornada] = useState(null);
+  const { jornadas, papeletas, isLoadingPapeletas } = useSelector(
+    (state) => state.consultas
+  );
 
-                      
-          </Box>
-                    
+  const [buscador, setBuscador] = useState("");
+  const [dataSearch, setDataSearch] = useState([]);
+  const handleSearch = (event) => {
+    setBuscador(event.target.value);
+    searching(papeletas, event.target.value);
+  };
+
+  const searching = (data, buscador) => {
+    const newData = data.filter((jornada) => {
+      if (jornada.nombre.toUpperCase().includes(buscador.toUpperCase()))
+        return jornada;
+    });
+
+    setDataSearch(newData);
+  };
+
+  useEffect(() => {
+    setDataSearch(papeletas);
+  }, [papeletas]);
+
+  const getJornada = (id) => {
+    return jornadas.find((jornada) => {
+      console.log(jornada);
+      if (jornada.idJornada.toString() === id.toString()) return jornada;
+    });
+  };
+  useEffect(() => {
+    dispatch(getPapletas(id));
+    const jornadaa = getJornada(id);
+    console.log(jornadaa);
+    console.log(jornadas);
+    setjornada(jornadaa);
+  }, []);
+
+  return (
+    <Box
+      display={"flex"}
+      flexDirection="column"
+      alignItems={"center"}
+      justifyContent="center"
+      sx={{ mt: 5, width: "100%", height: "auto" }}
+    >
+      <Box
+        display={"flex"}
+        flexDirection="column"
+        alignItems={"center"}
+        justifyContent="center"
+        sx={{
+          width: "90%",
+          background: "#fff",
+          boxShadow: 5,
+          pt: 5,
+          pb: 5,
+          mb: 5,
+          borderRadius: "15px",
+        }}
+      >
+        <Typography
+          textAlign={"center"}
+          sx={{
+            mb: 5,
+            fontSize: { lg: "22px", sm: "18px", xs: "15px" },
+            fontWeight: "bold",
+          }}
+        >
+          {jornada?.nombreJornada ? jornada.nombreJornada : "Elige"}
+        </Typography>
+        <SearchCustome
+          buscador={buscador}
+          handleSearch={handleSearch}
+        ></SearchCustome>
+        <Box
+          display={"flex"}
+          flexDirection="column"
+          alignItems={"center"}
+          sx={{
+            p: 2,
+            pt: 4,
+            mt: 5,
+            width: "90%",
+            borderRadius: "20px",
+            height: "auto",
+          }}
+        >
+          <Typography
+            textAlign={"center"}
+            sx={{ fontSize: "25px", fontWeight: "bold" }}
+          >
+            Resultados encontrados:
+          </Typography>
+          {isLoadingPapeletas ? (
+            <Stack
+              justifyContent="center"
+              sx={{ color: "grey.500" }}
+              spacing={2}
+              direction="row"
+            >
+              <CircularProgress color="primary" />
+            </Stack>
+          ) : (
+            <Box sx={{ width: "100%", p: 3, mt: 3 }}>
+              <GridBoletasConsultas papeletas={dataSearch} />
+            </Box>
+          )}
+        </Box>
+      </Box>
     </Box>
-  )
-}
+  );
+};

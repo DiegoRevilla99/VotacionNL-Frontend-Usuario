@@ -1,17 +1,24 @@
-import { Box } from '@mui/material'
-import React from 'react'
-import { BoletaCard } from './BoletaCard'
-import { BoletaNFCard } from './BoletaNFCard'
-import { EleccionCard } from './EleccionCard'
+import { Box, Typography } from "@mui/material";
+import React from "react";
+import { BoletaCard } from "./BoletaCard";
+import { BoletaNFCard } from "./BoletaNFCard";
+import { EleccionCard } from "./EleccionCard";
 
-export const GridBoletasNF = ({more=false ,jornada=[1,2]}) => {
+export const GridBoletasNF = ({ more = false, boletas = [] }) => {
   return (
-    <Box  display={"flex"} gap="60px" flexWrap="wrap" justifyContent={"center"} width={"100%"}>
-{
-    jornada.map(()=>(
-        <BoletaNFCard/>
-    ))
-}
+    <Box
+      className="animate__animated animate__fadeInUp"
+      display={"flex"}
+      gap="60px"
+      flexWrap="wrap"
+      justifyContent={"center"}
+      width={"100%"}
+    >
+      {boletas?.length > 0 ? (
+        boletas.map((boleta) => <BoletaNFCard boleta={boleta} />)
+      ) : (
+        <Typography>No se encontró información</Typography>
+      )}
     </Box>
-  )
-}
+  );
+};
