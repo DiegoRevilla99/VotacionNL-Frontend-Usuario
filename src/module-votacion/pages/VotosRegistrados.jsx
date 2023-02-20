@@ -226,8 +226,10 @@ export const VotosRegistrados = () => {
 		const nuevos = [];
 		const array = [];
 		votos.forEach((voto) => {
+			console.log("VOTO INDIVIDUAL", voto);
 			const numero = voto.partidos[0].claveCoalicion;
 			let nulo = voto.partidos.some((partido) => {
+				// if (voto.partidos.length > 1) return partido.claveCoalicion === "SinCoalicion";
 				return partido.claveCoalicion !== numero;
 			});
 
@@ -244,8 +246,10 @@ export const VotosRegistrados = () => {
 	const verificarCoaliciones = (votos) => {
 		const nuevos = [];
 		votos.forEach((voto) => {
+			console.log("VOTO INDIVIDUAL", voto);
 			const numero = voto.partidos[0].claveCoalicion;
 			let nulo = voto.partidos.some((partido) => {
+				// if (voto.partidos.length === 1) return partido.claveCoalicion === "SinCoalicion";
 				return partido.claveCoalicion !== numero;
 			});
 
@@ -354,6 +358,15 @@ export const VotosRegistrados = () => {
 
 				const candidatosId = planillaCurrent.candidatos.map((candidato) => candidato.id);
 
+				const combi2 =
+					voto.selecciones.length === 1
+						? voto.selecciones[0].idCandAso + ""
+						: voto.selecciones.reduce((acc, cur, index, array) => {
+								console.log("Valores", index, acc, cur);
+								if (index === 1) return acc.idCandAso + "::" + cur.idCandAso;
+								else return acc + "::" + cur.idCandAso;
+						  });
+
 				voto.selecciones.every((seleccion, indexSeleccion) => {
 					const planillaAComparar = boletaCurrent.candidatos.find(
 						(planilla) => planilla.id === seleccion.idCandAso
@@ -372,9 +385,22 @@ export const VotosRegistrados = () => {
 
 						if (result) {
 							console.log("ENTRA A GUARDAR VALIDA");
+
+							const ordenados = candidatosId.sort();
+							const soloIds = ordenados.map((id) => {
+								return id.charAt(0);
+							});
+							console.log("CANDIATOS QUE ID CREADOS", soloIds);
+							const string1 =
+								soloIds.length === 1
+									? soloIds[0] + ""
+									: soloIds.reduce((acc, cur) => acc + "::" + cur);
+
 							nuevos[index] = {
 								boletaModel: voto.boletaModel,
 								selecciones: voto.selecciones,
+								combinacionPersona: string1,
+								combinacionPlanilla: combi2,
 							};
 							array[index] = false;
 						} else {

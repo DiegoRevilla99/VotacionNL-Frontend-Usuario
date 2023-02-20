@@ -137,7 +137,10 @@ export const getBoletasDeVotante = async (idJornada) => {
 				partidos.push({
 					idCandidato: partido.candidato.idCandidato,
 					id: partido.partido.clavePartido,
-					claveCoalicion: partido.coalicion.claveCoalicion,
+					claveCoalicion:
+						partido.coalicion === null
+							? "SinCoalicion"
+							: partido.coalicion.claveCoalicion,
 					nombrePartido: partido.partido.nombre,
 					nombre: `${partido.candidato.nombreCandidato} ${partido.candidato.apellidoPCandidato} ${partido.candidato.apellidoMCandidato}`,
 					nombreSuplente: `${partido.suplente.nombreSuplente} ${partido.suplente.apellidoPSuplente} ${partido.suplente.apellidoMSuplente}`,
@@ -147,7 +150,7 @@ export const getBoletasDeVotante = async (idJornada) => {
 			});
 
 			boletas1.push({
-				encabezado: boleta.boletaModel.nombreEleccion,
+				encabezado: boleta.boletaModel.nombreEstructuraBoleta,
 				idEstructuraBoleta: boleta.boletaModel.idEstructuraBoleta,
 				jornadaElectoral: data.jornadaModel.nombreJornada,
 				entidad: data.jornadaModel.entidad,
@@ -166,6 +169,7 @@ export const getBoletasDeVotante = async (idJornada) => {
 
 		return { ok: true, data: boletas1 };
 	} catch (error) {
+		console.log("ERRORRRRRRRR", error.message);
 		return { ok: false };
 	}
 };
@@ -256,19 +260,23 @@ export const getBoletasDeVotanteNoFormal = async (idJornada) => {
 	}
 };
 
-export const getConsultasDeVotante = async (curp) => {
+export const getConsultasDeVotante = async (idJornada, curp) => {
 	try {
 		// await timeout(1000);
 
-		const { data } = await consultasAPI.get("jornada/consulta/informacion/completa");
+		const { data } = await consultasAPI.get(
+			`jornada/consulta/${idJornada}/informacion/completa`
+		);
+
+		console.log("DATA QUE LLEGA", data);
 
 		let consulta1 = {
-			nombreJornada: data[0].jornadaModel.nombreJornada,
-			entidad: data[0].jornadaModel.entidad,
+			nombreJornada: data.jornadaModel.nombreJornada,
+			entidad: data.jornadaModel.entidad,
 			papeletas: [],
 		};
 		let papeletas = [];
-		data[0].papeletas.forEach((papeleta) => {
+		data.papeletas.forEach((papeleta) => {
 			papeletas.push({
 				id: papeleta.estructuraPapeletaModel.idPapeleta,
 				asunto: papeleta.estructuraPapeletaModel.nombre,

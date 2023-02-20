@@ -52,7 +52,8 @@ export const compararSelfies = async (linkSelfie, curp) => {
 		const { data } = await votanteAPI.get(`${curp}/images_comparision`);
 		console.log("LINK DE LA SELFIE YA GUARDADA", data.selfie);
 
-		const url = `https://ms-bio.herokuapp.com/api/selfie?nombreUser=${linkSelfie}&nombreUser2=${data.selfie}`;
+		const url = `https://validcredenciales.herokuapp.com/api/selfie?nombreUser=${linkSelfie}&nombreUser2=${data.selfie}`;
+		// const url = `https://ms-bio.herokuapp.com/api/selfie?nombreUser=${linkSelfie}&nombreUser2=${data.selfie}`;
 
 		let okResp = false;
 		let verif = false;
@@ -97,7 +98,8 @@ export const verificarCredencial = async ({
 	console.log("URIS", uriCredFrontalCrop, uriCredTraseraCrop, uriCredSelfieCrop);
 
 	try {
-		const url = `https://ms-bio.herokuapp.com/api/usuario?nombreUser=${uriCredSelfieCrop}&nombreUser2=${uriCredFrontalCrop}`;
+		// const url = `https://ms-bio.herokuapp.com/api/usuario?nombreUser=${uriCredSelfieCrop}&nombreUser2=${uriCredFrontalCrop}`;
+		const url = `https://validcredenciales.herokuapp.com/api/usuario?nombreUser=${uriCredSelfieCrop}&nombreUser2=${uriCredFrontalCrop}`;
 
 		let okResp = false;
 		let verif = false;

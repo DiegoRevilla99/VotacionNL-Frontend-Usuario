@@ -26,7 +26,7 @@ export const onRegistrarUsuario = (password, email, curp, navigate = () => {}) =
 
 		const { ok } = await registrarUsuario(password, email, curp);
 
-		console.log("ok", ok);
+		console.log("ok?????", ok);
 
 		if (ok) {
 			console.log("PETICION BIEN HECHA");

@@ -15,14 +15,14 @@ export const getDataVotantePassword = async (token) => {
 };
 
 export const registrarUsuario = async (password, email, curp) => {
-	console.log(password, email, curp);
+	console.log("La data que llega", password, email, curp);
 	try {
-		const { data } = await authAPI.post(`api/auth/signup`, {
-			curp: curp,
-			email: email,
-			password: password,
-			roles: ["ROLE_VOTANTE"],
-		});
+		// const { data } = await authAPI.post(`api/auth/signup`, {
+		// 	curp: curp,
+		// 	email: email,
+		// 	password: password,
+		// 	roles: ["ROLE_VOTANTE"],
+		// });
 		// await timeout(4000);
 
 		// console.log("DATA USER: ", data);

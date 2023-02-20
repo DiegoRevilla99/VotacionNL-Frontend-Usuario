@@ -74,7 +74,7 @@ export const onEmitirVoto = (values, idJornadaVotante, curp, navigate = () => {}
 				navigate();
 			} else {
 				console.log("no se emitio el voto");
-				const { ok1 } = await flagJornadaNoRealizada(idJornadaVotante);
+				const { ok1 } = await flagJornadaNoRealizada(idJornadaVotante, curp);
 				dispatch(onError("Fallo al emitir voto, intenta mas tarde."));
 				dispatch(onNoVotando());
 			}
@@ -103,7 +103,7 @@ export const onEmitirVotoNoFormal = (values, idJornadaVotante, curp, navigate = 
 				navigate();
 			} else {
 				console.log("no se emitio el voto");
-				const { ok1 } = await flagJornadaNoRealizada(idJornadaVotante);
+				const { ok1 } = await flagJornadaNoRealizada(idJornadaVotante, curp);
 				dispatch(onError("Fallo al emitir voto, intenta mas tarde."));
 				dispatch(onNoVotando());
 			}
@@ -185,12 +185,12 @@ export const onComenzarVotacion = (token, curp, navigate = () => {}, jornadaForm
 	return async (dispatch) => {
 		dispatch(onCheckingVotante());
 
-		// const { ok, data } = await comenzarVotacion(token, curp);
+		const { ok, data } = await comenzarVotacion(token, curp);
 
 		if (
-			token === "123123"
-			// ok &&
-			// data === "Verificado"
+			// token === "123123"
+			ok &&
+			data === "Verificado"
 		) {
 			const { ok: ok1, data } = await getBoletasDeVotante(jornadaFormal.idJornada);
 			if (ok1) {
@@ -203,6 +203,8 @@ export const onComenzarVotacion = (token, curp, navigate = () => {}, jornadaForm
 				dispatch(onSetSelfieVerificada(false));
 				dispatch(onVotando());
 				navigate();
+			} else {
+				console.log("error de boletas");
 			}
 		} else {
 			dispatch(onNoVotando());
@@ -218,7 +220,7 @@ export const onComenzarConsulta = (consultaCiudadana, curp, navigate = () => {})
 
 		// const { ok } = await comenzarVotacion();
 		//!! IMPLEMENTAR BIEN EL ENDPOINT PARA OBTENER JORNADA ESPECÍFICA
-		const { ok, data } = await getConsultasDeVotante(curp);
+		const { ok, data } = await getConsultasDeVotante(consultaCiudadana.idJornada, curp);
 
 		if (ok) {
 			console.log("CONSULTAS", data);
