@@ -26,8 +26,9 @@ import { NoDisponible } from "../components/NoDisponible";
 import { getBoletaBYIDFormales } from "../../store/resultados-formales/formalesThunks";
 import { GridCandFormales } from "../components/formales/GridCandFormales";
 import { Resumen } from "../components/Resumen";
+import { GridPlanilla } from "../components/noFormales/GridPlanilla";
 
-export const ResultadosRepFormal = ({}) => {
+export const ResultadosPlanillaNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados, boleta } = useSelector(
@@ -131,7 +132,7 @@ export const ResultadosRepFormal = ({}) => {
             }}
             textAlign={"center"}
           >
-            {boleta?.nombreEstructuraBoleta}
+            NOMBRE DE LA BOLETA{boleta?.nombreEstructuraBoleta}
           </Typography>
           <Box
             display={"flex"}
@@ -154,17 +155,31 @@ export const ResultadosRepFormal = ({}) => {
                 color="initial"
                 align="center"
               >
-                CANDIDATO GANADOR:
+                PLANILLA GANADORA:
               </Typography>
-
               <Typography
-                mt={2}
-                mb={2}
+                mb={1}
                 color="initial"
                 align="center"
                 sx={{ fontWeight: "bold" }}
               >
                 LAURA YESSENIA SANCHEZ LOPEZ
+              </Typography>
+              <Typography
+                mb={1}
+                color="initial"
+                align="center"
+                sx={{ fontWeight: "bold" }}
+              >
+                KEVIN EDILBERTO CHAVEZ SANCHEZ
+              </Typography>
+              <Typography
+                mb={1}
+                color="initial"
+                align="center"
+                sx={{ fontWeight: "bold" }}
+              >
+                JOSE ANTONIO DIEGO REVILLA
               </Typography>
 
               {/* {resultados.ganadores?.map((gan, index) => {
@@ -178,7 +193,6 @@ export const ResultadosRepFormal = ({}) => {
                   </Typography>
                 );
               })} */}
-
               <Box
                 borderRight="1px solid"
                 pr={4}
@@ -235,7 +249,7 @@ export const ResultadosRepFormal = ({}) => {
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
               ) : xssize ? (
-                <GridCandFormales candidatos={[1, 2, 3]} />
+                <GridPlanilla candidatos={[1, 2, 3]} />
               ) : (
                 update && (
                   <Intermedio

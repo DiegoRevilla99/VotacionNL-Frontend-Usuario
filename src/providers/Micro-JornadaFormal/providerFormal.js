@@ -53,12 +53,21 @@ export const getBoletabyIDProvider = async (idBoleta) => {
       console.log(error);
       return { ok: false, data: "", errorMessage: error.message };
     });
-
-  //ENDPOINT FAKE
-  // const { data } = await getBoletaAPI(idBoleta);
 };
 
 /* export const getResultadosFormalesProvider = async (idJornada) => {
+  try {
+    // **FETCH
+    const response = await jornadaFormalApi.get(
+      "votos/consulta/jornada/" + idJornada + "/resultados"
+    );
+    return { ok: true, data: response.data };
+  } catch (error) {
+    return { ok: false };
+  }
+};  */
+
+/* export const getResultadoProvider = async (idJornada) => {
   try {
     // **FETCH
     const response = await jornadaFormalApi.get(

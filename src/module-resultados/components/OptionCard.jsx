@@ -19,7 +19,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export const OptionCard = ({ type = 1, name = "", url = "" }) => {
+export const OptionCard = ({ type = 1, name = "", url = "", imagen = "" }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const goTo = (url) => {
@@ -76,10 +76,11 @@ export const OptionCard = ({ type = 1, name = "", url = "" }) => {
           component="img"
           sx={{
             height: { md: "400px", xs: "200px" },
-            width: { md: "400px", xs: "200px" },
+            width: "100%",
           }}
           image={
-            type === 1 ? jornadaIMG : type === 2 ? jornadaNFIMG : consultaImg
+            imagen
+            // type === 1 ? jornadaIMG : type === 2 ? jornadaNFIMG : consultaImg
           }
           alt="img"
         />

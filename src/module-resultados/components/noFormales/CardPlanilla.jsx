@@ -57,7 +57,7 @@ const userPhoto = {
   justifyContent: "center",
 };
 
-export const CardCandidatos = ({ candidato }) => {
+export const CardPlanilla = () => {
   return (
     <Box sx={card}>
       <Box sx={header} className="header">
@@ -70,7 +70,7 @@ export const CardCandidatos = ({ candidato }) => {
             class="photo"
           />
         </Box>
-        <Typography sx={{ m: 1 }}>{candidato?.nombre}</Typography>
+        <Typography sx={{ m: 1 }}>Laura Yessenia Sanchez Lopez</Typography>
       </Box>
       <Box sx={{ padding: "20px" }} className="body">
         <Box sx={skill}>
@@ -87,25 +87,14 @@ export const CardCandidatos = ({ candidato }) => {
         </Box>
 
         <Divider></Divider>
-        <Box
-          display={"flex"}
-          alignItems="center"
-          flexDirection="column"
-          sx={{ mt: 2, width: "100%" }}
-        >
+        <Box sx={{ mt: 2, width: "100%" }}>
           <Typography
             mb={"10px"}
             sx={{ fontWeight: "bold" }}
             textAlign={"center"}
           >
-            Partido(s)
+            Asociaciones
           </Typography>
-
-          <Box>
-            {candidato?.partidos.map((partido) => {
-              return <img width={"50px"} height="50px" src={partido.logo} />;
-            })}
-          </Box>
         </Box>
         <Box sx={skill}></Box>
       </Box>

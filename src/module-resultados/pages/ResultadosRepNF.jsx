@@ -24,13 +24,15 @@ import { getResult } from "../../store/resultados-consultas/consultasThunks";
 import { CardCandidatos } from "../components/formales/CardCandidatos";
 import { NoDisponible } from "../components/NoDisponible";
 import { getBoletaBYIDFormales } from "../../store/resultados-formales/formalesThunks";
-import { getBoletaBYIDNF } from "../../store/resultados-noformales/noformalesThunks";
+import { GridCandFormales } from "../components/formales/GridCandFormales";
+import { Resumen } from "../components/Resumen";
+import { GridCandNoFormales } from "../components/noFormales/GridCandNoFormales";
 
-export const ResultadosRepNoFormal = ({}) => {
+export const ResultadosRepNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados, boleta } = useSelector(
-    (state) => state.noformales
+    (state) => state.formales
   );
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
@@ -68,7 +70,7 @@ export const ResultadosRepNoFormal = ({}) => {
     // console.log("jornada:", jornada);
     // console.log("consulta:", id);
     // dispatch(getResult(jornada, id));
-    dispatch(getBoletaBYIDNF(id));
+    dispatch(getBoletaBYIDFormales(id));
   }, []);
 
   useEffect(() => {
@@ -107,7 +109,7 @@ export const ResultadosRepNoFormal = ({}) => {
           </Typography>
           <CircularProgress color="primary" />
         </Stack>
-      ) : resultados ? (
+      ) : true ? (
         <Box
           display={"flex"}
           width={"100%"}
@@ -130,7 +132,7 @@ export const ResultadosRepNoFormal = ({}) => {
             }}
             textAlign={"center"}
           >
-            nombre
+            {boleta?.nombreEstructuraBoleta}
           </Typography>
           <Box
             display={"flex"}
@@ -147,24 +149,23 @@ export const ResultadosRepNoFormal = ({}) => {
           >
             <Box display={"flex"} flexDirection="column" alignItems="center">
               <Typography
-                variant="h6"
+                variant="body2"
+                mt={1}
+                mb={1}
                 color="initial"
                 align="center"
-                sx={{
-                  fontSize: { lg: "25px", md: "18px", xs: "12px" },
-                  wordBreak: "break-word",
-                }}
               >
-                titulo
+                CANDIDATO GANADOR:
               </Typography>
+
               <Typography
-                variant="body2"
                 mt={2}
                 mb={2}
                 color="initial"
                 align="center"
+                sx={{ fontWeight: "bold" }}
               >
-                CANDIDATO GANADOR
+                LAURA YESSENIA SANCHEZ LOPEZ
               </Typography>
 
               {/* {resultados.ganadores?.map((gan, index) => {
@@ -190,89 +191,7 @@ export const ResultadosRepNoFormal = ({}) => {
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />
 
-            <Box
-              display={"flex"}
-              justifyContent="center"
-              flexDirection={"column"}
-              alignItems={"center"}
-              bgcolor="#f2f2f2"
-              borderRadius={"7px"}
-              border="1px solid"
-              borderColor={"#BEBDBD"}
-              boxShadow={5}
-              width={{ lg: "60%", md: "70%", xs: "100%" }}
-              height="auto"
-              p={1}
-            >
-              <Typography
-                variant="h6"
-                color="#543884"
-                sx={{
-                  fontWeight: "bold",
-                  pb: 3,
-                  fontSize: { lg: "25px", md: "18px", xs: "15px" },
-                }}
-              >
-                RESUMEN
-              </Typography>
-              <Box
-                display={"flex"}
-                justifyContent="center"
-                flexDirection={{ sm: "row", xs: "column" }}
-                alignItems={"center"}
-              >
-                <Box
-                  display={"flex"}
-                  alignItems="center"
-                  flexDirection="column"
-                >
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                      pb: 3,
-                      fontSize: { lg: "22px", md: "18px", xs: "10px" },
-                    }}
-                  >
-                    VOTOS ACUMULADOS
-                  </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>0</Typography>
-                </Box>
-                <Box sx={{ p: 3 }}>+</Box>
-                <Box
-                  display={"flex"}
-                  alignItems="center"
-                  flexDirection="column"
-                >
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                      pb: 3,
-                      fontSize: { lg: "22px", md: "18px", xs: "10px" },
-                    }}
-                  >
-                    VOTOS NULOS
-                  </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>0</Typography>
-                </Box>
-                <Box sx={{ p: 3 }}>=</Box>
-                <Box
-                  display={"flex"}
-                  alignItems="center"
-                  flexDirection="column"
-                >
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                      pb: 3,
-                      fontSize: { lg: "22px", md: "18px", xs: "10px" },
-                    }}
-                  >
-                    TOTAL
-                  </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>0</Typography>
-                </Box>
-              </Box>
-            </Box>
+            <Resumen acumulados={0} candReg={0} nulos={0} total={0} />
           </Box>
 
           <Divider sx={{ paddingTop: "1.5rem" }} />
@@ -284,8 +203,8 @@ export const ResultadosRepNoFormal = ({}) => {
             alignItems={"center"}
             sx={{
               height: "auto",
-              pr: 3,
-              pl: 1,
+              pr: 2,
+              pl: 2,
               pt: 5,
               pb: 5,
               mt: 2,
@@ -300,9 +219,9 @@ export const ResultadosRepNoFormal = ({}) => {
               color="initial"
               fontWeight="bold"
               textAlign={"center"}
-              sx={{ mb: 10 }}
+              sx={{ mb: 5 }}
             >
-              RESULTADOS
+              RESULTADOS:
             </Typography>
             <Box
               display={"flex"}
@@ -317,7 +236,7 @@ export const ResultadosRepNoFormal = ({}) => {
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
               ) : xssize ? (
-                <CardCandidatos />
+                <GridCandNoFormales candidatos={[1, 2, 3]} />
               ) : (
                 update && (
                   <Intermedio
@@ -332,7 +251,7 @@ export const ResultadosRepNoFormal = ({}) => {
           </Box>
         </Box>
       ) : (
-        <NoDisponible titulo={boleta?.encabezadoBoleta} />
+        <NoDisponible titulo={boleta?.nombreEstructuraBoleta} />
       )}
     </>
   );

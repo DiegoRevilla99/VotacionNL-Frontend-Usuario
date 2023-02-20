@@ -36,7 +36,13 @@ export const NoDisponible = ({ titulo = "" }) => {
         >
           RESULTADOS NO DISPONIBLES DE "{titulo}"
         </Typography>
-        <img width={"200px"} height="200px" src={wait} />
+        <img
+          width={"200px"}
+          height="200px"
+          src={
+            "https://imagesvotacion.s3.eu-north-1.amazonaws.com/1676865671355_wait.png"
+          }
+        />
       </Box>
     </Box>
   );

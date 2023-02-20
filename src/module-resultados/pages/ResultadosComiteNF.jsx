@@ -26,8 +26,9 @@ import { NoDisponible } from "../components/NoDisponible";
 import { getBoletaBYIDFormales } from "../../store/resultados-formales/formalesThunks";
 import { GridCandFormales } from "../components/formales/GridCandFormales";
 import { Resumen } from "../components/Resumen";
+import { GridCandNoFormales } from "../components/noFormales/GridCandNoFormales";
 
-export const ResultadosRepFormal = ({}) => {
+export const ResultadosComiteNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados, boleta } = useSelector(
@@ -131,7 +132,7 @@ export const ResultadosRepFormal = ({}) => {
             }}
             textAlign={"center"}
           >
-            {boleta?.nombreEstructuraBoleta}
+            NOMBRE DE LA BOLETA{boleta?.nombreEstructuraBoleta}
           </Typography>
           <Box
             display={"flex"}
@@ -154,17 +155,32 @@ export const ResultadosRepFormal = ({}) => {
                 color="initial"
                 align="center"
               >
-                CANDIDATO GANADOR:
+                COMITÉ GANADOR:
               </Typography>
 
               <Typography
-                mt={2}
-                mb={2}
+                mb={1}
                 color="initial"
                 align="center"
                 sx={{ fontWeight: "bold" }}
               >
-                LAURA YESSENIA SANCHEZ LOPEZ
+                1.-LAURA YESSENIA SANCHEZ LOPEZ
+              </Typography>
+              <Typography
+                mb={1}
+                color="initial"
+                align="center"
+                sx={{ fontWeight: "bold" }}
+              >
+                2.-KEVIN EDILBERTO CHAVEZ SANCHEZ
+              </Typography>
+              <Typography
+                mb={1}
+                color="initial"
+                align="center"
+                sx={{ fontWeight: "bold" }}
+              >
+                3.-JOSE ANTONIO DIEGO REVILLA
               </Typography>
 
               {/* {resultados.ganadores?.map((gan, index) => {
@@ -235,7 +251,7 @@ export const ResultadosRepFormal = ({}) => {
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
               ) : xssize ? (
-                <GridCandFormales candidatos={[1, 2, 3]} />
+                <GridCandNoFormales candidatos={[1, 2, 3]} />
               ) : (
                 update && (
                   <Intermedio
