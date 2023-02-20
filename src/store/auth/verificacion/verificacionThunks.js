@@ -1,25 +1,53 @@
 import {
-    getVerificacionRespuesta, getVerificacionRespuestaFormal, verificacionRespuesta, verificarFolio
+    getValidarVoto, getValidarVotoConsulta, getVerificacionRespuesta, getVerificacionRespuestaFormal, verificacionRespuesta
 } from '../../../providers/Micro-Verificacion/providerVerificacion';
 import {
-    onCheckingPeticion, onError,
-    onFillBoletas, onNoVerificando, onOkPeticion
+    onCheckingPeticion, onError, onFillBoletas, onFillVoto, onNoVerificando, onOkPeticion, onValidarVoto, onVerificando
 } from './verificacionSlice';
 
-export const onVerficacionVoto = (values, navigate = () => {}) => {
+
+
+export const onGetValidarVoto = (claveVoto, navigate = () => {}) => {
+    return async (dispatch) => {
+		dispatch(onCheckingVotante());
+        const { ok, data } = await getValidarVoto(claveVoto);
+        if (ok) {
+            dispatch(onFillVoto(data));
+            dispatch(onVerificando());
+            navigate();
+        }
+		 else {
+			dispatch(onNoVotando());
+			dispatch(onError("El token es incorrecto o ha caducado."));
+		}
+	};
+}
+// export const onGetValidarVoto = (claveVoto, navigate = () => {}) => {
+//     return async (dispatch) => {
+//         // dispatch(onChecking());
+//         // dispatch(onCheckingVerificacion());
+//         const { ok, data } = await getValidarVoto(claveVoto); // provider
+//         if (ok) {
+//             dispatch(onValidarVoto(data)); // slice
+//             navigate();
+//         } else {
+//             dispatch(onError("Error de verificación. Revisa tu folio"));
+//         }
+//     };
+// }
+export const onGetValidarVotoConsulta = (claveVoto, navigate = () => {}) => {
     return async (dispatch) => {
         // dispatch(onChecking());
         // dispatch(onCheckingVerificacion());
-        const { ok } = await verificarFolio(values);
+        const { ok, data } = await getValidarVotoConsulta(claveVoto); // provider
         if (ok) {
-            dispatch(onNoVerificando());
+            dispatch(onValidarVoto(data)); // slice
             navigate();
         } else {
             dispatch(onError("Error de verificación. Revisa tu folio"));
         }
     };
 }
-
 export const onVerficacionRespuesta = (values, navigate = () => {}) => {
     return async (dispatch) => {
         // dispatch(onChecking());

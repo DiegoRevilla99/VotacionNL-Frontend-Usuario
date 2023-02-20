@@ -1,4 +1,30 @@
+import { votosSegurosAPI } from "./config";
+import { votoConsultaAPI } from "./configConsulta";
+export const getValidarVoto = async (claveVoto) => {
+    try{
+        console.log("claveVoto", claveVoto);
+        const { data } = await votosSegurosAPI.get(`verificacion/${claveVoto}`);
+        // https://ms-jornada-voto-seguro.herokuapp.com/votos_seguros/verificacion/ELECTORAL-ESIAK-KQHPV
+        // https://ms-jornada-voto-seguro.herokuapp.com/votos_seguros/verificacion/ELECTORAL-NLGQX-AGAKJ
+        console.log("data", data);
+        return { ok: true, data: data };
+    } catch (error) {
+        return { ok: false };
+    }
+};
 
+export const getValidarVotoConsulta = async (claveVoto) => {
+    try{
+        console.log("claveVoto", claveVoto);
+        const { data } = await votoConsultaAPI.get(`verificacion/${claveVoto}`);
+        // https://ms-jornada-voto-consulta.herokuapp.com/votos/consulta/verificacion/CONSULTA-ORD-ENCPB-DJOOW
+        console.log("data", data);
+        return { ok: true, data: data };
+    } catch (error) {
+        return { ok: false };
+    }
+};
+        
 export const verificarFolio = async () => {
 	try {
 		await timeout(500);
