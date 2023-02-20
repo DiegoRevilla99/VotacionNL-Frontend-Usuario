@@ -1,23 +1,21 @@
-import { Box, Button, CardActions , CardActionArea, Stepper, TextField, Typography, Stack } from "@mui/material";
-import { Container } from "@mui/system";
-import { Formik } from "formik";
-import React from "react";
-import PreviewIcon from '@mui/icons-material/Preview';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import { Box, Button, Typography } from "@mui/material";
+import { Container } from "@mui/system";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ModalBoleta } from "./ModalBoleta";
-import { useState } from "react";
+// import { ModalBoleta } from "./ModalBoleta";
 export const FolioFound = () => {
 	const navigate = useNavigate();
 	const plantilla2 = () => {
 		navigate("/verificacion/individual");
 	};
-    const [statusModal, setStatusModal] = useState(false);
-    const handleCloseModal = () => setStatusModal(false);
-    const handleOpenModal = () => {
-        // toastOffOperation();
-        setStatusModal(true);
-        };
+    
+    // const [statusModal, setStatusModal] = useState(false);
+    // const handleCloseModal = () => setStatusModal(false);
+    // const handleOpenModal = () => {
+    //     // toastOffOperation();
+    //     setStatusModal(true);
+    //     };
 	return (
 		<Box pt="1.5rem">
 			<Container
@@ -115,23 +113,8 @@ export const FolioFound = () => {
                         > 
                         HORA APROXIMADA: 000:000:000
 					</Typography>
-                    <Typography
-                        color="initial"
-                            mb="1rem"
-                            align="center"
-                            sx={{
-                                fontSize: {
-                                    xs: "1rem",
-                                    sm: "1rem",
-                                    md: "1rem",
-                                    lg: "1rem",
-                                    xl: "1rem",
-                                },
-                            }}
-                        > 
-                        EL SENTIDO DEL VOTO SE ENCUENTRA REFLEJADO EN EL SIGUIENTE BOTÓN:
-					</Typography>
-                    <Box
+
+                    {/* <Box
                     mb={2}>
                     <Button 
                         startIcon={<PreviewIcon size="Large"/>}
@@ -162,7 +145,7 @@ export const FolioFound = () => {
                         }}>
                         MOSTRAR BOLETA
                         </Button>
-                    </Box>
+                    </Box> */}
                     <Box>
                         <Button 
                         startIcon={<PersonSearchIcon size="Large"/>}
@@ -187,8 +170,8 @@ export const FolioFound = () => {
                             },
                             // height: "10%",
                             "&:hover": {
-                                // background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
-                                // color: "#FFFFFF",
+                                background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
+                                color: "#FFFFFF",
                             },
                         }}>
                         Ingresar otro folio
@@ -197,7 +180,7 @@ export const FolioFound = () => {
                     </Box>
 				</Box>
 			</Container>
-            <ModalBoleta statusModal={statusModal} handleToggleModal={handleCloseModal} />
+            {/* <ModalBoleta statusModal={statusModal} handleToggleModal={handleCloseModal} /> */}
 		</Box>
 	);
 };

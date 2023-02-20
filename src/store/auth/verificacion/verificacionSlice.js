@@ -6,6 +6,15 @@ export const verificacionSlice = createSlice({
         status: "noVerificando", //noVerificando, verificando, checking
         errorMessage: "",
         statusPeticion: "off", //checking, ok, fail, off
+        claveVoto: "",
+        votos: [],
+        votoSelected: {
+            id: "",
+            fechaEmision: "",
+            horaEmision: "",
+            idBoleta: "",
+            sentido: [],
+        },
         boleta: [],
         boletaSelected: {
             encabezado: "",
@@ -30,8 +39,9 @@ export const verificacionSlice = createSlice({
         onCheckingVerificacion: (state) => {
             state.status = "checking";
         },
-        onVerificando: (state) => {
+        onVerificando: (state, {payload}) => {
             state.status = "verificando";
+            // state.claveVoto = payload.claveVoto;
         },
         onNoVerificando: (state) => {
             state.status = "noVerificando";
@@ -39,9 +49,13 @@ export const verificacionSlice = createSlice({
         onError: (state, { payload }) => {
             state.errorMessage = payload;
         },
-        onFillBoletas: (state, { payload }) => {
-            state.boletas = payload;
+        onFillVoto: (state, { payload }) => {
+            state.votos = payload;
         },
+        onValidarVoto: (state, { payload }) => {
+            state.votoSelected = payload;
+        }
+
     },
 });
 
@@ -54,5 +68,6 @@ export const {
     onVerificando,
     onNoVerificando,
     onError,
-    onFillBoletas,
+    onFillVoto,
+    onValidarVoto,
 } = verificacionSlice.actions;
