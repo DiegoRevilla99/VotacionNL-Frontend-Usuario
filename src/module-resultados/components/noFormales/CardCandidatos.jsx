@@ -1,5 +1,5 @@
 import { Box, Divider, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 
 const card = {
   width: "100%",
@@ -57,7 +57,10 @@ const userPhoto = {
   justifyContent: "center",
 };
 
-export const CardCandidatos = ({ candidato }) => {
+export const CardCandidatos = ({ total, candidato }) => {
+  const [porncentaje, setPorncentaje] = useState(
+    (100 * candidato.votos) / total
+  );
   return (
     <Box sx={card}>
       <Box
@@ -71,27 +74,33 @@ export const CardCandidatos = ({ candidato }) => {
             width={"100%"}
             height={"100%"}
             style={{ borderRadius: "50%" }}
-            src="https://randomuser.me/api/portraits/women/79.jpg"
+            src={candidato.fotoCandidato ? candidato.fotoCandidato : ""}
+            alt="foto"
             class="photo"
           />
         </Box>
         <Typography textAlign={"center"} sx={{ p: 0 }}>
           {/* {candidato.nombreCandidato} */}
-          Laura Yessenia Sanchez Lopez
+          {candidato.nombreCandidato + " "} {candidato.apellidoPCandidato + " "}{" "}
+          {candidato.apellidoMCandidato + " "}
         </Typography>
       </Box>
       <Box sx={{ padding: "20px" }} className="body">
         <Box sx={skill}>
           <Box sx={skillName}>Porcentaje</Box>
           <Box sx={skillLevel}>
-            <Box sx={skillPercent} width={"90%"}></Box>
+            <Box sx={skillPercent} width={porncentaje + "%"}></Box>
           </Box>
-          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>90%</Box>
+          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>
+            {porncentaje.toFixed(2)}%
+          </Box>
         </Box>
 
         <Box sx={skill}>
           <Box sx={skillName}>Total votos</Box>
-          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>9000 votos</Box>
+          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>
+            {candidato.votos} votos
+          </Box>
         </Box>
 
         <Divider></Divider>

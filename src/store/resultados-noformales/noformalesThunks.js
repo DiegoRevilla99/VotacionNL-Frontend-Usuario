@@ -68,6 +68,8 @@ export const getResultNoFormal = (idJornada, idConsulta) => {
         convData = toNoFormal(newData);
       }
 
+      console.log(convData);
+
       dispatch(setResultados({ resultados: data }));
       dispatch(setBoleta({ boleta: convData }));
     } else {

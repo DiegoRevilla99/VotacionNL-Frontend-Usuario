@@ -14,15 +14,15 @@ export const ResultadosNoFormales = ({ tipo = "REPRESENTANTE" }) => {
     (state) => state.noformales
   );
   useEffect(() => {
-    // dispatch(getResultNoFormal(jornada, id));
+    dispatch(getResultNoFormal(jornada, id));
   }, []);
   return (
     <>
       {isLoadingResultados ? (
         <Typography>Cargando...</Typography>
-      ) : tipo === "REPRESENTANTE" ? (
+      ) : boleta.modalidad === "REPRESENTANTE" ? (
         <ResultadosRepNF />
-      ) : tipo === "COMITE" ? (
+      ) : boleta.modalidad === "COMITE" ? (
         <ResultadosComiteNF />
       ) : (
         <ResultadosPlanillaNF />

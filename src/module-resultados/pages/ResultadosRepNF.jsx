@@ -27,43 +27,21 @@ import { getBoletaBYIDFormales } from "../../store/resultados-formales/formalesT
 import { GridCandFormales } from "../components/formales/GridCandFormales";
 import { Resumen } from "../components/Resumen";
 import { GridCandNoFormales } from "../components/noFormales/GridCandNoFormales";
+import { GraficasRepComite } from "../components/GraficasRepComite";
+import { ChartEjemplo } from "../components/formales/chartEjemplo";
 
 export const ResultadosRepNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
   const { resultados, isLoadingResultados, boleta } = useSelector(
-    (state) => state.formales
+    (state) => state.noformales
   );
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
-  const smsize = useMediaQuery(theme.breakpoints.only("sm"));
+  const smsize = useMediaQuery(theme.breakpoints.down("sm"));
   const mdsize = useMediaQuery(theme.breakpoints.only("md"));
   const lgsize = useMediaQuery(theme.breakpoints.only("lg"));
   const xlsize = useMediaQuery(theme.breakpoints.only("xl"));
-  const [etiquetas, setetiquetas] = useState([]);
-  const [datosN, setDatosN] = useState([]);
-  const [titulo, settitulo] = useState("");
-  const [update, setUpdate] = useState(true);
-  const [winer, setWiner] = useState("");
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
-  const datos = [100, 500, 30, 300, 1000, 300, 350];
-  const images = [
-    "https://upload.wikimedia.org/wikipedia/commons/5/5c/PAN_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/b/b5/PRI_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/8/8f/PRD_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/e/e7/Worker%27s_Party_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-  ];
 
   useEffect(() => {
     // setUpdate(true);
@@ -74,7 +52,7 @@ export const ResultadosRepNF = ({}) => {
   }, []);
 
   useEffect(() => {
-    console.log("boleta:", boleta);
+    // console.log("boleta:", boleta);
   }, [boleta]);
 
   /* useEffect(() => {
@@ -132,8 +110,7 @@ export const ResultadosRepNF = ({}) => {
             }}
             textAlign={"center"}
           >
-            Nombre boleta
-            {/* {boleta?.nombreEstructuraBoleta} */}
+            {boleta?.boleta}
           </Typography>
           <Box
             display={"flex"}
@@ -166,20 +143,10 @@ export const ResultadosRepNF = ({}) => {
                 align="center"
                 sx={{ fontWeight: "bold" }}
               >
-                LAURA YESSENIA SANCHEZ LOPEZ
+                {boleta.winers?.nombreCandidato}
+                {boleta.winers?.apellidoPCandidato}
+                {boleta.winers?.apellidoMCandidato}
               </Typography>
-
-              {/* {resultados.ganadores?.map((gan, index) => {
-                return (
-                  <Typography
-                    sx={{ fontSize: { md: "15px", xs: "9px" } }}
-                    color="initial"
-                    fontWeight="bold"
-                  >
-                    {index + 1}.- {gan.question}
-                  </Typography>
-                );
-              })} */}
 
               <Box
                 borderRight="1px solid"
@@ -192,7 +159,12 @@ export const ResultadosRepNF = ({}) => {
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />
 
-            <Resumen acumulados={0} candReg={0} nulos={0} total={0} />
+            <Resumen
+              acumulados={boleta.total - boleta.cnr - boleta.nulo}
+              candReg={boleta.cnr}
+              nulos={boleta.nulo}
+              total={boleta.total}
+            />
           </Box>
 
           <Divider sx={{ paddingTop: "1.5rem" }} />
@@ -236,17 +208,20 @@ export const ResultadosRepNF = ({}) => {
             >
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
-              ) : xssize ? (
-                <GridCandNoFormales candidatos={[1, 2, 3]} />
+              ) : smsize ? (
+                <GridCandNoFormales
+                  total={boleta.total}
+                  candidatos={boleta.candidatos}
+                />
               ) : (
-                update && (
-                  <Intermedio
-                    titulo={"Titulo"}
-                    datos={datos}
-                    labels={labels}
-                    img={[]}
-                  ></Intermedio>
-                )
+                // <GraficasRepComite
+                //   total={boleta.total}
+                //   resultados={boleta.candidatos}
+                // />
+                <ChartEjemplo
+                  totalV={boleta.total}
+                  candidatos={boleta.candidatos}
+                ></ChartEjemplo>
               )}
             </Box>
           </Box>
