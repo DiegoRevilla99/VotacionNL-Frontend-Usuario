@@ -1,4 +1,5 @@
 import { jornadaFormalApi } from "./configjornadaFormal";
+import { jornadaFormalVotoApi } from "./configVotoSeguro";
 
 export const getJornadasFormalesProvider = async () => {
   return jornadaFormalApi
@@ -55,17 +56,16 @@ export const getBoletabyIDProvider = async (idBoleta) => {
     });
 };
 
-/* export const getResultadosFormalesProvider = async (idJornada) => {
+export const getResultadosFormalesProvider = async (idJornada) => {
   try {
-    // **FETCH
-    const response = await jornadaFormalApi.get(
-      "votos/consulta/jornada/" + idJornada + "/resultados"
+    const response = await jornadaFormalVotoApi.get(
+      "votos_seguros/jornadaelectoral/" + idJornada + "/resultados"
     );
     return { ok: true, data: response.data };
   } catch (error) {
     return { ok: false };
   }
-};  */
+};
 
 /* export const getResultadoProvider = async (idJornada) => {
   try {

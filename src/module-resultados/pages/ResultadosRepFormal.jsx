@@ -23,14 +23,18 @@ import { useTheme } from "@mui/material/styles";
 import { getResult } from "../../store/resultados-consultas/consultasThunks";
 import { CardCandidatos } from "../components/formales/CardCandidatos";
 import { NoDisponible } from "../components/NoDisponible";
-import { getBoletaBYIDFormales } from "../../store/resultados-formales/formalesThunks";
+import {
+  getBoletaBYIDFormales,
+  getResultFormales,
+} from "../../store/resultados-formales/formalesThunks";
 import { GridCandFormales } from "../components/formales/GridCandFormales";
 import { Resumen } from "../components/Resumen";
+import { ChartJFormales } from "../components/formales/chartJFormales";
 
 export const ResultadosRepFormal = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
-  const { resultados, isLoadingResultados, boleta } = useSelector(
+  const { resultados, isLoadingResultados, boleta, boletaInfo } = useSelector(
     (state) => state.formales
   );
   const theme = useTheme();
@@ -70,6 +74,7 @@ export const ResultadosRepFormal = ({}) => {
     // console.log("consulta:", id);
     // dispatch(getResult(jornada, id));
     dispatch(getBoletaBYIDFormales(id));
+    dispatch(getResultFormales(jornada, id));
   }, []);
 
   useEffect(() => {
@@ -131,7 +136,7 @@ export const ResultadosRepFormal = ({}) => {
             }}
             textAlign={"center"}
           >
-            {boleta?.nombreEstructuraBoleta}
+            {boletaInfo?.nombreEstructuraBoleta}
           </Typography>
           <Box
             display={"flex"}
@@ -164,7 +169,7 @@ export const ResultadosRepFormal = ({}) => {
                 align="center"
                 sx={{ fontWeight: "bold" }}
               >
-                LAURA YESSENIA SANCHEZ LOPEZ
+                {boleta.winner.nombre}
               </Typography>
 
               {/* {resultados.ganadores?.map((gan, index) => {
@@ -190,7 +195,12 @@ export const ResultadosRepFormal = ({}) => {
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />
 
-            <Resumen acumulados={0} candReg={0} nulos={0} total={0} />
+            <Resumen
+              acumulados={boleta?.acumuladas}
+              candReg={boleta.cnr}
+              nulos={boleta.nulo}
+              total={boleta?.acumuladas + boleta.cnr + boleta.nulo}
+            />
           </Box>
 
           <Divider sx={{ paddingTop: "1.5rem" }} />
@@ -235,16 +245,15 @@ export const ResultadosRepFormal = ({}) => {
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
               ) : xssize ? (
-                <GridCandFormales candidatos={[1, 2, 3]} />
+                <GridCandFormales
+                  total={boleta?.acumuladas + boleta.cnr + boleta.nulo}
+                  candidatos={boleta.candidatos}
+                />
               ) : (
-                update && (
-                  <Intermedio
-                    titulo={"Titulo"}
-                    datos={datos}
-                    labels={labels}
-                    img={[]}
-                  ></Intermedio>
-                )
+                <ChartJFormales
+                  total={boleta?.acumuladas + boleta.cnr + boleta.nulo}
+                  candidatos={boleta.candidatos}
+                />
               )}
             </Box>
           </Box>

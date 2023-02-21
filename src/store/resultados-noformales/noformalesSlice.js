@@ -9,7 +9,9 @@ export const noformalesSlice = createSlice({
     isLoadingResultados: false,
     resultados: false,
     isLoadingBoleta: false,
+    isLoadingBoletaInfo: false,
     boleta: false,
+    boletaInfo: false,
     boletas: [],
     status: "",
     errorMessage: "",
@@ -45,6 +47,14 @@ export const noformalesSlice = createSlice({
       state.boleta = action.payload.boleta;
     },
 
+    startLoadingBoletaInfo: (state /* action */) => {
+      state.isLoadingBoletaInfo = true;
+    },
+    setBoletaInfo: (state, action) => {
+      state.isLoadingBoletaInfo = false;
+      state.boletaInfo = action.payload.boletaInfo;
+    },
+
     onOkPeticion: (state) => {
       state.statusPeticion = "ok";
     },
@@ -67,6 +77,8 @@ export const {
   setResultados,
   startLoadingBoleta,
   setBoleta,
+  startLoadingBoletaInfo,
+  setBoletaInfo,
 } = noformalesSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;
