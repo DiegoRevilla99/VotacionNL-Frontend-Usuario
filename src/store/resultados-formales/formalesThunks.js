@@ -53,6 +53,7 @@ export const getBoletaBYIDFormales = (id) => {
 
 export const getResultFormales = (idJornada, idConsulta) => {
   return async (dispatch, getState) => {
+    dispatch(setBoleta({ boleta: false }));
     dispatch(setResultados({ resultados: false }));
     dispatch(startLoadingResultados());
     const { ok, data, errorMessage } = await getResultadosFormalesProvider(
