@@ -113,7 +113,7 @@ export const ResultadosRepFormal = ({}) => {
           </Typography>
           <CircularProgress color="primary" />
         </Stack>
-      ) : true ? (
+      ) : resultados?.boletas.length > 0 ? (
         <Box
           display={"flex"}
           width={"100%"}
@@ -259,7 +259,7 @@ export const ResultadosRepFormal = ({}) => {
           </Box>
         </Box>
       ) : (
-        <NoDisponible titulo={boleta?.nombreEstructuraBoleta} />
+        <NoDisponible titulo={boletaInfo?.nombreEstructuraBoleta} />
       )}
     </>
   );
