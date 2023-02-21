@@ -45,14 +45,14 @@ export const GroupPage = () => {
   const params = useParams();
   const [searchJornada, setSearchJornada] = useState('');
 
-  console.log("imprimimos el store",params);
+  // console.log("imprimimos el store",params);
   const { jornadasFolio } = useVerficacionStore();
-  console.log("imprimimos el stro",jornadasFolio);
+  // console.log("imprimimos el stro",jornadasFolio);
 
   const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
-  console.log("jornada en la que estamos",jornadaEncontrar);
+  // console.log("jornada en la que estamos",jornadaEncontrar);
   const boletaEncontrar = jornadaEncontrar.boletas.find(boleta => boleta.idBoleta === params.idBoleta);
-  console.log("boleta en la que estamos",boletaEncontrar);
+  // console.log("boleta en la que estamos",boletaEncontrar);
   const plantilla1 = () => {
     navigate("/verificacion/visualizacion/boleta/"+params.id);
   };

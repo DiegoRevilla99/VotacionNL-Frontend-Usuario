@@ -3,10 +3,12 @@ import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
+import { onError } from "../../store/verificacion-voto/verificacionSlice";
 import { onGetValidarVoto } from "../../store/verificacion-voto/verificacionThunks";
 const validationSchema = object({
 	folio: string("").required("Este campo es requerido").matches(/^[a-zA-Z0-9-]+$/, "Solo se permiten números, letras y guiones")
@@ -16,7 +18,12 @@ export const IndividualPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const { status } = useSelector((state) => state.verificacion);
+	const { status, errorMessage } = useSelector((state) => state.verificacion);
+	const [ error, setError ] = useState();
+	useEffect(() => {
+		setError(errorMessage);
+	  }, [errorMessage]);
+	  
 	const onSubmit = (values) => {
 	  dispatch(onGetValidarVoto(
 		values.folio,
@@ -25,8 +32,10 @@ export const IndividualPage = () => {
 		},
 	  ));
 	};
+	// console.log(error);
 	const onCancel = () => {
 	  navigate("/verificacion");
+	  dispatch(onError());
 	};
   
 	
@@ -78,13 +87,19 @@ export const IndividualPage = () => {
 									onChange={handleChange}
 									fullWidth
 									focused
+									placeholder="Ejemplo: ELECTORAL-000..."
 									variant="outlined"
-									label="Ingresa el folio"
+									label="Ingresa tu folio a verificar..."
 									type="text"
-									error={touched.folio && Boolean(errors.folio)}
-									helperText={touched.folio && errors.folio}
+									error={touched.folio && Boolean(errors.folio) ? errors.folio : error}
+									// helperText={touched.folio && errors.folio}
+									helperText={touched.folio && errors.folio ? errors.folio : error}
 								></TextField>
-
+										{/* {error && (
+										<Box ml={2} mt={1} sx={{ fontSize: "12px", color: "#791010" }}>
+											{error}
+										</Box>
+										)} */}
 								<Box 
 									sx={{ display: 'flex', 
 										flexDirection: {
@@ -150,7 +165,7 @@ export const IndividualPage = () => {
 											transition: "all 0.5s ease",
 										},
 									}}>
-									Solicita tu verificación
+									verificar folio
 									</Button>
 								</Box>
 							</Form>

@@ -3,8 +3,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box, Button, Card, CardActions, CardContent, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
-import Paper from '@mui/material/Paper';
-import { experimentalStyled } from '@mui/material/styles';
 import { Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -14,51 +12,9 @@ import { onGetFoliosJornadas } from '../../store/verificacion-voto/verificacionT
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
-import { emphasize, styled } from '@mui/material/styles';
 import { BotonBack } from './botonback';
 import { BreadCrumbsCustom } from './BreadCrumbsCustom';
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-    const backgroundColor =
-      theme.palette.mode === 'light'
-        ? theme.palette.grey[100]
-        : theme.palette.grey[800];
-    return {
-      backgroundColor,
-      height: theme.spacing(3),
-      color: theme.palette.text.primary,
-      fontWeight: theme.typography.fontWeightRegular,
-      '&:hover, &:focus': {
-        backgroundColor: emphasize(backgroundColor, 0.06),
-      },
-      '&:active': {
-        boxShadow: theme.shadows[1],
-        backgroundColor: emphasize(backgroundColor, 0.12),
-      },
-    };
-  }); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
-// ----------- Bradcrumbs ----------
 
-const Item = experimentalStyled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-
-  
-  const rows = [
-    { id: 1, lastName: 'JORNADA ELECTORAL 2021'},
-    { id: 2, lastName: 'JORNADA ELECTORAL 2022'},
-    { id: 3, lastName: 'JORNADA ELECTORAL 2023'},
-    { id: 4, lastName: 'JORNADA ELECTORAL 2024'},
-    { id: 5, lastName: 'JORNADA ELECTORAL 2025'},
-    { id: 6, lastName: 'JORNADA ELECTORAL 2026'}, 
-    { id: 7, lastName: 'JORNADA ELECTORAL GOBERNADOR ORDINARIA 2021'},
-    { id: 8, lastName: 'JORNADA ELECTORAL GOBERNADOR ORDINARIA 2022'}, 
-    { id: 9, lastName: 'JORNADA ELECTORAL GOBERNADOR ORDINARIA 2023'},
-  ];
   export const Jornadas = () => {
       const navigate = useNavigate();
       const plantilla1 = (id) => {

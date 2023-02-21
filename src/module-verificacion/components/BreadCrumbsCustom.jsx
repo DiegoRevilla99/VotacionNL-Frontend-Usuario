@@ -11,9 +11,9 @@ export const BreadCrumbsCustom = ({ routes = [], currentRoute = "" }) => {
     <Link key={route.name} underline="hover" to={route.url}>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {route.name === "VERIFICACIÓN" && (
-          <HomeIcon fontSize="medium" sx={{ mr: 0.5 }} />
+          <HomeIcon fontSize="small" sx={{ mr: 0.5 }} />
         )}
-        <Typography sx={{ fontSize: { md: "18px", xs: "10px" } }}>
+        <Typography sx={{ fontSize: { md: "17px", xs: "13px" } }}>
           {route.name}
         </Typography>
       </Box>

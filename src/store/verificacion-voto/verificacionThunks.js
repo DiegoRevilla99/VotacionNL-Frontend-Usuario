@@ -8,6 +8,7 @@ import { onCheckingPeticion, onCheckingVerificacion, onError, onFillJornadaSenti
 export const onGetValidarVoto = (claveVoto, navigate = () => {}) => {
     return async (dispatch) => {
 		dispatch(onCheckingVerificacion());
+        dispatch(onError());
         const { ok, data } = await getValidarVoto(claveVoto);
         console.log("data", data);
         if (ok) {
@@ -16,9 +17,9 @@ export const onGetValidarVoto = (claveVoto, navigate = () => {}) => {
             navigate();
         }
 		 else {
-            console.log("entro al error");
+            // console.log("entro al error");
 			dispatch(onNoVerificando());
-			dispatch(onError("No se encontró los resultados con ese folio."));
+			dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro"));
 		}
 	};
 }

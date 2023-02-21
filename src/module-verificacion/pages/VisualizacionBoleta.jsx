@@ -28,16 +28,16 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
   export const VisualizacionBoleta = () => {
     const navigate = useNavigate();
   	const plantilla1 = (idBoleta) => {
-      console.log("imprimimos el id",idBoleta);
+      // console.log("imprimimos el id",idBoleta);
       // navigate("/verificacion/visualizacion/boleta/group");
       navigate("/verificacion/visualizacion/boleta/"+params.id+"/group/"+idBoleta);
       // verificacion/visualizacion/:id/boleta/group/:id
     };
 
     const params = useParams();
-    console.log("imprimimos el store",params);
+    // console.log("imprimimos el store",params);
     const { jornadasFolio } = useVerficacionStore();
-    console.log("imprimimos el stro",jornadasFolio);
+    // console.log("imprimimos el stro",jornadasFolio);
     const [searchBoleta, setSearchBoleta] = useState('');
 
     const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
