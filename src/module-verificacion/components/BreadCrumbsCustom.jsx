@@ -32,7 +32,7 @@ export const BreadCrumbsCustom = ({ routes = [], currentRoute = "" }) => {
         mt: { xl: 2, md: 0, xs: 0 },
       }}
     >
-      <Breadcrumbs separator={<NavigateNextIcon />} aria-label="breadcrumb">
+      <Breadcrumbs maxItems={2} separator={<NavigateNextIcon />} aria-label="breadcrumb">
         {breadcrumbs}
         <Typography
           sx={{

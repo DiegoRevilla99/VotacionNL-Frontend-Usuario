@@ -16,6 +16,7 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
 // import { experimentalStyled as styled } from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import { emphasize, styled } from '@mui/material/styles';
+import { BotonBack } from './botonback';
 import { BreadCrumbsCustom } from './BreadCrumbsCustom';
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
@@ -61,8 +62,6 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
   export const Jornadas = () => {
       const navigate = useNavigate();
       const plantilla1 = (id) => {
-        // console.log("presionamos el boton",id);
-        //   dispatch(onSetJornadaSelected({ id, title, boletas: [] }));
           navigate("/verificacion/visualizacion/boleta/"+id);
         };
         const [searchJornada, setSearchJornada] = useState('');
@@ -74,6 +73,9 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
       useEffect(() => {
           dispatch(onGetFoliosJornadas());
       }, []);
+        const jornadasFiltradas = jornadasFolio.filter((jornada) =>
+    jornada.jornadaModel.nombreJornada.toLowerCase().includes(searchJornada.toLowerCase())
+    );
     //   console.log(jornadasFolio);
     //   console.log(params);
 
@@ -121,7 +123,7 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
 							},
 						}}
 					>
-                        A continuación se muestran las jornadas
+                        A CONTINUACIÓN SE MUESTRAN LAS JORNADAS ELECTORALES DISPONIBLES
 					</Typography>
                     <Box 
                     ml={{											
@@ -166,7 +168,7 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
                     </Box>
                     <Box ml={1} mr={1} mt={4} mb={1} align="center" display="flex" justifyContent="center">
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {jornadasFolio.map((jornada) => (
+                    {jornadasFiltradas.map((jornada) => (
                     <Grid item xs={4} sm={4} md={4} key={jornada.jornadaModel.idJornada}>
                         <Card 
                         sx={{ minWidth: 247 }} 
@@ -238,9 +240,12 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
                 </>
                 ):
                 (
+                        <>
                     <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
                         No se encontraron jornadas por el momento, intente más tarde.
                     </Typography>
+                    <BotonBack url='/verificacion'/>
+                        </>
                 )}
 
 			</Container>

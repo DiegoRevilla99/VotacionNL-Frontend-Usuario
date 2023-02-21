@@ -24,7 +24,8 @@ export const HomeRoutes = () => {
 			<Route path="verificacion/visualizacion/boleta" element={<VisualizacionBoleta />} />
 			<Route path="verificacion/visualizacion/boleta/:id" element={<VisualizacionBoleta />} />
 			<Route path="verificacion/visualizacion/boleta/group" element={<GroupPage />} />
-			<Route path="verificacion/visualizacion/boleta/group/:id" element={<GroupPage />} />
+			<Route path="verificacion/visualizacion/boleta/:id/group/:idBoleta" element={<GroupPage />} />
+			{/* navigate("/verificacion/visualizacion/"+params.id+"/boleta/"+id); */}
 			{/*Logueado */}
 			<Route path="verificacion/visualizacionnf" element={<JornadasNoFormales />} />
 			<Route

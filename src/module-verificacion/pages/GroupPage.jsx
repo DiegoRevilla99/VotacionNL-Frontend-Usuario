@@ -1,8 +1,8 @@
+import ReplyAllIcon from "@mui/icons-material/ReplyAll";
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
-import { experimentalStyled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,38 +13,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
-import { emphasize, styled } from '@mui/material/styles';
+import { useParams } from "react-router-dom";
 import { BreadCrumbsCustom } from '../components/BreadCrumbsCustom';
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-    const backgroundColor =
-      theme.palette.mode === 'light'
-        ? theme.palette.grey[100]
-        : theme.palette.grey[800];
-    return {
-      backgroundColor,
-      height: theme.spacing(3),
-      color: theme.palette.text.primary,
-      fontWeight: theme.typography.fontWeightRegular,
-      '&:hover, &:focus': {
-        backgroundColor: emphasize(backgroundColor, 0.06),
-      },
-      '&:active': {
-        boxShadow: theme.shadows[1],
-        backgroundColor: emphasize(backgroundColor, 0.12),
-      },
-    };
-  }); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
-// ----------- Bradcrumbs ----------
-
-const Item = experimentalStyled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
+import { useVerficacionStore } from '../hooks/useVerificacionStore';
 const rows = [
   { id: 1, folio:'JE22-ORD-GHR41S', sentido: 'Matias Oropeza Oropeza '},
   { id: 2, folio:'JE22-ORD-GHR42S', sentido: 'Isidoro Arriaga Arriaga'},
@@ -70,10 +41,42 @@ const rows = [
 
 export const GroupPage = () => {
 	const navigate = useNavigate();
+  
+  const params = useParams();
   const [searchJornada, setSearchJornada] = useState('');
-	const onCancel = () => {
-		navigate("/verificacion/visualizacion/boleta");
-	};
+
+  console.log("imprimimos el store",params);
+  const { jornadasFolio } = useVerficacionStore();
+  console.log("imprimimos el stro",jornadasFolio);
+
+  const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
+  console.log("jornada en la que estamos",jornadaEncontrar);
+  const boletaEncontrar = jornadaEncontrar.boletas.find(boleta => boleta.idBoleta === params.idBoleta);
+  console.log("boleta en la que estamos",boletaEncontrar);
+  const plantilla1 = () => {
+    navigate("/verificacion/visualizacion/boleta/"+params.id);
+  };
+
+const [searchValue, setSearchValue] = useState('');
+
+const handleSearch = (value) => {
+  setSearchValue(value);
+}
+
+// Filtrar las selecciones según la búsqueda
+const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
+  if (seleccion.idSeleccion.toString().includes(searchValue)) {
+    return true;
+  }
+  if (seleccion.nombrePartido.toLowerCase().includes(searchValue.toLowerCase())) {
+    return true;
+  }
+  if (seleccion.nombreCandidato.toLowerCase().includes(searchValue.toLowerCase())) {
+    return true;
+  }
+  return false;
+});
+
 	return (
 		<Box pt="1.5rem" align="center" display="flex" justifyContent="center"  
         sx={{						
@@ -105,12 +108,14 @@ export const GroupPage = () => {
 							},
               {
 								name: "BOLETAS",
-								url: "/verificacion/visualizacion/boleta",
+								url: "/verificacion/visualizacion/boleta/"+params.id,
 							},
 						]}
 						currentRoute="FOLIOS"
 					></BreadCrumbsCustom>
         {/* Bradcrumbs */}
+        {boletaEncontrar.selecciones.length > 0 ? (
+          <>
                 <Typography
                   color="initial"
                   mb="1rem"
@@ -125,7 +130,7 @@ export const GroupPage = () => {
                       },
                       }}
                     >
-                       Folios y sus sentidos de acuerdo a la boleta *name de la boleta*
+                       DETALLES DE LA BOLETA CON EL FOLIO: {boletaEncontrar.idBoleta}
 					</Typography>
           <Box 
             ml={{											
@@ -148,7 +153,7 @@ export const GroupPage = () => {
                 justifyContent:'flex-end' }}>
                   <TextField
                       id="input-with-icon-textfield"
-                      label="Ingrese el nombre o folio"
+                      label="Ingrese el nombre del sentido, el partido o el folio"
                       sx={{ width: {
                           xs: "100%",
                           sm: "100%",
@@ -157,8 +162,8 @@ export const GroupPage = () => {
                           xl: "40%",
                       } }}
                       size="normal"
-                      placeholder="Ejemplo: Jornada..."
-                      onChange={(e) => setSearchJornada(e.target.value)}
+                      placeholder="Ej: Nombre del partido... o El Folio... o Nombre del candidato... "
+                      onChange={(e) => handleSearch(e.target.value)}
                       InputProps={{
                           endAdornment: (
                           <InputAdornment position="end">
@@ -191,27 +196,52 @@ export const GroupPage = () => {
                       fontSize: "1.2rem",
                                   }} >FOLIOS</TableCell>
                     <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
+                                  }}>PARTIDO</TableCell>
+                    <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
                                   }}>SENTIDOS</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody style={{background: "#d0afd3db"}}>
-                {rows.filter((jornada) => jornada.folio.toLowerCase().includes(searchJornada)
-                              || jornada.folio.toUpperCase().includes(searchJornada)
-                              || jornada.sentido.toLowerCase().includes(searchJornada)
-                              || jornada.sentido.toUpperCase().includes(searchJornada)
-                              ).map((jornada) => (
+                {filteredSelections.map((seleccion, index) => (
                     <TableRow 
-                      key={jornada.folio}
+                      key={index}
                     > 
                       <TableCell  style={{ width: "30%", color:"BLACK", fontSize:"1.05rem"}}>
-                      {jornada.folio}</TableCell>
-                      <TableCell style={{ width: "60%", color:"BLACK", fontSize:"1.05rem"}}>{jornada.sentido}</TableCell>
+                      {seleccion.idSeleccion}</TableCell>
+                      <TableCell style={{ width: "30%", color:"BLACK", fontSize:"1.05rem"}}>{seleccion.nombrePartido}</TableCell>
+                      <TableCell style={{ width: "60%", color:"BLACK", fontSize:"1.05rem"}}>{seleccion.nombreCandidato}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </Box>
+          </>
+        ):
+        (
+                <>
+            <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
+                No se encontraron folios pertenecientes esta boleta por el momento, intente más tarde.
+            </Typography>
+
+            <Button
+              // type="submit"
+            //   className={styles.boton}
+            borderRadius="10px"
+              variant="contained"
+              color="primary"
+            //   style={styleButton}
+              onClick={plantilla1}
+              sx={{
+                mt: 2,
+                width: { sm: `150px`, xs: "150px" },
+              }}
+            >
+              <ReplyAllIcon />
+              Regresar
+            </Button>
+                </>
+        )}
 			</Container>
 		</Box>
 	);

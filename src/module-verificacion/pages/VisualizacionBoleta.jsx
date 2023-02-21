@@ -21,22 +21,30 @@ import { useParams } from "react-router-dom";
   // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { BotonBack } from "../components/botonback";
 import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
 // ----------- Bradcrumbs ----------
   export const VisualizacionBoleta = () => {
     const navigate = useNavigate();
-  	const plantilla1 = () => {
-      navigate("/verificacion/visualizacion/boleta/group");
-      // navigate("/verificacion/visualizacion/boleta/group/"+id);
-      // "verificacion/visualizacion/boleta/group/:id"
+  	const plantilla1 = (idBoleta) => {
+      console.log("imprimimos el id",idBoleta);
+      // navigate("/verificacion/visualizacion/boleta/group");
+      navigate("/verificacion/visualizacion/boleta/"+params.id+"/group/"+idBoleta);
+      // verificacion/visualizacion/:id/boleta/group/:id
     };
 
     const params = useParams();
-    console.log(params);
+    console.log("imprimimos el store",params);
     const { jornadasFolio } = useVerficacionStore();
-    console.log(jornadasFolio);
-    const [searchJornada, setSearchJornada] = useState('');
+    console.log("imprimimos el stro",jornadasFolio);
+    const [searchBoleta, setSearchBoleta] = useState('');
+
+    const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
+
+    const boletasFiltradas = jornadaEncontrar.boletas.filter((boleta) =>
+    boleta.idBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
+  );
     if (status === "checking")
       return (
         <Box sx={{ width: "100%" }}>
@@ -76,6 +84,8 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
 						currentRoute="BOLETAS"
 					></BreadCrumbsCustom>
           {/* Bradcrumbs */}
+          {jornadaEncontrar.boletas.length > 0 ? (
+            <>
             <Typography
               color="initial"
               mb="1rem"
@@ -90,7 +100,7 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
                 },
               }}
             >
-              A continuación se muestran las boletas de la jornadas {params.id}
+              A CONTINUACIÓN SE MUESTRAN LAS BOLETAS DE {jornadaEncontrar.jornadaModel.nombreJornada}
             </Typography>
             <Box 
               ml={{											
@@ -121,8 +131,8 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
                           xl: "40%",
                       } }}
                       size="normal"
-                      placeholder="Ejemplo: Jornada..."
-                      onChange={(e) => setSearchJornada(e.target.value)}
+                      placeholder="Ejemplo: Electoral..."
+                      onChange={(e) => setSearchBoleta(e.target.value)}
                       InputProps={{
                           endAdornment: (
                           <InputAdornment position="end">
@@ -135,14 +145,12 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
               </Box>
               <Box ml={1} mr={1} mt={4} mb={1}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
-                    || jornada.lastName.toUpperCase().includes(searchJornada)
-                    ).map((jornada) => (
-                    <Grid item xs={4} sm={4} md={6} key={jornada.id}>
+                    {boletasFiltradas.map((boleta, index) => (
+                    <Grid item xs={4} sm={4} md={6} key={index}>
                         <Card 
                         sx={{ minWidth: 247 }} 
-                        onClick={plantilla1}
-                        // onClick={() => plantilla1()}
+                        // onClick={plantilla1}
+                        onClick={() => plantilla1(boleta.idBoleta)}
                         style={{ 
                           // border: "1px solid #D0D0D0", 
                           // background: "#373637"
@@ -152,16 +160,16 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
                       }} >
                           <CardContent>
                             <Typography sx={{ fontSize: 14 }} color="text" gutterBottom>
-                              Boleta {jornada.id}
+                              Boleta {index}
                             </Typography>
                             <Typography variant="h6" component="div">
-                              {jornada.lastName}
+                              {boleta.idBoleta}
                             </Typography>
                           </CardContent>
                           <CardActions>
                             <Button 
-                          onClick={plantilla1}
-                            // onClick={() => plantilla1()}
+                          // onClick={plantilla1}
+                            onClick={() => plantilla1(boleta.idBoleta)}
                             sx={{ 
                               color: "#364691", 
                               // color: "433A9C",543884
@@ -179,7 +187,18 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
                             ))}
                         </Grid>
                 </Box>
-                
+                </>
+                ):
+                (
+                        <>
+                    <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
+                        No se encontraron sentidos en la boleta por el momento, intente más tarde.
+                    </Typography>
+
+                     <BotonBack url="/verificacion/visualizacion"/>
+                         </>
+                    
+                )}
     </Container>
 	</Box>
       );
