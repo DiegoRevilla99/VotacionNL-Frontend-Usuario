@@ -3,10 +3,19 @@ import { createSlice } from "@reduxjs/toolkit";
 export const verificacionSlice = createSlice({
     name: "verificacion",
     initialState: {
-        status: "noVerificando", //noVerificando, verificando, checking
+        status: "noVerificado", //checking verficado noVerificado
+        // status: "noVerificando", //noVerificando, verificando, checking
         errorMessage: "",
         statusPeticion: "off", //checking, ok, fail, off
         claveVoto: "",
+        jornadasFolio: [],
+        jornadaSelected: {
+			id: "",
+			title: "",
+			nombre: "",
+			boletas: [],
+			boletaSelected: {},
+		},
         votos: [],
         votoSelected: {
             id: "",
@@ -14,13 +23,6 @@ export const verificacionSlice = createSlice({
             horaEmision: "",
             idBoleta: "",
             sentido: [],
-        },
-        boleta: [],
-        boletaSelected: {
-            encabezado: "",
-            modalidad: "", // Formales, No Formales, Comite y Planilla
-            folio: "",
-            candidato: [], // Nombre por quien se votó [1, 2, 3]
         },
     },
     reducers: {
@@ -39,23 +41,34 @@ export const verificacionSlice = createSlice({
         onCheckingVerificacion: (state) => {
             state.status = "checking";
         },
-        onVerificando: (state, {payload}) => {
-            state.status = "verificando";
+        onVerificado: (state, {payload}) => {
+            state.status = "verficado";
             // state.claveVoto = payload.claveVoto;
         },
         onNoVerificando: (state) => {
-            state.status = "noVerificando";
+            state.status = "noVerificado";
         },
         onError: (state, { payload }) => {
+            state.status = "noVerificado";
             state.errorMessage = payload;
         },
         onFillVoto: (state, { payload }) => {
+            console.log("PAYLOAD", payload);
             state.votos = payload;
         },
         onValidarVoto: (state, { payload }) => {
             state.votoSelected = payload;
-        }
-
+        },
+        onFillJornadaSentidos: (state, { payload }) => {
+            console.log("PAYLOAD", payload);
+            state.jornadasFolio = payload;
+        },
+        onSetJornadaSelected: (state, { payload }) => {
+			console.log(payload);
+			state.jornadaSelected.id = payload.id;
+			state.jornadaSelected.title = payload.title;
+			state.jornadaSelected.boletas = payload.boletas || [];
+		},
     },
 });
 
@@ -65,9 +78,11 @@ export const {
     onFailPeticion,
     onOffPeticion,
     onCheckingVerificacion,
-    onVerificando,
+    onVerificado,
     onNoVerificando,
+    onSetJornadaSelected,
     onError,
     onFillVoto,
     onValidarVoto,
+    onFillJornadaSentidos,
 } = verificacionSlice.actions;

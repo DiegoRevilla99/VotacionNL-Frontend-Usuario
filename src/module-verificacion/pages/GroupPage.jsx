@@ -13,13 +13,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
-import BallotIcon from '@mui/icons-material/Ballot';
-import Groups2Icon from '@mui/icons-material/Groups2';
-import HomeIcon from '@mui/icons-material/Home';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
 import { emphasize, styled } from '@mui/material/styles';
+import { BreadCrumbsCustom } from '../components/BreadCrumbsCustom';
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
       theme.palette.mode === 'light'
@@ -97,32 +93,23 @@ export const GroupPage = () => {
 			>
 
         {/* Bradcrumbs */}
-            <Box align="center" display="flex" justifyContent="center" mb={2}>
-              <Breadcrumbs aria-label="breadcrumb" maxItems={2}>
-                    <StyledBreadcrumb
-                    component="a"
-                    href="/verificacion"
-                    label="Verificación"
-                    icon={<HomeIcon fontSize="small" />}
-                    />
-                    <StyledBreadcrumb 
-                    component="a"
-                    href="/verificacion/visualizacion"
-                    icon={<AllInboxIcon fontSize="small" />}
-                    label="Jornadas" 
-                    />
-                    <StyledBreadcrumb 
-                    component="a"
-                    href="/verificacion/visualizacion/boleta"
-                    icon={<BallotIcon fontSize="small" />}
-                    label="Boletas" 
-                    />
-                    <StyledBreadcrumb
-                    label="Folios"
-                    icon={<Groups2Icon fontSize="small" />}
-                    />
-                </Breadcrumbs>
-              </Box>
+        <BreadCrumbsCustom
+						routes={[
+							{
+								name: "VERIFICACIÓN",
+								url: "/verificacion",
+							},
+              {
+								name: "JORNADAS ELECTORALES",
+								url: "/verificacion/visualizacion",
+							},
+              {
+								name: "BOLETAS",
+								url: "/verificacion/visualizacion/boleta",
+							},
+						]}
+						currentRoute="FOLIOS"
+					></BreadCrumbsCustom>
         {/* Bradcrumbs */}
                 <Typography
                   color="initial"

@@ -1,15 +1,15 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { PasosPage } from "../../module-auth/pages/PasosPage";
-import { HomePage } from "../pages/HomePage";
-import { VerificacionPage } from "../../module-verificacion/pages/VerificacionPage";
-import { IndividualPage } from "../../module-verificacion/pages/IndividualPage";
-import { GroupPage } from "../../module-verificacion/pages/GroupPage";
 import { FolioFound } from "../../module-verificacion/components/FolioFound";
-import { GroupPageLogged } from "../../module-verificacion/pages/GroupPageLogged";
 import { Jornadas } from "../../module-verificacion/components/Jornadas";
-import { VisualizacionBoleta } from "../../module-verificacion/pages/VisualizacionBoleta";
 import { JornadasNoFormales } from "../../module-verificacion/components/JornadasNoFormales";
+import { GroupPage } from "../../module-verificacion/pages/GroupPage";
+import { GroupPageLogged } from "../../module-verificacion/pages/GroupPageLogged";
+import { IndividualPage } from "../../module-verificacion/pages/IndividualPage";
+import { VerificacionPage } from "../../module-verificacion/pages/VerificacionPage";
+import { VisualizacionBoleta } from "../../module-verificacion/pages/VisualizacionBoleta";
 import { VisualizacionBoletaNoFormal } from "../../module-verificacion/pages/VisualizacionBoletaNoFormal";
+import { HomePage } from "../pages/HomePage";
 export const HomeRoutes = () => {
 	return (
 		<Routes>
@@ -18,11 +18,13 @@ export const HomeRoutes = () => {
 			<Route path="verificacion" element={<VerificacionPage />} />
 			<Route path="verificacion/individual" element={<IndividualPage />} />
 			<Route path="verificacion/individual/FoundFolio" element={<FolioFound />} />
-
+			<Route path="/verificacion/individual/:folio/FoundFolio" element={<FolioFound />} />
 			{/* No Logueado */}
 			<Route path="verificacion/visualizacion" element={<Jornadas />} />
 			<Route path="verificacion/visualizacion/boleta" element={<VisualizacionBoleta />} />
+			<Route path="verificacion/visualizacion/boleta/:id" element={<VisualizacionBoleta />} />
 			<Route path="verificacion/visualizacion/boleta/group" element={<GroupPage />} />
+			<Route path="verificacion/visualizacion/boleta/group/:id" element={<GroupPage />} />
 			{/*Logueado */}
 			<Route path="verificacion/visualizacionnf" element={<JornadasNoFormales />} />
 			<Route

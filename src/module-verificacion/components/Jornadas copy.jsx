@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { onGetFoliosJornadas } from '../../store/verificacion-voto/verificacionThunks';
-// import { onSetJornadaSelected } from '../../store/verificacion-voto/verificacionSlice';
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
@@ -60,10 +59,8 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
   ];
   export const Jornadas = () => {
       const navigate = useNavigate();
-      const plantilla1 = (id) => {
-        // console.log("presionamos el boton",id);
-        //   dispatch(onSetJornadaSelected({ id, title, boletas: [] }));
-          navigate("/verificacion/visualizacion/boleta/"+id);
+      const plantilla1 = () => {
+          navigate("/verificacion/visualizacion/boleta");
         };
         const [searchJornada, setSearchJornada] = useState('');
         const params = useParams();
@@ -74,9 +71,7 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
       useEffect(() => {
           dispatch(onGetFoliosJornadas());
       }, []);
-    //   console.log(jornadasFolio);
-    //   console.log(params);
-
+      console.log(jornadasFolio);
       //
 	return (
 		<Box pt="1.5rem"     
@@ -106,8 +101,6 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
 						currentRoute="JORNADAS ELECTORALES"
 					></BreadCrumbsCustom>
                 {/* end Bradcrumbs */}
-                {jornadasFolio.length > 0 ? (
-                    <>
 					<Typography
 						color="initial"
 						align="center"
@@ -166,11 +159,13 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
                     </Box>
                     <Box ml={1} mr={1} mt={4} mb={1} align="center" display="flex" justifyContent="center">
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {jornadasFolio.map((jornada) => (
-                    <Grid item xs={4} sm={4} md={4} key={jornada.jornadaModel.idJornada}>
+                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
+                    || jornada.lastName.toUpperCase().includes(searchJornada)
+                    ).map((jornada) => (
+                    <Grid item xs={4} sm={4} md={4} key={jornada.id}>
                         <Card 
                         sx={{ minWidth: 247 }} 
-                        onClick={() => plantilla1(jornada.jornadaModel.idJornada)}
+                        onClick={plantilla1}
                         style={{ 
                           // border: "1px solid #D0D0D0", 
                           // background: "#373637"
@@ -179,13 +174,13 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
                           <CardContent>
 
                             <Typography variant="h6" component="div" color="white">
-                            {jornada.jornadaModel.nombreJornada}	
+                            {jornada.lastName}	
                             </Typography>
                           </CardContent>
                           <CardActions >
                             <Box  align="center" display="flex" justifyContent="center" width="100%" mb={1}>
                             <Button 
-                                onClick={() => plantilla1(jornada.jornadaModel.idJornada)}
+                                onClick={plantilla1}
                                 startIcon = {<BallotIcon />}
                                 sx={{
 									// backgroundColor: "#eba302",
@@ -235,14 +230,6 @@ const Item = experimentalStyled(Paper)(({ theme }) => ({
                             ))}
                         </Grid>
                 </Box>
-                </>
-                ):
-                (
-                    <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
-                        No se encontraron jornadas por el momento, intente más tarde.
-                    </Typography>
-                )}
-
 			</Container>
 		</Box>
 	);

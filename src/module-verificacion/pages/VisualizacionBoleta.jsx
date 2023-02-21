@@ -1,6 +1,6 @@
 import {
   Box,
-  Button, Grid, LinearProgress, Paper, TextField, Typography
+  Button, Grid, LinearProgress, TextField, Typography
 } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -17,49 +17,25 @@ import { useNavigate } from "react-router-dom";
   //   import { onSetJornadaSelected } from "../../store/module-preparacion/jornada/SliceJornada";
   import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-import { experimentalStyled } from '@mui/material/styles';
-
+import { useParams } from "react-router-dom";
   // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import BallotIcon from '@mui/icons-material/Ballot';
-import HomeIcon from '@mui/icons-material/Home';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Chip from '@mui/material/Chip';
-import { emphasize, styled } from '@mui/material/styles';
-const Item = experimentalStyled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-    const backgroundColor =
-      theme.palette.mode === 'light'
-        ? theme.palette.grey[100]
-        : theme.palette.grey[800];
-    return {
-      backgroundColor,
-      height: theme.spacing(3),
-      color: theme.palette.text.primary,
-      fontWeight: theme.typography.fontWeightRegular,
-      '&:hover, &:focus': {
-        backgroundColor: emphasize(backgroundColor, 0.06),
-      },
-      '&:active': {
-        boxShadow: theme.shadows[1],
-        backgroundColor: emphasize(backgroundColor, 0.12),
-      },
-    };
-  }); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
+import { useVerficacionStore } from '../hooks/useVerificacionStore';
 // ----------- Bradcrumbs ----------
   export const VisualizacionBoleta = () => {
     const navigate = useNavigate();
   	const plantilla1 = () => {
       navigate("/verificacion/visualizacion/boleta/group");
+      // navigate("/verificacion/visualizacion/boleta/group/"+id);
+      // "verificacion/visualizacion/boleta/group/:id"
     };
+
+    const params = useParams();
+    console.log(params);
+    const { jornadasFolio } = useVerficacionStore();
+    console.log(jornadasFolio);
     const [searchJornada, setSearchJornada] = useState('');
     if (status === "checking")
       return (
@@ -86,26 +62,19 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
           }}
         >
               {/* Bradcrumbs */}
-              <Box align="center" display="flex" justifyContent="center" mb={2}>
-                  <Breadcrumbs aria-label="breadcrumb" maxItems={2}>
-                      <StyledBreadcrumb
-                      component="a"
-                      href="/verificacion"
-                      label="Verificación"
-                      icon={<HomeIcon fontSize="small" />}
-                      />
-                      <StyledBreadcrumb 
-                      component="a"
-                      href="/verificacion/visualizacion"
-                      icon={<AllInboxIcon fontSize="small" />}
-                      label="Jornadas" 
-                      />
-                      <StyledBreadcrumb
-                      label="Boletas"
-                      icon={<BallotIcon fontSize="small" />}
-                      />
-                  </Breadcrumbs>
-                </Box>
+              <BreadCrumbsCustom
+						routes={[
+							{
+								name: "VERIFICACIÓN",
+								url: "/verificacion",
+							},
+              {
+								name: "JORNADAS ELECTORALES",
+								url: "/verificacion/visualizacion",
+							},
+						]}
+						currentRoute="BOLETAS"
+					></BreadCrumbsCustom>
           {/* Bradcrumbs */}
             <Typography
               color="initial"
@@ -121,7 +90,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                 },
               }}
             >
-              A continuación se muestran las boletas de la jornadas *name jornada*
+              A continuación se muestran las boletas de la jornadas {params.id}
             </Typography>
             <Box 
               ml={{											
@@ -173,6 +142,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                         <Card 
                         sx={{ minWidth: 247 }} 
                         onClick={plantilla1}
+                        // onClick={() => plantilla1()}
                         style={{ 
                           // border: "1px solid #D0D0D0", 
                           // background: "#373637"
@@ -190,7 +160,8 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
                           </CardContent>
                           <CardActions>
                             <Button 
-                            onClick={plantilla1}
+                          onClick={plantilla1}
+                            // onClick={() => plantilla1()}
                             sx={{ 
                               color: "#364691", 
                               // color: "433A9C",543884

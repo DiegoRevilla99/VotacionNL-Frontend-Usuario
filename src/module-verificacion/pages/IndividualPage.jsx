@@ -2,39 +2,38 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { Container } from "@mui/system";
-import { Formik } from "formik";
+import { Form, Formik } from "formik";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
-
+import { onGetValidarVoto } from "../../store/verificacion-voto/verificacionThunks";
 const validationSchema = object({
 	folio: string("").required("Este campo es requerido").matches(/^[a-zA-Z0-9-]+$/, "Solo se permiten números, letras y guiones")
 });
 
 export const IndividualPage = () => {
 	const navigate = useNavigate();
-	// const dispatch = useDispatch();
-	// const { status } = useSelector((state) => state.verificacion);
-	
+	const dispatch = useDispatch();
+
+	const { status } = useSelector((state) => state.verificacion);
 	const onSubmit = (values) => {
-		// Todo: dispatch(iniciarSesionConEmail())
-		// dispatch(
-		// 	onLoginWithEmailAndPassword(values.curp, values.password, () =>
-		// 		navigate("/votacion/inicio")
-		// 	)
-		// );
-		// **exito
-		console.log(values);
-		navigate("/verificacion/individual/FoundFolio");
+	  dispatch(onGetValidarVoto(
+		values.folio,
+		() => {
+		  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
+		},
+	  ));
 	};
 	const onCancel = () => {
-		navigate("/verificacion");
+	  navigate("/verificacion");
 	};
-
+  
+	
 	return (
 		<Box pt="1.5rem">
 			<Container
-				maxWidth="lg"
+				maxWidth="md"
 				sx={{
 					boxShadow: 1,
 					backgroundColor: "white",
@@ -65,12 +64,13 @@ export const IndividualPage = () => {
 							folio: "",
 						}}
 						validationSchema={validationSchema}
-						onSubmit={(values) => {
+						onSubmit={(values, {resetForm}) => {
 							onSubmit(values);
+							resetForm();
 						}}
 					>
 						{({ values, handleSubmit, errors, touched, handleChange }) => (
-							<form onSubmit={handleSubmit}>
+							<Form onSubmit={handleSubmit}>
 
 								<TextField
 									name="folio"
@@ -84,6 +84,7 @@ export const IndividualPage = () => {
 									error={touched.folio && Boolean(errors.folio)}
 									helperText={touched.folio && errors.folio}
 								></TextField>
+
 								<Box 
 									sx={{ display: 'flex', 
 										flexDirection: {
@@ -97,6 +98,7 @@ export const IndividualPage = () => {
 									>
 								<Button
 									onClick={onCancel}
+									disabled={status === "checking" ? true : false}
 									startIcon={<ReplyIcon size="large" fontSize="inherit"/>}
 									color="inherit"
 									sx={{ mr: 1,
@@ -151,7 +153,7 @@ export const IndividualPage = () => {
 									Solicita tu verificación
 									</Button>
 								</Box>
-							</form>
+							</Form>
 						)}
 					</Formik>
 				</Box>
