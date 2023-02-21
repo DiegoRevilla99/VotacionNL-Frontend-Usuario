@@ -169,7 +169,7 @@ export const ResultadosRepFormal = ({}) => {
                 align="center"
                 sx={{ fontWeight: "bold" }}
               >
-                {boleta.winner.nombre}
+                {boleta?.winner?.nombre}
               </Typography>
 
               {/* {resultados.ganadores?.map((gan, index) => {
