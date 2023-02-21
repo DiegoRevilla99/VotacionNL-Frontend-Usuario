@@ -1,7 +1,8 @@
-import { Container, Modal, Typography } from "@mui/material";
+import { Button, Container, Modal, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 const style = {
 	position: "absolute",
@@ -23,6 +24,7 @@ const velocidad = 500;
 export const ModalEmitirVotos = ({ modalStatus }) => {
 	const { errorMessage, statusPeticion } = useSelector((state) => state.votante);
 	const [tick, setTick] = useState(contador);
+	const navigate = useNavigate();
 	useEffect(() => {
 		const interval = setInterval(() => {
 			contador++;
@@ -32,6 +34,11 @@ export const ModalEmitirVotos = ({ modalStatus }) => {
 
 		return () => clearInterval(interval);
 	}, []);
+
+	const handleRegresar = () => {
+		console.log("NAVEGA");
+		navigate("/votacion/inicio");
+	};
 
 	return (
 		<Modal
@@ -44,20 +51,44 @@ export const ModalEmitirVotos = ({ modalStatus }) => {
 				<Box sx={{ overflowY: "auto", height: "100%" }}>
 					<Box>
 						{statusPeticion === "fail" && errorMessage !== "" ? (
-							<Typography
-								id="modal-modal-title"
-								variant="h5"
-								color="#323232"
-								align="center"
-								display="flex"
-								justifyContent="center"
-								// p={2}
-								// justifyItems="center"
-								// alignContent="center"
-								// alignItems="center"
-							>
-								Fallo al emitir voto. Intenta más tarde.
-							</Typography>
+							<>
+								<Typography
+									id="modal-modal-title"
+									variant="h5"
+									color="#323232"
+									align="center"
+									display="flex"
+									justifyContent="center"
+									// p={2}
+									// justifyItems="center"
+									// alignContent="center"
+									// alignItems="center"
+								>
+									Fallo al emitir voto. Intenta más tarde.
+								</Typography>
+								<Box
+									sx={{
+										display: "flex",
+										flexDirection: "row",
+										pt: 4,
+									}}
+								>
+									<Box sx={{ flex: "1 1 auto" }} />
+									<Button
+										sx={{
+											"&.Mui-disabled": {
+												color: "#f8f7f3 !important",
+												border: "1px solid #f8f7f3 !important",
+											},
+										}}
+										color="darkButton"
+										variant="contained"
+										onClick={handleRegresar}
+									>
+										Regresar
+									</Button>
+								</Box>
+							</>
 						) : (
 							<>
 								<Typography

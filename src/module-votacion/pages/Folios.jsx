@@ -2,6 +2,7 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { captureCanvas } from "../components/imprimirFolio";
 
 export const Folios = () => {
 	const { folios } = useSelector((state) => state.votante);
@@ -81,6 +82,7 @@ export const Folios = () => {
 							}}
 							display="flex"
 							flexDirection="column"
+							id="folioImpresion"
 						>
 							<Typography
 								color="base.main"
@@ -131,6 +133,30 @@ export const Folios = () => {
 									</Typography>
 								</React.Fragment>
 							))}
+							<Box display="flex" justifyContent="center" pt={2}>
+								<Button
+									variant="contained"
+									size="large"
+									// color="base"
+									onClick={captureCanvas}
+									sx={{
+										boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+										transition: "all 0.5s ease",
+										backgroundColor: "#388452",
+										// width: "100%",
+										// minHeight: { xs: "8rem", md: "10rem" },
+										fontSize: { xs: "1.1rem", md: "1.2rem" },
+										// borderRadius: "2rem 2rem 2rem 2rem",
+										"&:hover": {
+											backgroundColor: "#323232 !important",
+											transform: "translate(-5px, -5px)",
+											boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
+										},
+									}}
+								>
+									Descargar folios
+								</Button>
+							</Box>
 						</Box>
 					</Box>
 					<Box

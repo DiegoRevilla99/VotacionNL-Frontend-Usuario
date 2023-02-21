@@ -18,7 +18,7 @@ import {
 import { VotoNulo } from "../components/VotoNulo";
 
 export const EditarBoleta = () => {
-	const { statusPeticion, boletaActual, votos, jornadaActual } = useSelector(
+	const { statusPeticion, boletaActual, votos, jornadaActual, status } = useSelector(
 		(state) => state.votante
 	);
 	const params = useParams();
@@ -27,6 +27,12 @@ export const EditarBoleta = () => {
 	const [seleccionados, setSeleccionados] = useState([]);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (status === "noVotando") {
+			navigate("/votacion/inicio");
+		}
+	}, []);
 
 	console.log("SELECCIONADOS", seleccionados);
 
@@ -101,9 +107,13 @@ export const EditarBoleta = () => {
 										sx={{ backgroundColor: "#423838" }}
 									>
 										{/* GOBERNADOR */}
-										{boletaActual.modalidad === "REPRESENTANTE"
+										{jornadaActual?.tipoJornada !== "JornadaNoFormal"
+											? ""
+											: boletaActual.modalidad === "REPRESENTANTE"
 											? "REPRESENTANTE"
-											: "COMITÉ"}
+											: boletaActual.modalidad === "COMITE"
+											? "COMITÉ"
+											: "PLANILLA"}
 									</Typography>
 								</Box>
 								<Grid container spacing={3} pb="2rem">

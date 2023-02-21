@@ -55,6 +55,7 @@ export const VotosRegistrados = () => {
 				});
 				return {
 					boletaModel: {
+						idJornada: jornadaActual.idJornada,
 						nombreEleccion: boletaCurrent.encabezado,
 						municipio: boletaCurrent.municipio,
 						distrito: boletaCurrent.distritoElectoral,
@@ -103,7 +104,8 @@ export const VotosRegistrados = () => {
 				});
 				return {
 					boletaModel: {
-						jornadaElectoral: jornadaActual.nombreJornada,
+						idJornada: jornadaActual.idJornada,
+						nombreJornada: jornadaActual.nombreJornada,
 						idEstructuraBoleta: boletaCurrent.idEstructuraBoleta,
 						modalidad:
 							boletaCurrent.modalidad === "REPRESENTANTE"
@@ -230,6 +232,7 @@ export const VotosRegistrados = () => {
 			const numero = voto.partidos[0].claveCoalicion;
 			let nulo = voto.partidos.some((partido) => {
 				// if (voto.partidos.length > 1) return partido.claveCoalicion === "SinCoalicion";
+				// if (partido.claveCoalicion === "SinCoalicion")
 				return partido.claveCoalicion !== numero;
 			});
 
@@ -518,6 +521,8 @@ export const VotosRegistrados = () => {
 											transition: "all 0.5s ease",
 											// backgroundColor: "#543884",
 											width: "100%",
+											minHeight: { xs: "8rem", md: "10rem" },
+											fontSize: { xs: "1.3rem", md: "1.5rem" },
 											// borderRadius: "2rem 2rem 2rem 2rem",
 											"&:hover": {
 												// backgroundColor: "#7E328B !important",

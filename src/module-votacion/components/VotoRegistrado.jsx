@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import React, { useState } from "react";
 import { onSetBoletaActual } from "../../store/votante/votanteSlice";
@@ -23,50 +23,106 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 			mb="2rem"
 		>
 			<Box p="1rem" width="100%" display="flex" flexDirection="column">
-				<Box width="100%" display="flex" pl={{ xs: "0.5rem", md: "1rem" }}>
-					<Box display="flex" flexDirection="column" flexGrow={3}>
-						<Typography variant="h6" color="base.main" width="100%" align="center">
-							{boleta.encabezado}
-						</Typography>
-						<Box
-							bgcolor="base.main"
-							borderRadius="1rem"
-							p="1rem"
-							align="center"
-							height="100%"
-							sx={{
-								width: "100%",
-								wordBreak: "break-word",
-							}}
-						>
-							{voto.map((seleccionado, index, row) => {
-								if (
-									coalicionInvalida &&
-									jornadaActual.tipoJornada === "JornadaFormal"
-								) {
-									return (
-										<>
-											{boleta.candidatos.map((candidato, index) => {
-												if (candidato.id === seleccionado) {
-													return (
-														<React.Fragment key={candidato.id + index}>
+				<Box
+					width="100%"
+					display="flex"
+					// pl={{ xs: "0.5rem", md: "1rem" }}
+					px={{ xs: "0.5rem", md: "0.8rem" }}
+				>
+					<Grid container spacing={3}>
+						<Grid item xs={12} md={12}>
+							<Box display="flex" flexDirection="column">
+								<Typography
+									variant="h6"
+									color="base.main"
+									width="100%"
+									align="center"
+									gutterBottom
+								>
+									{boleta.encabezado}
+								</Typography>
+								<Box
+									bgcolor="base.main"
+									borderRadius="1rem"
+									p="1rem"
+									align="center"
+									height="100%"
+									sx={{
+										width: "100%",
+										wordBreak: "break-word",
+									}}
+								>
+									{voto.map((seleccionado, index, row) => {
+										if (
+											coalicionInvalida &&
+											jornadaActual.tipoJornada === "JornadaFormal"
+										) {
+											return (
+												<>
+													{boleta.candidatos.map((candidato, index) => {
+														if (candidato.id === seleccionado) {
+															return (
+																<React.Fragment
+																	key={candidato.id + index}
+																>
+																	<Typography
+																		sx={{
+																			fontSize: {
+																				xs: 7,
+																				md: 11,
+																			},
+																			userSelect: "none",
+																		}}
+																		color="text.secondary"
+																		gutterBottom
+																		align="center"
+																	>
+																		{candidato.nombrePartido}
+																	</Typography>
+																	<Typography
+																		sx={{
+																			fontSize: {
+																				xs: 12,
+																				md: 16,
+																			},
+																		}}
+																		color="initial"
+																		gutterBottom
+																		key={
+																			boleta.encabezado +
+																			seleccionado +
+																			index
+																		}
+																		pb={1}
+																	>
+																		{candidato.nombre}
+																	</Typography>
+																</React.Fragment>
+															);
+														}
+													})}
+
+													{seleccionado === 100 && (
+														<>
+															{" "}
 															<Typography
 																sx={{
-																	fontSize: { xs: 7, md: 11 },
+																	fontSize: {
+																		xs: 7,
+																		md: 11,
+																	},
 																	userSelect: "none",
 																}}
 																color="text.secondary"
 																gutterBottom
 																align="center"
+																pt={1}
 															>
-																{candidato.nombrePartido}
+																CANDIDATURA NO REGISTRADA
 															</Typography>
 															<Typography
 																sx={{
-																	fontSize: {
-																		xs: 12,
-																		md: 16,
-																	},
+																	fontSize: { xs: 12, md: 16 },
 																}}
 																color="initial"
 																gutterBottom
@@ -75,18 +131,109 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 																	seleccionado +
 																	index
 																}
-																pb={1}
 															>
-																{candidato.nombre}
+																{candidaturaNoRegistrada[noBoleta]}
 															</Typography>
-														</React.Fragment>
-													);
-												}
-											})}
+														</>
+													)}
 
-											{seleccionado === 100 && (
+													{index + 1 === row.length && (
+														<Typography
+															sx={{
+																fontSize: { xs: 13, md: 16 },
+															}}
+															color="error"
+															gutterBottom
+															fontWeight="bold"
+															key={
+																boleta.encabezado +
+																seleccionado +
+																"Invalida" +
+																index
+															}
+														>
+															Voto nulo (Por coalición invalida)
+														</Typography>
+													)}
+												</>
+											);
+										} else if (
+											coalicionInvalida &&
+											jornadaActual.tipoJornada === "JornadaNoFormal"
+										) {
+											return (
 												<>
-													{" "}
+													{boleta.candidatos.map((candidato, index) => {
+														if (candidato.id === seleccionado) {
+															return (
+																<React.Fragment
+																	key={candidato.id + index}
+																>
+																	<Typography
+																		sx={{
+																			fontSize: {
+																				xs: 7,
+																				md: 11,
+																			},
+																			userSelect: "none",
+																		}}
+																		color="text.secondary"
+																		gutterBottom
+																		align="center"
+																	>
+																		{candidato.nombrePartido}
+																	</Typography>
+
+																	{candidato.candidatos.map(
+																		(cand, index2) => {
+																			return (
+																				<Typography
+																					sx={{
+																						fontSize: {
+																							xs: 12,
+																							md: 16,
+																						},
+																					}}
+																					color="initial"
+																					gutterBottom
+																					key={
+																						cand.id +
+																						seleccionado +
+																						index2
+																					}
+																				>
+																					{cand.nombre}
+																				</Typography>
+																			);
+																		}
+																	)}
+																</React.Fragment>
+															);
+														}
+													})}
+													{index + 1 === row.length && (
+														<Typography
+															sx={{
+																fontSize: { xs: 13, md: 16 },
+															}}
+															color="error"
+															gutterBottom
+															fontWeight="bold"
+															key={
+																boleta.encabezado +
+																seleccionado +
+																"Invalida" +
+																index
+															}
+														>
+															VOTO NULO (POR COMBINACIÓN INVÁLIDA)
+														</Typography>
+													)}
+												</>
+											);
+										} else if (seleccionado === 100 && !coalicionInvalida) {
+											return (
+												<>
 													<Typography
 														sx={{
 															fontSize: {
@@ -115,185 +262,132 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 														{candidaturaNoRegistrada[noBoleta]}
 													</Typography>
 												</>
-											)}
-
-											{index + 1 === row.length && (
-												<Typography
-													sx={{
-														fontSize: { xs: 13, md: 16 },
-													}}
-													color="error"
-													gutterBottom
-													fontWeight="bold"
-													key={
-														boleta.encabezado +
-														seleccionado +
-														"Invalida" +
-														index
-													}
-												>
-													Voto nulo (Por coalición invalida)
-												</Typography>
-											)}
-										</>
-									);
-								} else if (
-									coalicionInvalida &&
-									jornadaActual.tipoJornada === "JornadaNoFormal"
-								) {
-									return (
-										<>
-											{boleta.candidatos.map((candidato, index) => {
-												if (candidato.id === seleccionado) {
-													return (
-														<React.Fragment key={candidato.id + index}>
-															<Typography
-																sx={{
-																	fontSize: { xs: 7, md: 11 },
-																	userSelect: "none",
-																}}
-																color="text.secondary"
-																gutterBottom
-																align="center"
-															>
-																{candidato.nombrePartido}
-															</Typography>
-
-															{candidato.candidatos.map(
-																(cand, index2) => {
+											);
+										} else if (seleccionado === 200 && !coalicionInvalida) {
+											return (
+												<>
+													<Typography
+														sx={{
+															fontSize: {
+																xs: 7,
+																md: 11,
+															},
+															userSelect: "none",
+														}}
+														color="text.secondary"
+														gutterBottom
+														align="center"
+														pt={1}
+													>
+														VOTO NULO
+													</Typography>
+													<Typography
+														sx={{
+															fontSize: { xs: 12, md: 16 },
+														}}
+														color="initial"
+														gutterBottom
+														key={
+															boleta.encabezado + seleccionado + index
+														}
+													>
+														Voto nulo
+													</Typography>
+												</>
+											);
+										} else if (!coalicionInvalida) {
+											if (modalidadBoleta === "PLANILLA") {
+												return (
+													<>
+														{boleta.candidatos.map(
+															(candidato, index) => {
+																if (candidato.id === seleccionado) {
 																	return (
-																		<Typography
-																			sx={{
-																				fontSize: {
-																					xs: 12,
-																					md: 16,
-																				},
-																			}}
-																			color="initial"
-																			gutterBottom
+																		<React.Fragment
 																			key={
-																				cand.id +
-																				seleccionado +
-																				index2
+																				candidato.id + index
 																			}
 																		>
-																			{cand.nombre}
-																		</Typography>
+																			<Typography
+																				sx={{
+																					fontSize: {
+																						xs: 7,
+																						md: 11,
+																					},
+																					userSelect:
+																						"none",
+																				}}
+																				color="text.secondary"
+																				gutterBottom
+																				align="center"
+																				pt={1}
+																			>
+																				{
+																					candidato.nombrePartido
+																				}
+																			</Typography>
+																			{candidato.candidatos.map(
+																				(cand, index2) => {
+																					return (
+																						<Typography
+																							sx={{
+																								fontSize:
+																									{
+																										xs: 12,
+																										md: 16,
+																									},
+																							}}
+																							color="initial"
+																							gutterBottom
+																							key={
+																								cand.id +
+																								seleccionado +
+																								index2
+																							}
+																						>
+																							{
+																								cand.nombre
+																							}
+																						</Typography>
+																					);
+																				}
+																			)}{" "}
+																		</React.Fragment>
 																	);
 																}
-															)}
-														</React.Fragment>
-													);
-												}
-											})}
-											{index + 1 === row.length && (
-												<Typography
-													sx={{
-														fontSize: { xs: 13, md: 16 },
-													}}
-													color="error"
-													gutterBottom
-													fontWeight="bold"
-													key={
-														boleta.encabezado +
-														seleccionado +
-														"Invalida" +
-														index
-													}
-												>
-													VOTO NULO (POR COMBINACIÓN INVÁLIDA)
-												</Typography>
-											)}
-										</>
-									);
-								} else if (seleccionado === 100 && !coalicionInvalida) {
-									return (
-										<>
-											<Typography
-												sx={{
-													fontSize: {
-														xs: 7,
-														md: 11,
-													},
-													userSelect: "none",
-												}}
-												color="text.secondary"
-												gutterBottom
-												align="center"
-												pt={1}
-											>
-												CANDIDATURA NO REGISTRADA
-											</Typography>
-											<Typography
-												sx={{
-													fontSize: { xs: 12, md: 16 },
-												}}
-												color="initial"
-												gutterBottom
-												key={boleta.encabezado + seleccionado + index}
-											>
-												{candidaturaNoRegistrada[noBoleta]}
-											</Typography>
-										</>
-									);
-								} else if (seleccionado === 200 && !coalicionInvalida) {
-									return (
-										<>
-											<Typography
-												sx={{
-													fontSize: {
-														xs: 7,
-														md: 11,
-													},
-													userSelect: "none",
-												}}
-												color="text.secondary"
-												gutterBottom
-												align="center"
-												pt={1}
-											>
-												VOTO NULO
-											</Typography>
-											<Typography
-												sx={{
-													fontSize: { xs: 12, md: 16 },
-												}}
-												color="initial"
-												gutterBottom
-												key={boleta.encabezado + seleccionado + index}
-											>
-												Voto nulo
-											</Typography>
-										</>
-									);
-								} else if (!coalicionInvalida) {
-									if (modalidadBoleta === "PLANILLA") {
-										return (
-											<>
-												{boleta.candidatos.map((candidato, index) => {
-													if (candidato.id === seleccionado) {
-														return (
-															<React.Fragment
-																key={candidato.id + index}
-															>
-																<Typography
-																	sx={{
-																		fontSize: {
-																			xs: 7,
-																			md: 11,
-																		},
-																		userSelect: "none",
-																	}}
-																	color="text.secondary"
-																	gutterBottom
-																	align="center"
-																	pt={1}
-																>
-																	{candidato.nombrePartido}
-																</Typography>
-																{candidato.candidatos.map(
-																	(cand, index2) => {
-																		return (
+															}
+														)}
+													</>
+												);
+											} else
+												return (
+													<>
+														{boleta.candidatos.map(
+															(candidato, index) => {
+																if (candidato.id === seleccionado)
+																	return (
+																		<React.Fragment
+																			key={
+																				candidato.id + index
+																			}
+																		>
+																			<Typography
+																				sx={{
+																					fontSize: {
+																						xs: 7,
+																						md: 11,
+																					},
+																					userSelect:
+																						"none",
+																				}}
+																				color="text.secondary"
+																				gutterBottom
+																				align="center"
+																			>
+																				{
+																					candidato.nombrePartido
+																				}
+																			</Typography>
 																			<Typography
 																				sx={{
 																					fontSize: {
@@ -304,80 +398,36 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 																				color="initial"
 																				gutterBottom
 																				key={
-																					cand.id +
+																					boleta.encabezado +
 																					seleccionado +
-																					index2
+																					index
 																				}
+																				pb={1}
 																			>
-																				{cand.nombre}
+																				{candidato.nombre}
 																			</Typography>
-																		);
-																	}
-																)}{" "}
-															</React.Fragment>
-														);
-													}
-												})}
-											</>
-										);
-									} else
-										return (
-											<>
-												{boleta.candidatos.map((candidato, index) => {
-													if (candidato.id === seleccionado)
-														return (
-															<React.Fragment
-																key={candidato.id + index}
-															>
-																<Typography
-																	sx={{
-																		fontSize: { xs: 7, md: 11 },
-																		userSelect: "none",
-																	}}
-																	color="text.secondary"
-																	gutterBottom
-																	align="center"
-																>
-																	{candidato.nombrePartido}
-																</Typography>
-																<Typography
-																	sx={{
-																		fontSize: {
-																			xs: 12,
-																			md: 16,
-																		},
-																	}}
-																	color="initial"
-																	gutterBottom
-																	key={
-																		boleta.encabezado +
-																		seleccionado +
-																		index
-																	}
-																	pb={1}
-																>
-																	{candidato.nombre}
-																</Typography>
-															</React.Fragment>
-														);
-												})}
-											</>
-										);
-								}
-							})}
-						</Box>
-					</Box>
-					<Box
-						display="flex"
-						flexGrow={1}
-						// px="1rem"
-						pl="1rem"
-						justifyContent="center"
-						alignContent="center"
-						alignItems="center"
-					>
-						<Box>
-							<IconButton
+																		</React.Fragment>
+																	);
+															}
+														)}
+													</>
+												);
+										}
+									})}
+								</Box>
+							</Box>
+						</Grid>
+						<Grid item xs={12} md={12}>
+							<Box
+								display="flex"
+								// px="1rem"
+								pl="1rem"
+								justifyContent="center"
+								alignContent="center"
+								alignItems="center"
+							>
+								<Box>
+									{/* <IconButton
 								onClick={handleEdit}
 								sx={{
 									backgroundColor: "base.main",
@@ -387,9 +437,14 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 								}}
 							>
 								<ModeEditOutlineOutlinedIcon />
-							</IconButton>
-						</Box>
-					</Box>
+							</IconButton> */}
+									<Button color="base" onClick={handleEdit} variant="contained">
+										Editar mi voto
+									</Button>
+								</Box>
+							</Box>
+						</Grid>
+					</Grid>
 				</Box>
 			</Box>
 		</Box>

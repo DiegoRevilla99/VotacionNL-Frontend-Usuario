@@ -29,6 +29,7 @@ export const emitirVotoNoFormal = async (values) => {
 		for (const voto of values) {
 			const { data } = await votosNoFormalAPI.post("votos/no/formal/registrar/boleta", voto);
 			const { boletaModel } = data;
+			console.log("BOLETA MODEL DE FOLIOS NO FORMALES", boletaModel);
 			const { folioBoleta, nombreEleccion } = boletaModel;
 			folios.push({ folioBoleta, nombreEleccion });
 		}
@@ -139,7 +140,7 @@ export const getBoletasDeVotante = async (idJornada) => {
 					id: partido.partido.clavePartido,
 					claveCoalicion:
 						partido.coalicion === null
-							? "SinCoalicion"
+							? "SinCoalicion" + parseInt(Math.random() * (10000 - 1) + 1)
 							: partido.coalicion.claveCoalicion,
 					nombrePartido: partido.partido.nombre,
 					nombre: `${partido.candidato.nombreCandidato} ${partido.candidato.apellidoPCandidato} ${partido.candidato.apellidoMCandidato}`,
