@@ -28,10 +28,7 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
   export const VisualizacionBoleta = () => {
     const navigate = useNavigate();
   	const plantilla1 = (idBoleta) => {
-      // console.log("imprimimos el id",idBoleta);
-      // navigate("/verificacion/visualizacion/boleta/group");
       navigate("/verificacion/visualizacion/boleta/"+params.id+"/group/"+idBoleta);
-      // verificacion/visualizacion/:id/boleta/group/:id
     };
 
     const params = useParams();
@@ -149,12 +146,8 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
                     <Grid item xs={4} sm={4} md={6} key={index}>
                         <Card 
                         sx={{ minWidth: 247 }} 
-                        // onClick={plantilla1}
                         onClick={() => plantilla1(boleta.idBoleta)}
                         style={{ 
-                          // border: "1px solid #D0D0D0", 
-                          // background: "#373637"
-                          // backgroundColor: "#783A9C",
                           backgroundColor: "#5438849e",
                           color: "#FFFFFF",
                       }} >
@@ -172,8 +165,6 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
                             onClick={() => plantilla1(boleta.idBoleta)}
                             sx={{ 
                               color: "#364691", 
-                              // color: "433A9C",543884
-                              // background: "#ffe8c6",
                               "&:hover": {
                                 // background: "linear-gradient(45deg, #f0b91a8a 30%, #f0b91a8a 90%)",
                                 // color: "#FFFFFF",
@@ -203,14 +194,3 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
 	</Box>
       );
   };
-    const rows = [
-      { id: 1, lastName: 'BOLETA ELECTORAL 2021'},
-      { id: 2, lastName: 'BOLETA ELECTORAL 2022'},
-      { id: 3, lastName: 'BOLETA ELECTORAL 2023'},
-      { id: 4, lastName: 'BOLETA ESTUDIANTIL 2021'},
-      { id: 5, lastName: 'BOLETA ESTUDIANTIL 2022'},
-      { id: 6, lastName: 'BOLETA ESTUDIANTIL 2023'}, 
-      { id: 7, lastName: 'BOLETA GOBERNADOR ORDINARIA 2021'},
-      { id: 8, lastName: 'BOLETA GOBERNADOR ORDINARIA 2022'}, 
-      { id: 9, lastName: 'BOLETA GOBERNADOR ORDINARIA 2023'},
-    ];

@@ -2,18 +2,16 @@ import {
 	Box,
 	Button,
 	CircularProgress,
-	Container,
-	LinearProgress,
-	TextField,
-	Typography,
+	Container, TextField,
+	Typography
 } from "@mui/material";
 import { Formik } from "formik";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { object, string, ref } from "yup";
+import { object, string } from "yup";
 import { onLoginWithEmailAndPassword } from "../../store/auth/authThunks";
-
+import { PasswordTextField } from "../components/PasswordTextField";
 const validationSchema = object({
 	curp: string("").required("Este campo es requerido"),
 	password: string("").required("Este campo es requerido"),
@@ -25,6 +23,7 @@ export const LoginVotacionPage = () => {
 	const { status } = useSelector((state) => state.auth);
 
 	const handleSubmit = (values) => {
+		
 		// Todo: dispatch(iniciarSesionConEmail())
 		dispatch(
 			onLoginWithEmailAndPassword(values.curp, values.password, () =>
@@ -111,27 +110,25 @@ export const LoginVotacionPage = () => {
 									mt="2rem"
 									mb="1rem"
 								>
-									Contraseña
+									Contraseña	
 								</Typography>
-
-								<TextField
-									name="password"
-									value={values.password}
-									onChange={handleChange}
-									fullWidth
-									color="base"
-									focused
-									variant="outlined"
-									label="Ingresa tu contraseña"
-									type="password"
-									error={touched.password && Boolean(errors.password)}
-									helperText={touched.password && errors.password}
-									sx={{
-										"& .MuiInputBase-input": {
-											color: "white !important",
-										},
-									}}
-								></TextField>
+								 <PasswordTextField
+        name="password"
+        value={values.password}
+        onChange={handleChange}
+        fullWidth
+		focused
+		color="base"
+        variant="outlined"
+        label="Ingresa tu contraseña"
+        error={touched.password && Boolean(errors.password)}
+        helperText={touched.password && errors.password}
+        sx={{
+          "& .MuiInputBase-input": {
+            color: "white !important"
+          }
+        }}
+      />
 								<Box
 									sx={{
 										display: "flex",
