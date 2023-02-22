@@ -3,7 +3,8 @@ import React from "react";
 import { CardCandidatos } from "./CardCandidatos";
 import { CardPlanilla } from "./CardPlanilla";
 
-export const GridPlanilla = ({ candidatos = [1, 2, 3] }) => {
+export const GridPlanilla = ({ total = 1, candidatos = [] }) => {
+  console.log(candidatos);
   return (
     <Box
       display={"flex"}
@@ -11,8 +12,8 @@ export const GridPlanilla = ({ candidatos = [1, 2, 3] }) => {
       flexDirection={"column"}
       width={"100%"}
     >
-      {candidatos.map((candi) => {
-        return <CardPlanilla candidato={candi} />;
+      {candidatos?.map((candi) => {
+        return <CardPlanilla total={total} candidato={candi} />;
       })}
     </Box>
   );

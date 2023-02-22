@@ -12,15 +12,23 @@ import { GridBoletas } from "../components/GridBoletas";
 import { GridBoletasNF } from "../components/GridBoletasNF";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getBoletasNF } from "../../store/resultados-noformales/noformalesThunks";
+import {
+  getBoletasNF,
+  getConfigJornada,
+} from "../../store/resultados-noformales/noformalesThunks";
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 
 export const BoletasNoFormales = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [jornada, setjornada] = useState(null);
-  const { jornadas, boletas, isLoadingBoletas } = useSelector(
-    (state) => state.noformales
-  );
+  const {
+    jornadas,
+    boletas,
+    isLoadingBoletas,
+    isLoadingConfigJornada,
+    configJornada,
+  } = useSelector((state) => state.noformales);
 
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
@@ -53,6 +61,8 @@ export const BoletasNoFormales = () => {
 
   useEffect(() => {
     dispatch(getBoletasNF(id));
+
+    dispatch(getConfigJornada(id));
     const jornadaa = getJornada(id);
     console.log(jornadaa);
     console.log(jornadas);
@@ -67,6 +77,24 @@ export const BoletasNoFormales = () => {
       justifyContent="center"
       sx={{ mt: 5, width: "100%", height: "auto" }}
     >
+      <BreadCrumbsCustom
+        routes={[
+          {
+            name: "INICIO",
+            url: "/resultados/inicio/",
+          },
+          {
+            //
+            name: "JORNADAS NO FORMALES",
+            url: "/resultados/noformales/",
+          },
+        ]}
+        currentRoute={
+          !isLoadingConfigJornada
+            ? configJornada?.eleccionModel?.nombreEleccion
+            : "..."
+        }
+      ></BreadCrumbsCustom>
       <Box
         display={"flex"}
         flexDirection="column"
@@ -91,7 +119,7 @@ export const BoletasNoFormales = () => {
             fontWeight: "bold",
           }}
         >
-          {jornada?.nombreEleccion ? jornada.nombreEleccion : "Elige"}
+          {configJornada?.eleccionModel?.nombreEleccion}
         </Typography>
         <SearchCustome
           buscador={buscador}

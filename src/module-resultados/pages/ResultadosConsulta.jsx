@@ -19,11 +19,13 @@ import { purpleTheme } from "../../theme/purpleTheme";
 import { Intermedio } from "../components/Intermedio";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getConfigConsulta,
   getPapletas,
   getPapletasByID,
   getResult,
 } from "../../store/resultados-consultas/consultasThunks";
 import { NoDisponible } from "../components/NoDisponible";
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 
 export const ResultadosConsulta = ({
   chartData = [
@@ -36,9 +38,13 @@ export const ResultadosConsulta = ({
 }) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
-  const { resultados, isLoadingResultados, papeleta } = useSelector(
-    (state) => state.consultas
-  );
+  const {
+    resultados,
+    isLoadingResultados,
+    papeleta,
+    isLoadingConfigConsulta,
+    configConsulta,
+  } = useSelector((state) => state.consultas);
   const [etiquetas, setetiquetas] = useState([]);
   const [datosN, setDatosN] = useState([]);
   const [titulo, settitulo] = useState("");
@@ -66,6 +72,7 @@ export const ResultadosConsulta = ({
 
   useEffect(() => {
     dispatch(getPapletasByID(id));
+    dispatch(getConfigConsulta(jornada));
     setUpdate(true);
     console.log("jornada:", jornada);
     console.log("consulta:", id);
@@ -114,6 +121,28 @@ export const ResultadosConsulta = ({
           alignItems="center"
           className="animate__animated animate__fadeInUp"
         >
+          <BreadCrumbsCustom
+            routes={[
+              {
+                name: "INICIO",
+                url: "/resultados/inicio/",
+              },
+              {
+                //
+                name: "CONSULTAS",
+                url: "/resultados/consultas/",
+              },
+              {
+                name: !isLoadingConfigConsulta
+                  ? configConsulta?.jornadaModel?.nombreJornada
+                  : "...",
+                url: `/resultados/boletas-consultas/${configConsulta?.jornadaModel?.idJornada}/`,
+              },
+            ]}
+            currentRoute={
+              !isLoadingResultados ? resultados.papeleta?.nombre : "..."
+            }
+          ></BreadCrumbsCustom>
           <Typography
             sx={{
               mb: 3,

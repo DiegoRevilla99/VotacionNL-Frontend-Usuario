@@ -3,8 +3,8 @@ import React from "react";
 import { getCandidatos } from "../../helpers/FakeAPI";
 import { CardCandidatos } from "./CardCandidatos";
 
-export const GridCandFormales = ({ candidatos = [1, 2, 3] }) => {
-  const candi = getCandidatos();
+export const GridCandFormales = ({ total, candidatos }) => {
+  // const candi = getCandidatos();
   return (
     <Box
       display={"flex"}
@@ -12,8 +12,8 @@ export const GridCandFormales = ({ candidatos = [1, 2, 3] }) => {
       flexDirection={"column"}
       width={"100%"}
     >
-      {candi.data.map((candi) => {
-        return <CardCandidatos candidato={candi} />;
+      {candidatos?.map((candi) => {
+        return <CardCandidatos total={total} candidato={candi} />;
       })}
     </Box>
   );

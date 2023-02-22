@@ -5,7 +5,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useParams } from "react-router-dom";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 
-export const ChartEjemplo = ({
+export const ChartJFormales = ({
   chartData = [
     { votos: 50 },
     { votos: 10 },
@@ -34,11 +34,11 @@ export const ChartEjemplo = ({
 
   const [data, setData] = useState({
     // labels: chartData.map((data) => data.nombre),
-    labels: result.map((data) => data.nombreCandidato),
+    labels: result.map((data) => data.nombre),
     datasets: [
       {
         label: "Votos",
-        data: result.map((data) => data.votos),
+        data: result.map((data) => data.candidad),
         backgroundColor: [
           "#8B3232",
           "#8B5232",
@@ -52,10 +52,17 @@ export const ChartEjemplo = ({
           "#8B3252",
         ],
         image: result.map((data) => {
-          const link = data.fotoCandidato;
+          console.log(data.foto);
+          const link = data.foto ? data.foto : "";
+
           if (!link.includes("http")) {
             return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-          } else return data.fotoCandidato;
+          } else {
+            if (!link.includes("jpg") || !link.includes("jpg")) {
+              return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
+            } else
+              return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
+          }
         }),
         labels: chartData.map((data) => data.nombre),
       },

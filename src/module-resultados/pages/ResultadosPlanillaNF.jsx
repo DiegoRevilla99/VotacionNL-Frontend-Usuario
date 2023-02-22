@@ -26,44 +26,28 @@ import { NoDisponible } from "../components/NoDisponible";
 import { getBoletaBYIDFormales } from "../../store/resultados-formales/formalesThunks";
 import { GridCandFormales } from "../components/formales/GridCandFormales";
 import { Resumen } from "../components/Resumen";
+import { GridCandNoFormales } from "../components/noFormales/GridCandNoFormales";
+import { GraficasRepComite } from "../components/GraficasRepComite";
+import { ChartEjemplo } from "../components/formales/chartEjemplo";
+import { ChartPlanilla } from "../components/noFormales/chartPlanillla";
 import { GridPlanilla } from "../components/noFormales/GridPlanilla";
-
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 export const ResultadosPlanillaNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
-  const { resultados, isLoadingResultados, boleta } = useSelector(
-    (state) => state.formales
-  );
+  const {
+    resultados,
+    isLoadingResultados,
+    isLoadingConfigJornada,
+    configJornada,
+    boleta,
+  } = useSelector((state) => state.noformales);
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
-  const smsize = useMediaQuery(theme.breakpoints.only("sm"));
+  const smsize = useMediaQuery(theme.breakpoints.down("sm"));
   const mdsize = useMediaQuery(theme.breakpoints.only("md"));
   const lgsize = useMediaQuery(theme.breakpoints.only("lg"));
   const xlsize = useMediaQuery(theme.breakpoints.only("xl"));
-  const [etiquetas, setetiquetas] = useState([]);
-  const [datosN, setDatosN] = useState([]);
-  const [titulo, settitulo] = useState("");
-  const [update, setUpdate] = useState(true);
-  const [winer, setWiner] = useState("");
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
-  const datos = [100, 500, 30, 300, 1000, 300, 350];
-  const images = [
-    "https://upload.wikimedia.org/wikipedia/commons/5/5c/PAN_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/b/b5/PRI_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/8/8f/PRD_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/e/e7/Worker%27s_Party_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-  ];
 
   useEffect(() => {
     // setUpdate(true);
@@ -74,7 +58,7 @@ export const ResultadosPlanillaNF = ({}) => {
   }, []);
 
   useEffect(() => {
-    console.log("boleta:", boleta);
+    // console.log("boleta:", boleta);
   }, [boleta]);
 
   /* useEffect(() => {
@@ -119,6 +103,26 @@ export const ResultadosPlanillaNF = ({}) => {
           alignItems="center"
           className="animate__animated animate__fadeInUp"
         >
+          <BreadCrumbsCustom
+            routes={[
+              {
+                name: "INICIO",
+                url: "/resultados/inicio/",
+              },
+              {
+                name: "JORNADAS NO FORMALES",
+                url: "/resultados/noformales/",
+              },
+
+              {
+                name: !isLoadingConfigJornada
+                  ? configJornada?.eleccionModel?.nombreEleccion
+                  : "...",
+                url: `/resultados/boletas-noformales/${configJornada?.eleccionModel?.idEleccion}/`,
+              },
+            ]}
+            currentRoute={!isLoadingResultados ? boleta?.boleta : "..."}
+          ></BreadCrumbsCustom>
           <Typography
             sx={{
               mb: 3,
@@ -132,7 +136,7 @@ export const ResultadosPlanillaNF = ({}) => {
             }}
             textAlign={"center"}
           >
-            NOMBRE DE LA BOLETA{boleta?.nombreEstructuraBoleta}
+            {boleta?.boleta}
           </Typography>
           <Box
             display={"flex"}
@@ -157,42 +161,20 @@ export const ResultadosPlanillaNF = ({}) => {
               >
                 PLANILLA GANADORA:
               </Typography>
-              <Typography
-                mb={1}
-                color="initial"
-                align="center"
-                sx={{ fontWeight: "bold" }}
-              >
-                LAURA YESSENIA SANCHEZ LOPEZ
-              </Typography>
-              <Typography
-                mb={1}
-                color="initial"
-                align="center"
-                sx={{ fontWeight: "bold" }}
-              >
-                KEVIN EDILBERTO CHAVEZ SANCHEZ
-              </Typography>
-              <Typography
-                mb={1}
-                color="initial"
-                align="center"
-                sx={{ fontWeight: "bold" }}
-              >
-                JOSE ANTONIO DIEGO REVILLA
-              </Typography>
-
-              {/* {resultados.ganadores?.map((gan, index) => {
+              {boleta.winers?.candidatos?.map((win, index) => {
                 return (
                   <Typography
-                    sx={{ fontSize: { md: "15px", xs: "9px" } }}
                     color="initial"
-                    fontWeight="bold"
+                    align="center"
+                    sx={{ fontWeight: "bold" }}
                   >
-                    {index + 1}.- {gan.question}
+                    {win?.nombreCandidato}
+                    {win?.apellidoPCandidato}
+                    {win?.apellidoMCandidato}
                   </Typography>
                 );
-              })} */}
+              })}
+
               <Box
                 borderRight="1px solid"
                 pr={4}
@@ -204,7 +186,12 @@ export const ResultadosPlanillaNF = ({}) => {
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />
 
-            <Resumen acumulados={0} candReg={0} nulos={0} total={0} />
+            <Resumen
+              acumulados={boleta.total - boleta.cnr - boleta.nulo}
+              candReg={boleta.cnr}
+              nulos={boleta.nulo}
+              total={boleta.total}
+            />
           </Box>
 
           <Divider sx={{ paddingTop: "1.5rem" }} />
@@ -248,17 +235,20 @@ export const ResultadosPlanillaNF = ({}) => {
             >
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
-              ) : xssize ? (
-                <GridPlanilla candidatos={[1, 2, 3]} />
+              ) : smsize ? (
+                <GridPlanilla
+                  total={boleta.total}
+                  candidatos={boleta.planillas}
+                />
               ) : (
-                update && (
-                  <Intermedio
-                    titulo={"Titulo"}
-                    datos={datos}
-                    labels={labels}
-                    img={[]}
-                  ></Intermedio>
-                )
+                // <GraficasRepComite
+                //   total={boleta.total}
+                //   resultados={boleta.candidatos}
+                // />
+                <ChartPlanilla
+                  totalV={boleta.total}
+                  candidatos={boleta.planillas}
+                ></ChartPlanilla>
               )}
             </Box>
           </Box>

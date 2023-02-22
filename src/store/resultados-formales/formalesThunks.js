@@ -1,98 +1,24 @@
 import {
   getBoletabyIDProvider,
   getBoletasFormalesProvider,
+  getConfigJornadaFormalesProvider,
   getJornadasFormalesProvider,
+  getResultadosFormalesProvider,
 } from "../../providers/Micro-JornadaFormal/providerFormal";
 import {
   setBoleta,
+  setBoletaInfo,
   setBoletas,
   setJornadas,
+  setResultados,
+  setConfigJornadaFormal,
   startLoadingBoleta,
+  startLoadingBoletaInfo,
   startLoadingBoletas,
   startLoadingJornadas,
+  startLoadingResultados,
+  startLoadingConfigJornadaFormal,
 } from "./formalesSlice";
-
-const objectToArray = (obj) => {
-  let arreglo = Object.entries(obj);
-  console.log(arreglo);
-};
-
-const convResult = (obj) => {
-  const papeleta = obj.estructuraPapeleta;
-  let pregunta = {
-    idPregunta: obj.pregunta.idPregunta,
-    descripcion: obj.pregunta.descPregunta,
-    tipo: obj.pregunta.tipoRespuesta,
-    subtipo: obj.pregunta.subtipo,
-  };
-
-  let resultados = {
-    idPregunta: obj.resultados.idPregunta,
-    idPregunta: obj.resultados.idPregunta,
-  };
-  let listaResul = [];
-  let listaPregu = [];
-
-  if (obj.pregunta.opcion1 !== "") {
-    listaPregu.push(obj.pregunta.opcion1);
-    listaResul.push(obj.resultados.opc1);
-  }
-  if (obj.pregunta.opcion2 !== "") {
-    listaPregu.push(obj.pregunta.opcion2);
-    listaResul.push(obj.resultados.opc2);
-  }
-  if (obj.pregunta.opcion3 !== "") {
-    listaPregu.push(obj.pregunta.opcion3);
-    listaResul.push(obj.resultados.opc3);
-  }
-  if (obj.pregunta.opcion4 !== "") {
-    listaPregu.push(obj.pregunta.opcion4);
-    listaResul.push(obj.resultados.opc4);
-  }
-  if (obj.pregunta.opcion5 !== "") {
-    listaPregu.push(obj.pregunta.opcion5);
-    listaResul.push(obj.resultados.opc5);
-  }
-
-  listaPregu.push("nulos");
-  pregunta.lista = listaPregu;
-  listaResul.push(obj.resultados.nulos);
-  resultados.lista = listaResul;
-
-  let resOrd = [...resultados.lista];
-
-  resOrd.sort(function (a, b) {
-    return b - a;
-  });
-
-  const ganadores = [];
-  const gan = resultados.lista.map((res, index) => {
-    if (res === resOrd[0]) {
-      const win = { question: pregunta.lista[index], result: res };
-      ganadores.push(win);
-      return win;
-    }
-  });
-  const nulos = obj.resultados.nulos;
-  let acumulados =
-    parseInt(obj.resultados.opc1, 10) +
-    parseInt(obj.resultados.opc2, 10) +
-    parseInt(obj.resultados.opc3, 10) +
-    parseInt(obj.resultados.opc4, 10) +
-    parseInt(obj.resultados.opc5, 10);
-  console.log("acumulados: ", acumulados);
-
-  const data = {
-    papeleta,
-    pregunta,
-    resultados,
-    ganadores,
-    nulos,
-    acumulados,
-  };
-
-  return data;
-};
 
 export const getJornadasFormales = () => {
   return async (dispatch, getState) => {
@@ -118,36 +44,114 @@ export const getBoletasFormales = (id) => {
 
 export const getBoletaBYIDFormales = (id) => {
   return async (dispatch, getState) => {
-    dispatch(startLoadingBoleta());
+    dispatch(startLoadingBoletaInfo());
     const { ok, data, errorMessage } = await getBoletabyIDProvider(id);
     if (ok) {
-      dispatch(setBoleta({ boleta: data }));
+      dispatch(setBoletaInfo({ boletaInfo: data }));
     } else {
-      dispatch(setBoleta({ boleta: false }));
+      dispatch(setBoletaInfo({ boletaInfo: false }));
     }
   };
 };
 
-/* export const getResult = (idJornada, idConsulta) => {
+export const getResultFormales = (idJornada, idConsulta) => {
   return async (dispatch, getState) => {
+    dispatch(setBoleta({ boleta: false }));
     dispatch(setResultados({ resultados: false }));
     dispatch(startLoadingResultados());
-    const { ok, data, errorMessage } = await getResultadosProvider(idJornada);
+    const { ok, data, errorMessage } = await getResultadosFormalesProvider(
+      idJornada
+    );
 
     if (ok) {
       let convData = false;
-      const newData = data.papeletas.find((papeleta) => {
-        if (papeleta.estructuraPapeleta.idPapeleta.toString() === idConsulta) {
-          return papeleta;
+      const newData = data.boletas.find((boleta) => {
+        if (boleta.idBoleta.toString() === idConsulta) {
+          return boleta;
         }
       });
 
       if (newData) {
-        convData = convResult(newData);
+        convData = toRepFormal(newData);
       }
 
-      dispatch(setResultados({ resultados: convData }));
+      dispatch(setResultados({ resultados: data }));
+      dispatch(setBoleta({ boleta: convData }));
     } else {
     }
   };
-}; */
+};
+
+//_________________________jornada electoral_______________________
+
+const toRepFormal = (data) => {
+  let nulo = {
+    name: "Voto nulo",
+    datosCandidato: null,
+    candidad: 0,
+  };
+  let acumuladas = 0;
+
+  let cnr = data.candidaturasNoReg;
+
+  let candidatos = data.boletaCandidatos.map((candi) => {
+    if (candi.datosCandidato === null) {
+      console.log(candi);
+      if (candi.name === "Voto nulo") {
+        nulo = candi;
+      } else {
+        cnr = candi;
+      }
+      return null;
+    }
+
+    acumuladas += candi.candidad;
+
+    return {
+      nombre: candi.name,
+      foto: candi.datosCandidato.candidatoModel.fotoCandidato,
+      partidos: candi.datosCandidato.partidos,
+      candidad: candi.candidad,
+    };
+  });
+
+  candidatos = candidatos.filter((c) => {
+    if (c) return c;
+  });
+
+  let totalcnr = 0;
+  cnr.map((c) => {
+    totalcnr += c.candidad;
+  });
+
+  console.log("Antes: ", candidatos);
+  candidatos.sort((a, b) => {
+    console.log(a.candidad);
+    return b.candidad - a.candidad;
+  });
+
+  console.log("ordenado: ", candidatos);
+
+  return {
+    candidatos,
+    nulo: nulo.candidad,
+    cnr: totalcnr,
+    acumuladas,
+    winner: candidatos[0],
+  };
+};
+
+export const getConfigJornadaFormal = (idJornada) => {
+  return async (dispatch, getState) => {
+    dispatch(setConfigJornadaFormal({ configJornadaFormal: false }));
+    dispatch(startLoadingConfigJornadaFormal());
+    const { ok, data, errorMessage } = await getConfigJornadaFormalesProvider(
+      idJornada
+    );
+    if (ok) {
+      dispatch(setConfigJornadaFormal({ configJornadaFormal: data }));
+    } else {
+      dispatch(setConfigJornadaFormal({ configJornadaFormal: false }));
+    }
+  };
+};

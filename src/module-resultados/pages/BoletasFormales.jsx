@@ -10,16 +10,24 @@ import { SearchCustome } from "../components/SearchCustome";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import { GridBoletas } from "../components/GridBoletas";
 import { useDispatch, useSelector } from "react-redux";
-import { getBoletasFormales } from "../../store/resultados-formales/formalesThunks";
+import {
+  getBoletasFormales,
+  getConfigJornadaFormal,
+} from "../../store/resultados-formales/formalesThunks";
 import { useParams } from "react-router-dom";
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 
 export const BoletasFormales = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [jornada, setjornada] = useState(null);
-  const { jornadas, boletas, isLoadingBoletas } = useSelector(
-    (state) => state.formales
-  );
+  const {
+    jornadas,
+    boletas,
+    isLoadingBoletas,
+    isLoadingConfigJornadaFormal,
+    configJornadaFormal,
+  } = useSelector((state) => state.formales);
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
   const handleSearch = (event) => {
@@ -53,6 +61,7 @@ export const BoletasFormales = () => {
 
   useEffect(() => {
     dispatch(getBoletasFormales(id));
+    dispatch(getConfigJornadaFormal(id));
     const jornadaa = getJornada(id);
     console.log(jornadaa);
     console.log(jornadas);
@@ -67,6 +76,24 @@ export const BoletasFormales = () => {
       justifyContent="center"
       sx={{ mt: 5, width: "100%", height: "auto" }}
     >
+      <BreadCrumbsCustom
+        routes={[
+          {
+            name: "INICIO",
+            url: "/resultados/inicio/",
+          },
+          {
+            //
+            name: "JORNADAS FORMALES",
+            url: "/resultados/formales/",
+          },
+        ]}
+        currentRoute={
+          !isLoadingConfigJornadaFormal
+            ? configJornadaFormal?.eleccionModel?.nombreJornada
+            : "..."
+        }
+      ></BreadCrumbsCustom>
       <Box
         display={"flex"}
         flexDirection="column"
@@ -91,7 +118,7 @@ export const BoletasFormales = () => {
             mb: 3,
           }}
         >
-          {jornada?.nombreJornada ? jornada.nombreJornada : "Elige"}
+          {configJornadaFormal?.eleccionModel?.nombreJornada}
         </Typography>
         <SearchCustome
           buscador={buscador}
