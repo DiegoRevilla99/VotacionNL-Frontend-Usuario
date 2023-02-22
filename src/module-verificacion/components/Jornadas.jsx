@@ -3,66 +3,39 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box, Button, Card, CardActions, CardContent, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
-import Paper from '@mui/material/Paper';
-import { experimentalStyled } from '@mui/material/styles';
 import { Container } from "@mui/system";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { onGetFoliosJornadas } from '../../store/verificacion-voto/verificacionThunks';
+// import { onSetJornadaSelected } from '../../store/verificacion-voto/verificacionSlice';
+import { useVerficacionStore } from '../hooks/useVerificacionStore';
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
-import HomeIcon from '@mui/icons-material/Home';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Chip from '@mui/material/Chip';
-import { emphasize, styled } from '@mui/material/styles';
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-    const backgroundColor =
-      theme.palette.mode === 'light'
-        ? theme.palette.grey[100]
-        : theme.palette.grey[800];
-    return {
-      backgroundColor,
-      height: theme.spacing(3),
-      color: theme.palette.text.primary,
-      fontWeight: theme.typography.fontWeightRegular,
-      '&:hover, &:focus': {
-        backgroundColor: emphasize(backgroundColor, 0.06),
-      },
-      '&:active': {
-        boxShadow: theme.shadows[1],
-        backgroundColor: emphasize(backgroundColor, 0.12),
-      },
-    };
-  }); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
-// ----------- Bradcrumbs ----------
+import { BotonBack } from './botonback';
+import { BreadCrumbsCustom } from './BreadCrumbsCustom';
 
-const Item = experimentalStyled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+  export const Jornadas = () => {
+      const navigate = useNavigate();
+      const plantilla1 = (id) => {
+          navigate("/verificacion/visualizacion/boleta/"+id);
+        };
+        const [searchJornada, setSearchJornada] = useState('');
+        const params = useParams();
+        const dispatch = useDispatch();
+        //asdasd
 
-  const rows = [
-    { id: 1, lastName: 'JORNADA ELECTORAL 2021'},
-    { id: 2, lastName: 'JORNADA ELECTORAL 2022'},
-    { id: 3, lastName: 'JORNADA ELECTORAL 2023'},
-    { id: 4, lastName: 'JORNADA ELECTORAL 2024'},
-    { id: 5, lastName: 'JORNADA ELECTORAL 2025'},
-    { id: 6, lastName: 'JORNADA ELECTORAL 2026'}, 
-    { id: 7, lastName: 'JORNADA ELECTORAL GOBERNADOR ORDINARIA 2021'},
-    { id: 8, lastName: 'JORNADA ELECTORAL GOBERNADOR ORDINARIA 2022'}, 
-    { id: 9, lastName: 'JORNADA ELECTORAL GOBERNADOR ORDINARIA 2023'},
-  ];
+        const { jornadasFolio } = useVerficacionStore();
+      useEffect(() => {
+          dispatch(onGetFoliosJornadas());
+      }, []);
+        const jornadasFiltradas = jornadasFolio.filter((jornada) =>
+    jornada.jornadaModel.nombreJornada.toLowerCase().includes(searchJornada.toLowerCase())
+    );
+    //   console.log(jornadasFolio);
+    //   console.log(params);
 
-export const Jornadas = () => {
-	const navigate = useNavigate();
-	const plantilla1 = () => {
-		navigate("/verificacion/visualizacion/boleta");
-	};
-    const [searchJornada, setSearchJornada] = useState('');
+      //
 	return (
 		<Box pt="1.5rem"     
         sx={{						
@@ -81,21 +54,18 @@ export const Jornadas = () => {
 				}}
 			>
                 {/* start Bradcrumbs */}
-                    <Box align="center" display="flex" justifyContent="center" mb={2}>
-                        <Breadcrumbs aria-label="breadcrumb">
-                            <StyledBreadcrumb
-                            component="a"
-                            href="/verificacion"
-                            label="Verificación"
-                            icon={<HomeIcon fontSize="small" />}
-                            />
-                            <StyledBreadcrumb 
-                            label="Jornadas" 
-                            icon={<AllInboxIcon fontSize="small" />}
-                            />
-                        </Breadcrumbs>
-                        </Box>
+                        <BreadCrumbsCustom
+						routes={[
+							{
+								name: "VERIFICACIÓN",
+								url: "/verificacion",
+							},
+						]}
+						currentRoute="JORNADAS ELECTORALES"
+					></BreadCrumbsCustom>
                 {/* end Bradcrumbs */}
+                {jornadasFolio.length > 0 ? (
+                    <>
 					<Typography
 						color="initial"
 						align="center"
@@ -109,7 +79,7 @@ export const Jornadas = () => {
 							},
 						}}
 					>
-                        A continuación se muestran las jornadas
+                        A CONTINUACIÓN SE MUESTRAN LAS JORNADAS ELECTORALES DISPONIBLES
 					</Typography>
                     <Box 
                     ml={{											
@@ -154,13 +124,11 @@ export const Jornadas = () => {
                     </Box>
                     <Box ml={1} mr={1} mt={4} mb={1} align="center" display="flex" justifyContent="center">
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
-                    || jornada.lastName.toUpperCase().includes(searchJornada)
-                    ).map((jornada) => (
-                    <Grid item xs={4} sm={4} md={4} key={jornada.id}>
+                    {jornadasFiltradas.map((jornada) => (
+                    <Grid item xs={4} sm={4} md={4} key={jornada.jornadaModel.idJornada}>
                         <Card 
                         sx={{ minWidth: 247 }} 
-                        onClick={plantilla1}
+                        onClick={() => plantilla1(jornada.jornadaModel.idJornada)}
                         style={{ 
                           // border: "1px solid #D0D0D0", 
                           // background: "#373637"
@@ -169,13 +137,13 @@ export const Jornadas = () => {
                           <CardContent>
 
                             <Typography variant="h6" component="div" color="white">
-                            {jornada.lastName}	
+                            {jornada.jornadaModel.nombreJornada}	
                             </Typography>
                           </CardContent>
                           <CardActions >
                             <Box  align="center" display="flex" justifyContent="center" width="100%" mb={1}>
                             <Button 
-                                onClick={plantilla1}
+                                onClick={() => plantilla1(jornada.jornadaModel.idJornada)}
                                 startIcon = {<BallotIcon />}
                                 sx={{
 									// backgroundColor: "#eba302",
@@ -225,6 +193,17 @@ export const Jornadas = () => {
                             ))}
                         </Grid>
                 </Box>
+                </>
+                ):
+                (
+                        <>
+                    <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
+                        No se encontraron jornadas por el momento, intente más tarde.
+                    </Typography>
+                    <BotonBack url='/verificacion'/>
+                        </>
+                )}
+
 			</Container>
 		</Box>
 	);
