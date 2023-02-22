@@ -1,7 +1,16 @@
 import { Box, Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-import { Button, Divider, Grid, IconButton, LinearProgress, Modal, TextField } from "@mui/material";
+import {
+	Button,
+	Divider,
+	Grid,
+	Icon,
+	IconButton,
+	LinearProgress,
+	Modal,
+	TextField,
+} from "@mui/material";
 import { TarjetaRepresentante } from "../components/TarjetaRepresentante";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -16,6 +25,7 @@ import {
 	onSetBoletaActual,
 } from "../../store/votante/votanteSlice";
 import { VotoNulo } from "../components/VotoNulo";
+import WarningIcon from "@mui/icons-material/Warning";
 // import ReactRouterPrompt from "react-router-prompt";
 
 export const Boletas = () => {
@@ -393,16 +403,23 @@ export const Boletas = () => {
 										<Divider />
 									</Box>
 								)}
-								<Box
-									sx={{ display: { xs: "none", lg: "flex" } }}
-									justifyContent="center"
-								>
-									<Typography variant="body1" color="error" align="center">
-										{esNulo
-											? "Tu selección dará como resultado voto nulo por coalición invalida"
-											: ""}
-									</Typography>
-								</Box>
+								{esNulo && (
+									<Box
+										display="flex"
+										pb={2}
+										px={2}
+										sx={{ display: { xs: "none", lg: "flex" } }}
+										justifyContent="center"
+										alignContent="center"
+										alignItems="center"
+									>
+										<WarningIcon color="error" />
+										<Typography variant="body1" color="error" align="center">
+											Tu selección dará como resultado voto nulo por coalición
+											inválida
+										</Typography>
+									</Box>
+								)}
 
 								<Grid
 									container
@@ -481,17 +498,20 @@ export const Boletas = () => {
 										</Grid>
 									)}
 								</Grid>
-								<Box
-									display="flex"
-									pb={2}
-									sx={{ display: { xs: "flex", lg: "none" } }}
-								>
-									<Typography variant="body2" color="error" align="center">
-										{esNulo
-											? "Tu selección dará como resultado voto nulo por coalición invalida"
-											: ""}
-									</Typography>
-								</Box>
+								{esNulo && (
+									<Box
+										display="flex"
+										pb={2}
+										px={2}
+										sx={{ display: { xs: "flex", lg: "none" } }}
+									>
+										<WarningIcon color="error" />
+										<Typography variant="body2" color="error" align="center">
+											Tu selección dará como resultado voto nulo por coalición
+											inválida
+										</Typography>
+									</Box>
+								)}
 							</Box>
 							<Box
 								sx={{

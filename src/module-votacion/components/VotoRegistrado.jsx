@@ -438,7 +438,19 @@ export const VotoRegistrado = ({ voto, boleta, noBoleta, coalicionInvalida, moda
 							>
 								<ModeEditOutlineOutlinedIcon />
 							</IconButton> */}
-									<Button color="base" onClick={handleEdit} variant="contained">
+									<Button
+										onClick={handleEdit}
+										variant="contained"
+										sx={{
+											backgroundColor: "#ffd205",
+											color: "black",
+											fontSize: { xs: "1rem" },
+											"&:hover": {
+												backgroundColor: "#fff",
+												color: "black",
+											},
+										}}
+									>
 										Editar mi voto
 									</Button>
 								</Box>

@@ -82,7 +82,7 @@ export const TarjetaRepresentante = ({
 						>
 							<img
 								alt="logo"
-								src="https://customercare.igloosoftware.com/.api2/api/v1/communities/10068556/previews/thumbnails/4fc20722-5368-e911-80d5-b82a72db46f2?width=680&height=680&crop=False"
+								src={logo}
 								style={{
 									// transition: "width 0.5s, height 0.5s",
 									width: "5rem",

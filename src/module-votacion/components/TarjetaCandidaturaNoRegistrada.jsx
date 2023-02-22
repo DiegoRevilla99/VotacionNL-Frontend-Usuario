@@ -80,9 +80,11 @@ export const TarjetaCandidaturaNoRegistrada = ({
 							justifyContent="center"
 							alignItems="center"
 						>
-							{/* <img
+							<img
 								alt="logo"
-								src="https://customercare.igloosoftware.com/.api2/api/v1/communities/10068556/previews/thumbnails/4fc20722-5368-e911-80d5-b82a72db46f2?width=680&height=680&crop=False"
+								src={
+									"https://w7.pngwing.com/pngs/527/663/png-transparent-logo-person-user-person-icon-rectangle-photography-computer-wallpaper.png"
+								}
 								style={{
 									// transition: "width 0.5s, height 0.5s",
 									width: "5rem",
@@ -93,7 +95,7 @@ export const TarjetaCandidaturaNoRegistrada = ({
 									MozUserSelect: "none",
 									msUserSelect: "none",
 								}}
-							/> */}
+							/>
 						</Box>
 					</Grid>
 					<Grid item xs={8} display="flex" alignContent="center" alignItems="center">

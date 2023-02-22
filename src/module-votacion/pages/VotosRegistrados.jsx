@@ -518,18 +518,19 @@ export const VotosRegistrados = () => {
 									<Button
 										variant="contained"
 										size="large"
-										color="darkButton"
+										// color="darkButton"
 										onClick={onSubmit}
 										sx={{
 											boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
 											transition: "all 0.5s ease",
-											// backgroundColor: "#543884",
+											backgroundColor: "#388452",
 											width: "100%",
 											minHeight: { xs: "8rem", md: "10rem" },
 											fontSize: { xs: "1.3rem", md: "1.5rem" },
+											fontWeight: "bold",
 											// borderRadius: "2rem 2rem 2rem 2rem",
 											"&:hover": {
-												// backgroundColor: "#7E328B !important",
+												backgroundColor: "#52bf77 !important",
 												transform: "translate(-5px, -5px)",
 												boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
 											},
