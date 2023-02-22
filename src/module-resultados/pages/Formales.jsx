@@ -74,7 +74,17 @@ export const Formales = () => {
   };
 
   useEffect(() => {
-    setDataSearch(jornadas);
+    const newD = [...jornadas];
+    newD.sort((a, b) => {
+      if (a.fechaHoraCreacion < b.fechaHoraCreacion) {
+        return 1;
+      } else if (a.fechaHoraCreacion > b.fechaHoraCreacion) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    setDataSearch(newD);
   }, [jornadas]);
 
   useEffect(() => {
