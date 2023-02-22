@@ -44,6 +44,7 @@ export const PasosPage = () => {
 	};
 
 	const handleSubmit = (values) => {
+		console.log("VALORES", values);
 		dispatch(
 			onLoginWithEmailAndPassword(values.curp, values.contrasenia, () =>
 				navigate("/votacion/inicio")
