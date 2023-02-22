@@ -11,10 +11,8 @@ export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}
 	return async (dispatch) => {
 		dispatch(onChecking());
 
-		const { ok, accessToken, username, refreshToken } = await loginWithEmailAndPassword(
-			email,
-			password
-		);
+		const { ok, accessToken, username, refreshToken, errorMessage } =
+			await loginWithEmailAndPassword(email, password);
 
 		if (ok) {
 			console.log("TODO BIEN");
@@ -23,7 +21,7 @@ export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}
 			setRefreshToken(refreshToken);
 			navigate();
 		} else {
-			dispatch(onError("Error de autenticación. Revisa tus credenciales"));
+			dispatch(onError(errorMessage));
 		}
 	};
 };

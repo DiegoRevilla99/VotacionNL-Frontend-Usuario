@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { PasosPage } from "../../module-auth/pages/PasosPage";
+import { ReenviarToken } from "../../module-auth/pages/ReenviarToken";
+import { RenviarEnlaceBlanco } from "../../module-auth/pages/RenviarEnlaceBlanco";
 import { FolioFound } from "../../module-verificacion/components/FolioFound";
 import { Jornadas } from "../../module-verificacion/components/Jornadas";
 import { JornadasNoFormales } from "../../module-verificacion/components/JornadasNoFormales";
@@ -24,7 +26,10 @@ export const HomeRoutes = () => {
 			<Route path="verificacion/visualizacion/boleta" element={<VisualizacionBoleta />} />
 			<Route path="verificacion/visualizacion/boleta/:id" element={<VisualizacionBoleta />} />
 			<Route path="verificacion/visualizacion/boleta/group" element={<GroupPage />} />
-			<Route path="verificacion/visualizacion/boleta/:id/group/:idBoleta" element={<GroupPage />} />
+			<Route
+				path="verificacion/visualizacion/boleta/:id/group/:idBoleta"
+				element={<GroupPage />}
+			/>
 			{/* navigate("/verificacion/visualizacion/"+params.id+"/boleta/"+id); */}
 			{/*Logueado */}
 			<Route path="verificacion/visualizacionnf" element={<JornadasNoFormales />} />
@@ -36,6 +41,7 @@ export const HomeRoutes = () => {
 				path="verificacion/visualizacionnf/boletanf/groupnf"
 				element={<GroupPageLogged />}
 			/>
+			<Route path="reenviarToken" element={<RenviarEnlaceBlanco />} />
 			<Route path="/*" element={<Navigate to="/home" />} />
 		</Routes>
 	);

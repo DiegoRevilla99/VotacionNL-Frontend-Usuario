@@ -33,6 +33,26 @@ export const registrarUsuario = async (password, email, curp) => {
 	}
 };
 
+export const reenviarTokenEmail = async (email, curp) => {
+	console.log("La data que llega", email, curp);
+	try {
+		const response = await tokenApi.post(`email/validation/send_token`, {
+			dateTimeCreation: new Date().toISOString(),
+			dateTimeExpiration: new Date().toISOString(),
+			email: email,
+			subject: "RESTABLECIMIENTO DE CONTRASEÑA",
+			userName: curp,
+		});
+		// await timeout(4000);
+
+		console.log("REENVIO ", response);
+		return { ok: true };
+	} catch (error) {
+		console.log("ERROR DATA USER", error);
+		return { ok: false };
+	}
+};
+
 export const enviartTokenSms = async (curp) => {
 	console.log("CURP QUE LLEGAAAA", curp);
 	try {

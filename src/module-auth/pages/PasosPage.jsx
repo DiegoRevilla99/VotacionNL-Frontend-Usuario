@@ -107,8 +107,8 @@ export const PasosPage = () => {
 									dar click en este enlace, serás redireccionado a una pantalla en
 									donde podrás establecer tu contraseña y acceder al módulo de
 									votación en el siguiente paso. Si no recibiste el correo
-									electrónico, puedes contactarte con nosotros dando click{" "}
-									<Link>aquí</Link>
+									electrónico, puedes renviarlo dando click{" "}
+									<Link to="/reenviarToken">aquí</Link>
 								</Typography>
 								<Typography
 									variant="body1"
@@ -197,8 +197,24 @@ export const PasosPage = () => {
 													// display="flex"
 													// justifyContent="right"
 												>
-													<Link>¿Olvidaste tu contraseña?</Link>
+													<Link color="base" to="/auth/restablecer">
+														¿Olvidaste tu contraseña?
+													</Link>
 												</Box>
+
+												{/* <Box>
+													<Link color="base" to="/auth/restablecer">
+														<Typography
+															variant="body1"
+															color="white"
+															sx={{
+																textDecoration: "underline white",
+															}}
+														>
+															¿Olvidaste tu contraseña?
+														</Typography>
+													</Link>
+												</Box> */}
 												<Box
 													sx={{
 														display: "flex",

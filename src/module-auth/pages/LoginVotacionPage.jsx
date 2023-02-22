@@ -1,16 +1,23 @@
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+	Alert,
 	Box,
 	Button,
 	CircularProgress,
 	Container,
+	FormControl,
+	IconButton,
+	InputAdornment,
+	InputLabel,
 	LinearProgress,
+	OutlinedInput,
 	TextField,
 	Typography,
 } from "@mui/material";
 import { Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { object, string, ref } from "yup";
 import { onLoginWithEmailAndPassword } from "../../store/auth/authThunks";
 
@@ -22,7 +29,12 @@ const validationSchema = object({
 export const LoginVotacionPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { status } = useSelector((state) => state.auth);
+	const { status, errorMessage } = useSelector((state) => state.auth);
+	const [showPassword, setShowPassword] = useState(false);
+	const handleClickShowPassword = () => setShowPassword((show) => !show);
+	const handleMouseDownPassword = (event) => {
+		event.preventDefault();
+	};
 
 	const handleSubmit = (values) => {
 		// Todo: dispatch(iniciarSesionConEmail())
@@ -114,7 +126,7 @@ export const LoginVotacionPage = () => {
 									Contraseña
 								</Typography>
 
-								<TextField
+								{/* <TextField
 									name="password"
 									value={values.password}
 									onChange={handleChange}
@@ -131,7 +143,70 @@ export const LoginVotacionPage = () => {
 											color: "white !important",
 										},
 									}}
-								></TextField>
+								></TextField> */}
+								<FormControl
+									variant="outlined"
+									focused
+									fullWidth
+									error={touched.password && Boolean(errors.password)}
+									helperText={touched.password && errors.password}
+								>
+									<InputLabel htmlFor="outlined-adornment-password" color="base">
+										Ingresa tu contraseña
+									</InputLabel>
+									<OutlinedInput
+										fullWidth
+										name="password"
+										value={values.password}
+										onChange={handleChange}
+										color="base"
+										sx={{
+											"& .MuiInputBase-input": {
+												color: "white !important",
+											},
+										}}
+										type={showPassword ? "text" : "password"}
+										endAdornment={
+											<InputAdornment position="end">
+												<IconButton
+													aria-label="toggle password visibility"
+													onClick={handleClickShowPassword}
+													onMouseDown={handleMouseDownPassword}
+													edge="end"
+													color="base"
+												>
+													{showPassword ? (
+														<VisibilityOff />
+													) : (
+														<Visibility />
+													)}
+												</IconButton>
+											</InputAdornment>
+										}
+										label="Ingresa tu contraseña"
+									/>
+								</FormControl>
+								{errorMessage !== "" ? (
+									<Box pt="2rem">
+										<Alert severity="error">{errorMessage}</Alert>
+									</Box>
+								) : (
+									<></>
+								)}
+
+								<Box textAlign={"center"} mt={"1rem"}>
+									<Link color="base" to="/auth/restablecer">
+										<Typography
+											variant="body1"
+											color="white"
+											sx={{
+												textDecoration: "underline white",
+											}}
+										>
+											¿Olvidaste tu contraseña?
+										</Typography>
+									</Link>
+								</Box>
 								<Box
 									sx={{
 										display: "flex",

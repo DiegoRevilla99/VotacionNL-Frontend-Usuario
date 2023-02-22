@@ -3,7 +3,10 @@ import { AppBarCustom } from "../../module-home/components/AppBarCustom";
 import { AppBarAuth } from "../components/AppBarAuth";
 import { EstablecerContrasenia } from "../pages/EstablecerContrasenia";
 import { LoginVotacionPage } from "../pages/LoginVotacionPage";
+import { ReenviarToken } from "../pages/ReenviarToken";
+import { RestablecerContrasenia } from "../pages/RestablecerContrasenia";
 import { SuccessPage } from "../pages/SuccessPage";
+import { TokenRenviadoExito } from "../pages/TokenRenviadoExito";
 
 export const AuthRoutes = () => {
 	return (
@@ -29,6 +32,9 @@ export const AuthRoutes = () => {
 							element={<EstablecerContrasenia />}
 						/>
 						<Route path="success" element={<SuccessPage />} />
+						<Route path="reenviarToken" element={<ReenviarToken />} />
+						<Route path="succesToken" element={<TokenRenviadoExito />} />
+						<Route path="restablecer" element={<RestablecerContrasenia />} />
 					</Routes>
 				</main>
 			</div>

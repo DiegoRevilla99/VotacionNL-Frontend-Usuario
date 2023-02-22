@@ -29,6 +29,11 @@ export const EstablecerContrasenia = () => {
 		dispatch(onRegistrarUsuario(values.password, email, curp, () => navigate("/auth/success")));
 	};
 
+	const handleReenviarToken = () => {
+		console.log("reenviar");
+		navigate("/auth/reenviarToken");
+	};
+
 	useEffect(() => {
 		console.log("ME CARGO");
 		if (curp === "") dispatch(onGetDataVotantePassword(params.token));
@@ -48,116 +53,166 @@ export const EstablecerContrasenia = () => {
 					// pl: "2rem",
 				}}
 			>
-				<Box>
-					{status === "checking" ? (
-						<Box
-							height="100%"
-							sx={{
-								display: "flex",
-								justifyContent: "center",
-								alignContent: "center",
-							}}
-						>
-							<CircularProgress size={80} color="base" />
-						</Box>
-					) : (
-						<>
-							{" "}
-							<Typography
-								variant="h5"
-								color="base.main"
-								display="flex"
-								justifyContent="center"
-								mb="2rem"
-							>
-								Establecer contarseña
-							</Typography>
-							<Typography
-								variant="caption"
-								color="#f0f0f0"
-								display="flex"
-								justifyContent="center"
-								mb="2rem"
-							>
-								La contraseña debe contener mínimo 6 caracteres, una mayúscula, una
-								minúscula, un numero y un simbolo ($%&/?...)
-							</Typography>
-							<Formik
-								initialValues={{
-									password: "",
-									passwordConfirm: "",
-								}}
-								validationSchema={validationSchema}
-								onSubmit={(values) => {
-									console.log(values);
-									handleSubmit(values);
+				{status === "error" ? (
+					<Box>
+						{status === "checking" ? (
+							<Box
+								height="100%"
+								sx={{
+									display: "flex",
+									justifyContent: "center",
+									alignContent: "center",
 								}}
 							>
-								{({ values, handleSubmit, errors, touched, handleChange }) => (
-									<form onSubmit={handleSubmit}>
-										<TextField
-											name="password"
-											value={values.password}
-											onChange={handleChange}
-											fullWidth
-											color="base"
-											focused
-											variant="outlined"
-											label="INGRESA TU CONTRASEÑA"
-											type="password"
-											error={touched.password && Boolean(errors.password)}
-											helperText={touched.password && errors.password}
-											sx={{
-												"& .MuiInputBase-input": {
-													color: "white !important",
-												},
-											}}
-										></TextField>
-										<TextField
-											name="passwordConfirm"
-											value={values.passwordConfirm}
-											onChange={handleChange}
-											fullWidth
-											color="base"
-											focused
-											variant="outlined"
-											label="CONFIRMA TU CONTARSEÑA"
-											type="password"
-											error={
-												touched.passwordConfirm &&
-												Boolean(errors.passwordConfirm)
-											}
-											helperText={
-												touched.passwordConfirm && errors.passwordConfirm
-											}
-											sx={{
-												marginTop: "2rem",
-												"& .MuiInputBase-input": {
-													color: "white !important",
-												},
-											}}
-										></TextField>
+								<CircularProgress size={80} color="base" />
+							</Box>
+						) : (
+							<>
+								{" "}
+								<Typography
+									variant="h5"
+									color="base.main"
+									display="flex"
+									justifyContent="center"
+									mb="2rem"
+								>
+									El enlace ha expirado
+								</Typography>
+								<Box
+									sx={{
+										display: "flex",
+										flexDirection: "row",
+										justifyContent: "center",
+										pt: 2,
+									}}
+								>
+									{/* <Button color="base">Regresar</Button> */}
+									{/* <Box sx={{ flex: "1 1 auto" }} /> */}
 
-										<Box
-											sx={{
-												display: "flex",
-												flexDirection: "row",
-												pt: 2,
-											}}
-										>
-											{/* <Button color="base">Regresar</Button> */}
-											<Box sx={{ flex: "1 1 auto" }} />
+									<Button
+										color="base"
+										onClick={handleReenviarToken}
+										variant="outlined"
+									>
+										Reenviar enlace
+									</Button>
+								</Box>
+							</>
+						)}
+					</Box>
+				) : (
+					<Box>
+						{status === "checking" ? (
+							<Box
+								height="100%"
+								sx={{
+									display: "flex",
+									justifyContent: "center",
+									alignContent: "center",
+								}}
+							>
+								<CircularProgress size={80} color="base" />
+							</Box>
+						) : (
+							<>
+								{" "}
+								<Typography
+									variant="h5"
+									color="base.main"
+									display="flex"
+									justifyContent="center"
+									mb="2rem"
+								>
+									Establecer contarseña
+								</Typography>
+								<Typography
+									variant="caption"
+									color="#f0f0f0"
+									display="flex"
+									justifyContent="center"
+									mb="2rem"
+								>
+									La contraseña debe contener mínimo 6 caracteres, una mayúscula,
+									una minúscula, un numero y un simbolo ($%&/?...)
+								</Typography>
+								<Formik
+									initialValues={{
+										password: "",
+										passwordConfirm: "",
+									}}
+									validationSchema={validationSchema}
+									onSubmit={(values) => {
+										console.log(values);
+										handleSubmit(values);
+									}}
+								>
+									{({ values, handleSubmit, errors, touched, handleChange }) => (
+										<form onSubmit={handleSubmit}>
+											<TextField
+												name="password"
+												value={values.password}
+												onChange={handleChange}
+												fullWidth
+												color="base"
+												focused
+												variant="outlined"
+												label="INGRESA TU CONTRASEÑA"
+												type="password"
+												error={touched.password && Boolean(errors.password)}
+												helperText={touched.password && errors.password}
+												sx={{
+													"& .MuiInputBase-input": {
+														color: "white !important",
+													},
+												}}
+											></TextField>
+											<TextField
+												name="passwordConfirm"
+												value={values.passwordConfirm}
+												onChange={handleChange}
+												fullWidth
+												color="base"
+												focused
+												variant="outlined"
+												label="CONFIRMA TU CONTARSEÑA"
+												type="password"
+												error={
+													touched.passwordConfirm &&
+													Boolean(errors.passwordConfirm)
+												}
+												helperText={
+													touched.passwordConfirm &&
+													errors.passwordConfirm
+												}
+												sx={{
+													marginTop: "2rem",
+													"& .MuiInputBase-input": {
+														color: "white !important",
+													},
+												}}
+											></TextField>
 
-											<Button color="base" type="submit">
-												Confirmar
-											</Button>
-										</Box>
-									</form>
-								)}
-							</Formik>
-						</>
-					)}
-				</Box>
+											<Box
+												sx={{
+													display: "flex",
+													flexDirection: "row",
+													pt: 2,
+												}}
+											>
+												{/* <Button color="base">Regresar</Button> */}
+												<Box sx={{ flex: "1 1 auto" }} />
+
+												<Button color="base" type="submit">
+													Confirmar
+												</Button>
+											</Box>
+										</form>
+									)}
+								</Formik>
+							</>
+						)}
+					</Box>
+				)}
 			</Container>
 		</Box>
 	);
