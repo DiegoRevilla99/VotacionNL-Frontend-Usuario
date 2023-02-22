@@ -4,7 +4,7 @@ import { Chart as chartJS } from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useParams } from "react-router-dom";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
-
+const patronURL = /^(ftp|http|https):\/\/[^ "]+$/;
 export const ChartJFormales = ({
   chartData = [
     { votos: 50 },
@@ -34,7 +34,10 @@ export const ChartJFormales = ({
 
   const [data, setData] = useState({
     // labels: chartData.map((data) => data.nombre),
-    labels: result.map((data) => data.nombre),
+    labels: result.map((data) => {
+      let nl = data.nombre.split(" ");
+      return nl;
+    }),
     datasets: [
       {
         label: "Votos",
@@ -52,17 +55,16 @@ export const ChartJFormales = ({
           "#8B3252",
         ],
         image: result.map((data) => {
-          console.log(data.foto);
-          const link = data.foto ? data.foto : "";
+          // console.log("img:", data);
+          const imgs = data.partidos.map((part) => {
+            if (patronURL.test(part.logo)) {
+              return part.logo;
+            } else {
+              return "https://cdn-icons-png.flaticon.com/512/4470/4470321.png";
+            }
+          });
 
-          if (!link.includes("http")) {
-            return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-          } else {
-            if (!link.includes("jpg") || !link.includes("jpg")) {
-              return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-            } else
-              return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-          }
+          return imgs;
         }),
         labels: chartData.map((data) => data.nombre),
       },
@@ -78,7 +80,7 @@ export const ChartJFormales = ({
     ],
   });
 
-  const imageItems = {
+  /* const imageItems = {
     id: "imageItems",
     beforeDatasetsDraw(chart, args, pluginOptions) {
       const {
@@ -99,6 +101,51 @@ export const ChartJFormales = ({
           30,
           30
         );
+      });
+    },
+  }; */
+
+  const imageItems = {
+    id: "imageItems",
+    beforeDatasetsDraw(chart, args, pluginOptions) {
+      const {
+        ctx,
+        options,
+        data,
+        scales: { x, y },
+      } = chart;
+      ctx.save();
+      const imageSize = options.layout.padding.bottom;
+      data.datasets[0].image.forEach((imageLink, index) => {
+        try {
+          imageLink.forEach((imagen, index2) => {
+            const logo = new Image();
+            logo.src = imagen;
+            ctx.drawImage(
+              logo,
+              // x.getPixelForValue(index) - 90 + 90 / (imageLink.length + (1 / 2) * index2),
+              x.getPixelForValue(index) -
+                90 +
+                (75 /
+                  (imageLink.length === 1
+                    ? 1
+                    : imageLink.length === 2
+                    ? 1.5
+                    : imageLink.length === 3
+                    ? 2
+                    : imageLink.length === 4
+                    ? 2.5
+                    : imageLink.length === 5
+                    ? 3
+                    : 1)) *
+                  (index2 + 1),
+              // x.getPixelForValue(index) - 80 + 80 / (index2 * index2 + 1),
+              y.getPixelForValue(0) + 100,
+              30,
+              30
+            );
+          });
+        } catch (error) {}
       });
     },
   };
@@ -165,7 +212,7 @@ export const ChartJFormales = ({
           responsive: true,
           layout: {
             padding: {
-              bottom: 60,
+              bottom: 80,
             },
           },
 

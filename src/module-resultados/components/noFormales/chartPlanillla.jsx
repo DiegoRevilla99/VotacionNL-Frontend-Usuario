@@ -58,12 +58,13 @@ export const ChartPlanilla = ({
           "#89328B",
           "#8B3252",
         ],
-        image: result.map((data) => {
+        /* image: result.map((data) => {
           const link = data.fotoCandidato ? data.fotoCandidato : "";
           if (!link.includes("http")) {
             return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
           } else return data.fotoCandidato;
-        }),
+        }), */
+        image: [],
         labels: chartData.map((data) => ""),
       },
       {
