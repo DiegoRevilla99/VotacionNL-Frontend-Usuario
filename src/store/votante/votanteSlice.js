@@ -35,7 +35,7 @@ export const votanteSlice = createSlice({
 		},
 		respuestasPapeletas: [],
 		verificado: false,
-		selfieVerificada: true,
+		selfieVerificada: false,
 		tokenSmsEnviado: false,
 		jornadaActual: null,
 		horaComienzoVotacion: null,
