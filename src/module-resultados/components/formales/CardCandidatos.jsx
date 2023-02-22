@@ -88,7 +88,9 @@ export const CardCandidatos = ({ total, candidato }) => {
 
         <Box sx={skill}>
           <Box sx={skillName}>Total votos</Box>
-          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>{total} votos</Box>
+          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>
+            {candidato?.candidad} votos
+          </Box>
         </Box>
 
         <Divider></Divider>
