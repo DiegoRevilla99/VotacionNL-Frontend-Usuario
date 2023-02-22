@@ -24,7 +24,7 @@ export const Consultas = () => {
   const { jornadas, isLoadingJornadas } = useSelector(
     (state) => state.consultas
   );
-  const [rangFecha, setRangFecha] = React.useState("");
+  const [rangFecha, setRangFecha] = React.useState("month");
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
   const handleSearch = (event) => {
@@ -39,7 +39,6 @@ export const Consultas = () => {
   };
 
   const filterForDate = (data, buscador) => {
-    console.log("AAA");
     const rangoFecha = new Date();
     let filterFn;
     if (buscador === "month") {
@@ -75,7 +74,17 @@ export const Consultas = () => {
   };
 
   useEffect(() => {
-    setDataSearch(jornadas);
+    const newD = [...jornadas];
+    newD.sort((a, b) => {
+      if (a.fechaHoraCreacion < b.fechaHoraCreacion) {
+        return 1;
+      } else if (a.fechaHoraCreacion > b.fechaHoraCreacion) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    setDataSearch(newD);
   }, [jornadas]);
 
   useEffect(() => {
