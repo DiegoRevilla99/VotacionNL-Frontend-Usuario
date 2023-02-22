@@ -282,7 +282,7 @@ export const ResultadosRepFormal = ({}) => {
                 />
               ) : (
                 <ChartJFormales
-                  total={boleta?.acumuladas + boleta.cnr + boleta.nulo}
+                  totalV={boleta?.acumuladas + boleta.cnr + boleta.nulo}
                   candidatos={boleta.candidatos}
                 />
               )}
