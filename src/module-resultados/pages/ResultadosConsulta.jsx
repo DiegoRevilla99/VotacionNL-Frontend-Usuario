@@ -194,15 +194,19 @@ export const ResultadosConsulta = ({
               </Typography>
 
               {resultados.ganadores?.map((gan, index) => {
-                return (
-                  <Typography
-                    sx={{ fontSize: { md: "15px", xs: "9px" } }}
-                    color="initial"
-                    fontWeight="bold"
-                  >
-                    {index + 1}.- {gan.question}
-                  </Typography>
-                );
+                if (gan.question !== "nulos") {
+                  return (
+                    <Typography
+                      sx={{ fontSize: { md: "15px", xs: "9px" } }}
+                      color="initial"
+                      fontWeight="bold"
+                    >
+                      {index + 1}.- {gan.question}
+                    </Typography>
+                  );
+                } else {
+                  return <Typography>""</Typography>;
+                }
               })}
 
               <Box

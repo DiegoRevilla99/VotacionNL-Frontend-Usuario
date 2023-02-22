@@ -52,17 +52,27 @@ export const ChartJFormales = ({
           "#8B3252",
         ],
         image: result.map((data) => {
-          console.log(data.foto);
-          const link = data.foto ? data.foto : "";
+          // console.log("img:", data);
+          const imgs = data?.partidos?.map((part) => {
+            let link = part.logo;
+            if (!link.includes("http")) {
+              return "";
+            } else {
+              return part.logo;
+            }
+          });
+          // console.log(imgs);
+          return imgs;
+          /* const link = data.foto ? data.foto : "";
 
-          if (!link.includes("http")) {
-            return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-          } else {
-            if (!link.includes("jpg") || !link.includes("jpg")) {
-              return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-            } else
-              return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-          }
+              if (!link.includes("http")) {
+                return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
+              } else {
+                if (!link.includes("jpg") || !link.includes("jpg")) {
+                  return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
+                } else
+                  return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
+            } */
         }),
         labels: chartData.map((data) => data.nombre),
       },
@@ -78,7 +88,7 @@ export const ChartJFormales = ({
     ],
   });
 
-  const imageItems = {
+  /* const imageItems = {
     id: "imageItems",
     beforeDatasetsDraw(chart, args, pluginOptions) {
       const {
@@ -99,6 +109,51 @@ export const ChartJFormales = ({
           30,
           30
         );
+      });
+    },
+  }; */
+
+  const imageItems = {
+    id: "imageItems",
+    beforeDatasetsDraw(chart, args, pluginOptions) {
+      const {
+        ctx,
+        options,
+        data,
+        scales: { x, y },
+      } = chart;
+      ctx.save();
+      const imageSize = options.layout.padding.bottom;
+      data.datasets[0].image.forEach((imageLink, index) => {
+        imageLink.forEach((imagen, index2) => {
+          try {
+            const logo = new Image();
+            logo.src = imagen;
+            ctx.drawImage(
+              logo,
+              // x.getPixelForValue(index) - 90 + 90 / (imageLink.length + (1 / 2) * index2),
+              x.getPixelForValue(index) -
+                90 +
+                (75 /
+                  (imageLink.length === 1
+                    ? 1
+                    : imageLink.length === 2
+                    ? 1.5
+                    : imageLink.length === 3
+                    ? 2
+                    : imageLink.length === 4
+                    ? 2.5
+                    : imageLink.length === 5
+                    ? 3
+                    : 1)) *
+                  (index2 + 1),
+              // x.getPixelForValue(index) - 80 + 80 / (index2 * index2 + 1),
+              y.getPixelForValue(0) + 30,
+              30,
+              30
+            );
+          } catch (error) {}
+        });
       });
     },
   };
