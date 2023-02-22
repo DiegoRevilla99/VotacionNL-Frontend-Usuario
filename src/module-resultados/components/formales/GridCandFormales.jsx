@@ -13,7 +13,7 @@ export const GridCandFormales = ({ total, candidatos }) => {
       width={"100%"}
     >
       {candidatos?.map((candi) => {
-        return <CardCandidatos total={total} candidato={candi} />;
+        return <CardCandidatos total={candi.candidad} candidato={candi} />;
       })}
     </Box>
   );
