@@ -97,7 +97,7 @@ export const CardPlanilla = ({ total, candidato }) => {
             Asociaciones
           </Typography>
         </Box>
-        <Box display={"flex"}>
+        <Box display={"flex"} flexWrap="wrap">
           {candidato?.asociacionModel?.map((ca) => {
             return <Typography sx={{ p: 1 }}>{ca.nombreAsociacion}</Typography>;
           })}

@@ -57,6 +57,7 @@ export const ChartEjemplo = ({
             return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
           } else return data.fotoCandidato;
         }),
+        // image: [],
         labels: chartData.map((data) => data.nombre),
       },
       {
