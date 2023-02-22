@@ -1,10 +1,13 @@
+
 import { PhotoCamera } from "@mui/icons-material";
+import SendIcon from "@mui/icons-material/Send";
 import {
 	Alert,
 	Box,
 	Button,
 	CircularProgress,
 	Container,
+	Divider,
 	FormControl,
 	Grid,
 	IconButton,
@@ -12,11 +15,12 @@ import {
 	Modal,
 	OutlinedInput,
 	Typography,
+	useMediaQuery
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { onVerificarCredencial } from "../../store/votante/votanteThunks";
-import SendIcon from "@mui/icons-material/Send";
 
 const style = {
 	position: "absolute",
@@ -55,6 +59,15 @@ export const ModalVerificarCuenta = ({
 			})
 		);
 	};
+	const theme = useTheme();
+  const xssize = useMediaQuery(theme.breakpoints.only("xs"));
+  const smsize = useMediaQuery(theme.breakpoints.only("sm"));
+  const mdsize = useMediaQuery(theme.breakpoints.only("md"));
+  const lgsize = useMediaQuery(theme.breakpoints.only("lg"));
+  const xlsize = useMediaQuery(theme.breakpoints.only("xl"));
+	let img1= "https://media.discordapp.net/attachments/825115444800258088/1078083538785669180/image.png?width=528&height=480";
+	let img2= "https://media.discordapp.net/attachments/825115444800258088/1078083844412026881/imageMostrar01.png";
+	let img3= "https://media.discordapp.net/attachments/825115444800258088/1078084391907106846/image.png?width=510&height=480";
 
 	return (
 		<Modal
@@ -66,11 +79,10 @@ export const ModalVerificarCuenta = ({
 				<Box
 					display="flex"
 					flexDirection="column"
-					// alignItems="center"
-					// justifyContent="center"
-					// overflow="auto"
 					sx={{
-						p: { xs: "0.5rem", md: "2rem" },
+					  p: { xs: "0.5rem", md: "2rem" },
+					  maxHeight: "80vh",
+					  overflow: "auto"
 					}}
 				>
 					<Typography
@@ -89,14 +101,215 @@ export const ModalVerificarCuenta = ({
 						display="flex"
 						justifyContent="center"
 						align="justify"
-						mb="2rem"
+						mb="1rem"	
 					>
-						Para poder asegurarnos de que eres una persona real y que eres el verdadero
-						dueño de esta cuenta, necesitamos que verifiques tu cuenta. Para poder
-						verificar tu cuenta debes de subir una foto de la parte frontal de tu
-						credencial, una foto de la parte trasera y una sefie tuya.
+						Para garantizar la seguridad de tu cuenta y confirmar que eres su dueño legítimo, necesitamos que completes un proceso de verificación. 
+						Para hacerlo, por favor sube tres fotos: una de la parte frontal de tu credencial, otra de la parte trasera y una foto de ti mismo. 
+						Una vez que hayamos recibido y revisado tus fotos, podrás disfrutar de todos los beneficios de tu cuenta. 
+						Gracias por tu colaboración en este proceso de seguridad.
 					</Typography>
+					<Typography
+                        sx={{ fontSize: "15px", opacity: 0.8 }}
+                        variant="subtitle2"
+                        textAlign="left"
+						color="red" // Utiliza el color "pink" en lugar de "red"
+
+											  >
+                        ALGUNAS RECOMENDACIONES QUE TE HACEMOS PARA UN REGISTRO EXITOSO SON:
+                      </Typography>
+					  <Typography
+                        sx={{ fontSize: "15px", opacity: 0.8 }}
+                        variant="subtitle2"
+                        textAlign="left"
+						color="red" // Utiliza el color "pink" en lugar de "red"
+
+                      >
+                        1.- TOMA LA FOTO EN UN LUGAR CON BUENA LUZ Y SIN REFLEJOS
+                      </Typography>
+					  <Typography
+                        sx={{ fontSize: "15px", opacity: 0.8 }}
+                        variant="subtitle2"
+                        textAlign="left"
+						color="red" // Utiliza el color "pink" en lugar de "red"
+
+                      >
+                        2.- FONDO DE UN COLOR DIFERENTE AL BLANCO
+                      </Typography>
+					  <Typography
+                        sx={{ fontSize: "15px", opacity: 0.8 }}
+                        variant="subtitle2"
+                        textAlign="left"
+						color="red" // Utiliza el color "pink" en lugar de "red"
+                      >
+                        3.- DALE UN MARGEN A LAS FOTOGRAFIAS AL MOMENTO DE TOMARLAS, COMO SE MUESTRA EN LA ILUSTRACIÓN SIGUIENTE
+                      </Typography>
+					  <br/>
+					<Typography
+                        sx={{ fontSize: "15px", fontWeight: "bold" }}
+                        variant="subtitle2"
+                        textAlign="center"
+                        color="primary"
+                      >
+                        PASO 1.- ES NECESARIO UNA FOTO DE TU CREDENCIAL DE LA PARTE FRONTAL
+                      </Typography>  
+					  {xssize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						<a><img width="100%" height="100%" src={img1} alt="Logo coalición"/></a>
+					  </Box>					  
+      					)}
+					  {smsize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="70%" height="70%" src={img1} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {mdsize && (
+												<Box
+												display="flex"
+												justifyContent="center"
+												alignItems="center"
+											  >
+						  <a><img width="75%" height="75%" src={img1} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {lgsize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="80%" height="80%" src={img1} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {xlsize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="80%" height="80%" src={img1} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+						<Divider/>
+					<Typography
+					mt="1rem"
+                        sx={{ fontSize: "15px", fontWeight: "bold" }}
+                        variant="subtitle2"
+                        textAlign="center"
+                        color="primary"
+						>
+						  PASO 2.- ES NECESARIO UNA FOTO DE TU CREDENCIAL DE LA PARTE TRASERA 
+                      </Typography>
+					  {xssize && (
+												<Box
+												display="flex"
+												justifyContent="center"
+												alignItems="center"
+											  >
+						  <a><img width="100%" height="100%" src={img2} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {smsize && (
+												<Box
+												display="flex"
+												justifyContent="center"
+												alignItems="center"
+											  >
+						  <a><img width="70%" height="70%" src={img2} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {mdsize && (
+												<Box
+												display="flex"
+												justifyContent="center"
+												alignItems="center"
+											  >
+						  <a><img width="75%" height="75%" src={img2} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {lgsize && (
+												<Box
+												display="flex"
+												justifyContent="center"
+												alignItems="center"
+											  >
+						  <a><img width="80%" height="80%" src={img2} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {xlsize && (
+												<Box
+												display="flex"
+												justifyContent="center"
+												alignItems="center"
+											  >
+						  <a><img width="80%" height="80%" src={img2} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+												<Divider/>
+					<Typography
+					mt="1rem"
+                        sx={{ fontSize: "15px", fontWeight: "bold" }}
+                        variant="subtitle2"
+                        textAlign="center"
+                        color="primary"
+						>
+						PASO 3.- ES NECESARIO UNA FOTO DE TI MISMO
+                      </Typography>
+					  {xssize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="100%" height="100%" src={img3} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {smsize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="70%" height="70%" src={img3} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {mdsize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="75%" height="75%" src={img3} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {lgsize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="80%" height="8%" src={img3} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+					  {xlsize && (
+						<Box
+						display="flex"
+						justifyContent="center"
+						alignItems="center"
+					  >
+						  <a><img width="80%" height="80%" src={img3} alt="Logo coalición"/></a>
+						  </Box>
+      					)}
+						<Divider/>
 					<Box
+						mt="1rem"
 						display="flex"
 						alignItems="center"
 						sx={{ width: "100%" }}
