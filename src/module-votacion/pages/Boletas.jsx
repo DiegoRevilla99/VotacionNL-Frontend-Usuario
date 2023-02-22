@@ -31,8 +31,10 @@ export const Boletas = () => {
 	const [noBoleta, setNoBoleta] = useState(1);
 	const [seleccionados, setSeleccionados] = useState([]);
 	const [candidaturaNoRegistrada, setCandidaturaNoRegistrada] = useState("");
+	const [esNulo, setEsNulo] = useState(false);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	console.log("STATE NULO", esNulo);
 
 	console.log("ME RENDERIZO BOLETA");
 
@@ -74,6 +76,159 @@ export const Boletas = () => {
 	useEffect(() => {
 		if (boletas.length !== 0) dispatch(onSetBoletaActual(noBoleta));
 	}, [boletas, noBoleta]);
+
+	useEffect(() => {
+		let partidos = [];
+		if (jornadaActual.tipoJornada === "JornadaFormal") {
+			if (seleccionados.length === 0) {
+			} else {
+				partidos = seleccionados.map((idPartido, indesBoleta) => {
+					if (idPartido === 100)
+						return {
+							clavePartido: "CANORE",
+							idCandidato: 99998,
+						};
+					else if (idPartido === 200)
+						return {
+							clavePartido: "NULO",
+							idCandidato: 99999,
+						};
+					else {
+						const index = boletaActual.candidatos.findIndex((i) => i.id === idPartido);
+						return {
+							claveCoalicion: boletaActual.candidatos[index].claveCoalicion,
+							clavePartido: boletaActual.candidatos[index].clavePartido,
+							idCandidato: boletaActual.candidatos[index].idCandidato,
+						};
+					}
+				});
+			}
+
+			console.log("Cambia");
+			const esNuloVer = verificarCoalicionesPreEnvio(partidos);
+
+			console.log("ES NULO FINAL?", esNuloVer);
+
+			setEsNulo(esNuloVer);
+		} else {
+			if (seleccionados.length === 0) {
+			} else {
+				const partidos = seleccionados.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							idCandAso: "CANORE",
+							modalidad:
+								boletaActual.modalidad === "REPRESENTANTE"
+									? 1
+									: boletaActual.modalidad === "COMITE"
+									? 2
+									: 3,
+							// nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+						};
+					else if (idPartido === 200)
+						return {
+							idCandAso: "NULO",
+							modalidad:
+								boletaActual.modalidad === "REPRESENTANTE"
+									? 1
+									: boletaActual.modalidad === "COMITE"
+									? 2
+									: 3,
+						};
+					else {
+						return {
+							idCandAso: idPartido,
+							modalidad:
+								boletaActual.modalidad === "REPRESENTANTE"
+									? 1
+									: boletaActual.modalidad === "COMITE"
+									? 2
+									: 3,
+						};
+					}
+				});
+				console.log("PARTIDOS PLANILLAS", partidos);
+				const esNuloFinal = verificarAsociacionesPreEnvio(partidos, boletaActual.modalidad);
+				console.log("ES NULO?", esNuloFinal);
+				const x = esNuloFinal;
+				setEsNulo(x);
+			}
+		}
+	}, [seleccionados]);
+
+	const verificarAsociacionesPreEnvio = (partidos, modalidad) => {
+		const nuevos = [];
+		const array = [];
+		let final = false;
+		console.log("PARTIDOS QUE LLEGAN", partidos, modalidad);
+		if (modalidad !== "PLANILLA") return false;
+		else {
+			console.log("entra primer else");
+			if (partidos[0].idCandAso === "CANORE") {
+				return false;
+			}
+			if (partidos[0].idCandAso === "NULO") {
+				return false;
+			}
+			// const idBoleta = boletaActual.idEstructuraBoleta;
+
+			// const boletaCurrent = boletas.find((boleta) => boleta.idEstructuraBoleta === idBoleta);
+
+			const planillaCurrent = boletaActual.candidatos.find(
+				(planilla) => planilla.id === partidos[0].idCandAso
+			);
+
+			const candidatosId = planillaCurrent.candidatos.map((candidato) => candidato.id);
+
+			partidos.every((seleccion, indexSeleccion) => {
+				const planillaAComparar = boletaActual.candidatos.find(
+					(planilla) => planilla.id === seleccion.idCandAso
+				);
+
+				const candidatosAComparar = planillaAComparar.candidatos.map(
+					(candidato) => candidato.id
+				);
+
+				console.log(`candidatosAComparar`, candidatosAComparar);
+
+				let nulo = false;
+				candidatosId.every((candidato) => {
+					const result = candidatosAComparar.some((candidatoX) => {
+						return candidatoX == candidato;
+					});
+
+					if (result) {
+						// array[index] = false;
+						nulo = true;
+					} else {
+						// array[index] = true;
+						// return false;
+						nulo = false;
+					}
+				});
+				// console.log("nulooooo", nulo);
+				final = nulo;
+				return nulo;
+			});
+			// console.log("FINAL?", final);
+			return !final;
+		}
+		// setCoalicionInvalida(array);
+	};
+
+	const verificarCoalicionesPreEnvio = (partidos) => {
+		const nuevos = [];
+		const array = [];
+		console.log("Partidos", partidos);
+		if (partidos.length === 0) return false;
+		const numero = partidos[0].claveCoalicion;
+		let nulo = partidos.some((partido) => {
+			// if (voto.partidos.length > 1) return partido.claveCoalicion === "SinCoalicion";
+			// if (partido.claveCoalicion === "SinCoalicion")
+			return partido.claveCoalicion !== numero;
+		});
+		return nulo;
+	};
 
 	if (statusPeticion === "checking") return <LinearProgress color="linearProgress" />;
 	else
@@ -132,7 +287,7 @@ export const Boletas = () => {
 										pb={1}
 										sx={{ backgroundColor: "#423838" }}
 									>
-										{jornadaActual.tipoJornada !== "JornadaNoFormal"
+										{jornadaActual?.tipoJornada !== "JornadaNoFormal"
 											? ""
 											: boletaActual.modalidad === "REPRESENTANTE"
 											? "REPRESENTANTE"
@@ -141,7 +296,7 @@ export const Boletas = () => {
 											: "PLANILLA"}
 									</Typography>
 								</Box>
-								{jornadaActual.tipoJornada === "JornadaNoFormal" ? (
+								{jornadaActual?.tipoJornada === "JornadaNoFormal" ? (
 									<></>
 								) : (
 									<Grid container spacing={3} pb="2rem">
@@ -220,7 +375,7 @@ export const Boletas = () => {
 									</Grid>
 								)}
 
-								{jornadaActual.tipoJornada === "JornadaNoFormal" && (
+								{jornadaActual?.tipoJornada === "JornadaNoFormal" && (
 									<Box>
 										<Box display="flex" justifyContent="center" pb="1rem">
 											<Typography
@@ -238,6 +393,16 @@ export const Boletas = () => {
 										<Divider />
 									</Box>
 								)}
+								<Box
+									sx={{ display: { xs: "none", lg: "flex" } }}
+									justifyContent="center"
+								>
+									<Typography variant="body1" color="error" align="center">
+										{esNulo
+											? "Tu selección dará como resultado voto nulo por coalición invalida"
+											: ""}
+									</Typography>
+								</Box>
 
 								<Grid
 									container
@@ -316,6 +481,17 @@ export const Boletas = () => {
 										</Grid>
 									)}
 								</Grid>
+								<Box
+									display="flex"
+									pb={2}
+									sx={{ display: { xs: "flex", lg: "none" } }}
+								>
+									<Typography variant="body2" color="error" align="center">
+										{esNulo
+											? "Tu selección dará como resultado voto nulo por coalición invalida"
+											: ""}
+									</Typography>
+								</Box>
 							</Box>
 							<Box
 								sx={{

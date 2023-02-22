@@ -20,7 +20,7 @@ export const TarjetaRepresentante = ({
 		seleccionados.find((idE) => idE === id) ? "circulo" + id : null
 	);
 	const handleToggle = () => {
-		if (seleccionados.includes(200)) return;
+		if (seleccionados.includes(200) || seleccionados.includes(100)) return;
 		if (selected == null) {
 			if (seleccionados.length >= max) return;
 			setSeleccionados((actual) => [...actual, id]);

@@ -21,8 +21,9 @@ export const TarjetaCandidaturaNoRegistrada = ({
 	const handleToggle = () => {
 		if (seleccionados.includes(200)) return;
 		if (selected == null) {
-			if (seleccionados.length === max) return;
-			setSeleccionados((actual) => [...actual, id]);
+			// if (seleccionados.length === max) return;
+			// setSeleccionados((actual) => [...actual, id]);
+			setSeleccionados((actual) => [id]);
 			setSelected("circulo" + id);
 		} else {
 			let nuevo = seleccionados.filter((seleccionado) => {

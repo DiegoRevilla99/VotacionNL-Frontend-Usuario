@@ -23,6 +23,7 @@ import {
 	onComenzarJornadaNoFormal,
 	onGetProcesosDelVotante,
 	onGetStatusValidacion,
+	onSetSesionFalse,
 } from "../../store/votante/votanteThunks";
 import { ModalRecortarFoto } from "../components/ModalRecortarFoto";
 import { ModalTokenVotacion } from "../components/ModalTokenVotacion";
@@ -80,6 +81,7 @@ export const InicioVotante = () => {
 
 	useEffect(() => {
 		dispatch(onGetProcesosDelVotante(username));
+		dispatch(onSetSesionFalse(username));
 	}, []);
 
 	useEffect(() => {
@@ -317,617 +319,655 @@ export const InicioVotante = () => {
 							)}
 						</Box>
 					</Grid>
-					{jornadaFormal !== null ? (
-						<Grid item xs={12} md={12}>
-							<Box width="100%" height="100%" position="relative">
-								<Box
-									height="auto"
-									zIndex={9999}
-									position="absolute"
-									width="100%"
-									px={2}
-									py={1}
-									sx={{
-										backgroundColor: "#323232",
-										borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
-										borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
-									}}
-								>
-									<Typography
-										variant="body"
-										color="#fed300"
-										display="flex"
-										justifyContent="center"
-										align="justify"
-										fontWeight="bold"
-									>
-										JORNADAS FORMALES
-									</Typography>
-								</Box>
-
-								{verificado && jornadaFormal !== null ? (
-									<Box
-										display="flex"
-										flexDirection="column"
-										alignItems="center"
-										justifyContent="center"
-										sx={{
-											minHeight: "10rem",
-											height: "100%",
-											boxShadow: 1,
-											backgroundColor: "white",
-											borderRadius: { xs: "0.5rem", md: "1rem" },
-											p: "2rem",
-											pt: "3rem",
-											// pl: "2rem",
-										}}
-									>
-										<Typography
-											variant="h6"
-											color="#323232"
-											display="flex"
-											justifyContent="center"
-											align="center"
-											pt={{ xs: "1.5rem", md: "0" }}
-											mb="1rem"
-											alignContent="center"
-											alignItems="center"
-											// height="35%"
-										>
-											{jornadaFormal.nombreJornada}
-										</Typography>
-										<Box>
-											{statusBoton.jornadaFormal === "en espera" ? (
-												<TemporizadorInicio
-													fechaInicio={
-														jornadaFormal.requestConfigJornada
-															.inicioRecepVoto
-													}
-													setStatusBoton={setStatusBoton}
-													statusBoton={statusBoton.jornadaFormal}
-													boton={"jornadaFormal"}
-												/>
-											) : (
-												<TemporizadorFin
-													fechaFin={
-														jornadaFormal.requestConfigJornada
-															.finRecepVoto
-													}
-													setStatusBoton={setStatusBoton}
-													statusBoton={statusBoton.jornadaFormal}
-													boton={"jornadaFormal"}
-													idProceso={jornadaFormal.idJornada}
-													curp={username}
-												/>
-											)}
-										</Box>
-										<Button
-											variant="contained"
-											size="large"
-											color="darkButton"
-											disabled={
-												statusBoton.jornadaFormal === "en espera" ||
-												statusBoton.jornadaFormal === "terminada" ||
-												status === "checking"
-											}
-											// onClick={handleOpenModal}
-											onClick={
-												selfieVerificada
-													? handleOpenModal
-													: handleOpenModalCamara
-											}
-											sx={{
-												boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-												transition: "all 0.5s ease",
-												width: { xs: "100%", md: "50%" },
-												"&:hover": {
-													transform: "translate(-5px, -5px)",
-													boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-												},
-											}}
-										>
-											COMENZAR VOTACIÓN
-										</Button>
-									</Box>
-								) : (
+					{statusJornadas === "checking" ? (
+						<Box
+							sx={{ display: "flex" }}
+							// position={"relative"}
+							width="100%"
+							justifyContent="center"
+							alignContent="center"
+							p={"4rem"}
+							pl="7rem"
+						>
+							<CircularProgress size={80} />
+						</Box>
+					) : (
+						<>
+							{jornadaFormal !== null ? (
+								<Grid item xs={12} md={12}>
 									<Box width="100%" height="100%" position="relative">
 										<Box
-											display="flex"
-											flexDirection="column"
-											alignItems="center"
-											justifyContent="center"
-											height="100%"
-											width="100%"
-											zIndex={10}
+											height="auto"
+											zIndex={9999}
 											position="absolute"
-											p="2rem"
+											width="100%"
+											px={2}
+											py={1}
 											sx={{
-												background: "rgba(120, 120, 120, 0.75 )",
-												borderRadius: { xs: "0.5rem", md: "1rem" },
-												backdropFilter: "blur( 10px )",
-												WebkitBackdropFilter: "blur( 10px )",
-												border: "1px solid rgba( 255, 255, 255, 0.18 )",
-											}}
-										>
-											<Box
-												p={2}
-												mt={4}
-												border="1px solid #f8f7f3"
-												borderRadius="2rem"
-											>
-												{statusJornadas === "checking" ? (
-													<Box sx={{ display: "flex" }}>
-														<CircularProgress color="base" />
-													</Box>
-												) : (
-													<Typography
-														variant="body1"
-														color="#f8f7f3"
-														display="flex"
-														justifyContent="center"
-														align="center"
-													>
-														{verificado
-															? "No tienes ninguna jornada formal por contestar"
-															: "Verifica tu cuenta para poder ver si tienes una jornada formal pendiente por contestar"}
-													</Typography>
-												)}
-											</Box>
-										</Box>
-										<Box
-											display="flex"
-											flexDirection="column"
-											alignItems="center"
-											justifyContent="center"
-											// zIndex={1}
-											// position="absolute"
-											sx={{
-												minHeight: "10rem",
-												height: "100%",
-												boxShadow: 1,
-												backgroundColor: "white",
-												borderRadius: { xs: "0.5rem", md: "1rem" },
-												p: "2rem",
-												// pl: "2rem",
+												backgroundColor: "#323232",
+												borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
+												borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
 											}}
 										>
 											<Typography
-												variant="h6"
-												color="#323232"
+												variant="body"
+												color="#fed300"
 												display="flex"
 												justifyContent="center"
-												align="center"
-												pt="2rem"
-												mb="2rem"
+												align="justify"
+												fontWeight="bold"
 											>
-												Jornada de ejemplo
+												JORNADAS FORMALES
 											</Typography>
-											<Button
-												variant="contained"
-												size="large"
-												color="darkButton"
-												onClick={handleOpenModal}
+										</Box>
+
+										{verificado && jornadaFormal !== null ? (
+											<Box
+												display="flex"
+												flexDirection="column"
+												alignItems="center"
+												justifyContent="center"
 												sx={{
-													boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-													transition: "all 0.5s ease",
-													// backgroundColor: "#543884",
-													width: { xs: "100%", md: "50%" },
-													// borderRadius: "2rem 2rem 2rem 2rem",
-													"&:hover": {
-														// backgroundColor: "#7E328B !important",
-														transform: "translate(-5px, -5px)",
-														boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-													},
+													minHeight: "10rem",
+													height: "100%",
+													boxShadow: 1,
+													backgroundColor: "white",
+													borderRadius: { xs: "0.5rem", md: "1rem" },
+													p: "2rem",
+													pt: "3rem",
+													// pl: "2rem",
 												}}
 											>
-												Comenzar Votación
-											</Button>
-										</Box>
-									</Box>
-								)}
-							</Box>
-						</Grid>
-					) : (
-						<></>
-					)}
-
-					{jornadaNoFormal !== null ? (
-						<Grid item xs={12} md={12} pb={5}>
-							<Box width="100%" height="100%" position="relative">
-								<Box
-									height="auto"
-									zIndex={9999}
-									position="absolute"
-									width="100%"
-									px={2}
-									py={1}
-									sx={{
-										backgroundColor: "#323232",
-										borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
-										borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
-									}}
-								>
-									<Typography
-										variant="body"
-										color="#fed300"
-										display="flex"
-										justifyContent="center"
-										align="justify"
-										fontWeight="bold"
-									>
-										JORNADAS NO FORMALES
-									</Typography>
-								</Box>
-								{jornadaNoFormal !== null ? (
-									<Box
-										display="flex"
-										flexDirection="column"
-										alignItems="center"
-										justifyContent="center"
-										sx={{
-											minHeight: "10rem",
-											height: "100%",
-											boxShadow: 1,
-											backgroundColor: "white",
-											borderRadius: { xs: "0.5rem", md: "1rem" },
-											p: "2rem",
-											pt: "3rem",
-										}}
-									>
-										<Typography
-											variant="h6"
-											color="#323232"
-											display="flex"
-											justifyContent="center"
-											align="center"
-											mb="1rem"
-											pt={{ xs: "1.5rem", md: "0" }}
-											alignContent="center"
-											alignItems="center"
-											// height="35%"
-										>
-											{jornadaNoFormal.nombreJornada}
-										</Typography>
-										<Box>
-											{statusBoton.jornadaNoFormal === "en espera" ? (
-												<TemporizadorInicio
-													fechaInicio={
-														jornadaNoFormal.requestConfigJornada
-															.inicioRecepVoto
+												<Typography
+													variant="h6"
+													color="#323232"
+													display="flex"
+													justifyContent="center"
+													align="center"
+													pt={{ xs: "1.5rem", md: "0" }}
+													mb="1rem"
+													alignContent="center"
+													alignItems="center"
+													// height="35%"
+												>
+													{jornadaFormal.nombreJornada}
+												</Typography>
+												<Box>
+													{statusBoton.jornadaFormal === "en espera" ? (
+														<TemporizadorInicio
+															fechaInicio={
+																jornadaFormal.requestConfigJornada
+																	.inicioRecepVoto
+															}
+															setStatusBoton={setStatusBoton}
+															statusBoton={statusBoton.jornadaFormal}
+															boton={"jornadaFormal"}
+														/>
+													) : (
+														<TemporizadorFin
+															fechaFin={
+																jornadaFormal.requestConfigJornada
+																	.finRecepVoto
+															}
+															setStatusBoton={setStatusBoton}
+															statusBoton={statusBoton.jornadaFormal}
+															boton={"jornadaFormal"}
+															idProceso={jornadaFormal.idJornada}
+															curp={username}
+														/>
+													)}
+												</Box>
+												<Button
+													variant="contained"
+													size="large"
+													color="darkButton"
+													disabled={
+														statusBoton.jornadaFormal === "en espera" ||
+														statusBoton.jornadaFormal === "terminada" ||
+														status === "checking"
 													}
-													setStatusBoton={setStatusBoton}
-													statusBoton={statusBoton.jornadaNoFormal}
-													boton={"jornadaNoFormal"}
-												/>
-											) : (
-												<TemporizadorFin
-													fechaFin={
-														jornadaNoFormal.requestConfigJornada
-															.finRecepVoto
+													// onClick={handleOpenModal}
+													onClick={
+														selfieVerificada
+															? handleOpenModal
+															: handleOpenModalCamara
 													}
-													setStatusBoton={setStatusBoton}
-													statusBoton={statusBoton.jornadaNoFormal}
-													boton={"jornadaNoFormal"}
-													idProceso={jornadaNoFormal.idJornada}
-													curp={username}
-												/>
-											)}
-										</Box>
-										<Button
-											variant="contained"
-											size="large"
-											color="darkButton"
-											onClick={handleComezarjornadaNoFormal}
-											disabled={
-												statusBoton.jornadaNoFormal === "en espera" ||
-												statusBoton.jornadaNoFormal === "terminada" ||
-												status === "checking"
-											}
-											sx={{
-												boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-												transition: "all 0.5s ease",
-												// backgroundColor: "#543884",
-												width: { xs: "100%", md: "50%" },
-												// borderRadius: "2rem 2rem 2rem 2rem",
-												"&:hover": {
-													// backgroundColor: "#7E328B !important",
-													transform: "translate(-5px, -5px)",
-													boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-												},
-											}}
-										>
-											COMENZAR VOTACIÓN
-										</Button>
-									</Box>
-								) : (
-									<Box width="100%" height="100%" position="relative">
-										<Box
-											display="flex"
-											flexDirection="column"
-											alignItems="center"
-											justifyContent="center"
-											height="100%"
-											width="100%"
-											zIndex={10}
-											position="absolute"
-											p="2rem"
-											sx={{
-												background: "rgba(120, 120, 120, 0.75 )",
-												borderRadius: { xs: "0.5rem", md: "1rem" },
-												backdropFilter: "blur( 10px )",
-												WebkitBackdropFilter: "blur( 10px )",
-												border: "1px solid rgba( 255, 255, 255, 0.18 )",
-											}}
-										>
-											<Box
-												p={2}
-												mt={4}
-												border="1px solid #f8f7f3"
-												borderRadius="2rem"
-											>
-												{statusJornadas === "checking" ? (
-													<Box sx={{ display: "flex" }}>
-														<CircularProgress color="base" />
+													sx={{
+														boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+														transition: "all 0.5s ease",
+														width: { xs: "100%", md: "50%" },
+														"&:hover": {
+															transform: "translate(-5px, -5px)",
+															boxShadow:
+																"5px 5px 1px rgba(0, 0, 0, 0.3)",
+														},
+													}}
+												>
+													COMENZAR VOTACIÓN
+												</Button>
+											</Box>
+										) : (
+											<Box width="100%" height="100%" position="relative">
+												<Box
+													display="flex"
+													flexDirection="column"
+													alignItems="center"
+													justifyContent="center"
+													height="100%"
+													width="100%"
+													zIndex={10}
+													position="absolute"
+													p="2rem"
+													sx={{
+														background: "rgba(120, 120, 120, 0.75 )",
+														borderRadius: { xs: "0.5rem", md: "1rem" },
+														backdropFilter: "blur( 10px )",
+														WebkitBackdropFilter: "blur( 10px )",
+														border: "1px solid rgba( 255, 255, 255, 0.18 )",
+													}}
+												>
+													<Box
+														p={2}
+														mt={4}
+														border="1px solid #f8f7f3"
+														borderRadius="2rem"
+													>
+														{statusJornadas === "checking" ? (
+															<Box sx={{ display: "flex" }}>
+																<CircularProgress color="base" />
+															</Box>
+														) : (
+															<Typography
+																variant="body1"
+																color="#f8f7f3"
+																display="flex"
+																justifyContent="center"
+																align="center"
+															>
+																{verificado
+																	? "No tienes ninguna jornada formal por contestar"
+																	: "Verifica tu cuenta para poder ver si tienes una jornada formal pendiente por contestar"}
+															</Typography>
+														)}
 													</Box>
-												) : (
+												</Box>
+												<Box
+													display="flex"
+													flexDirection="column"
+													alignItems="center"
+													justifyContent="center"
+													// zIndex={1}
+													// position="absolute"
+													sx={{
+														minHeight: "10rem",
+														height: "100%",
+														boxShadow: 1,
+														backgroundColor: "white",
+														borderRadius: { xs: "0.5rem", md: "1rem" },
+														p: "2rem",
+														// pl: "2rem",
+													}}
+												>
 													<Typography
-														variant="body1"
-														color="#f8f7f3"
+														variant="h6"
+														color="#323232"
 														display="flex"
 														justifyContent="center"
 														align="center"
+														pt="2rem"
+														mb="2rem"
 													>
-														No tienes ninguna jornada no formal por
-														contestar
+														Jornada de ejemplo
 													</Typography>
-												)}
+													<Button
+														variant="contained"
+														size="large"
+														color="darkButton"
+														onClick={handleOpenModal}
+														sx={{
+															boxShadow:
+																"0px 0px 0px rgba(0, 0, 0, 0.3)",
+															transition: "all 0.5s ease",
+															// backgroundColor: "#543884",
+															width: { xs: "100%", md: "50%" },
+															// borderRadius: "2rem 2rem 2rem 2rem",
+															"&:hover": {
+																// backgroundColor: "#7E328B !important",
+																transform: "translate(-5px, -5px)",
+																boxShadow:
+																	"5px 5px 1px rgba(0, 0, 0, 0.3)",
+															},
+														}}
+													>
+														Comenzar Votación
+													</Button>
+												</Box>
 											</Box>
-										</Box>
+										)}
+									</Box>
+								</Grid>
+							) : (
+								<></>
+							)}
+
+							{jornadaNoFormal !== null ? (
+								<Grid item xs={12} md={12} pb={5}>
+									<Box width="100%" height="100%" position="relative">
 										<Box
-											display="flex"
-											flexDirection="column"
-											alignItems="center"
-											justifyContent="center"
-											// zIndex={1}
-											// position="absolute"
+											height="auto"
+											zIndex={9999}
+											position="absolute"
+											width="100%"
+											px={2}
+											py={1}
 											sx={{
-												minHeight: "10rem",
-												height: "100%",
-												boxShadow: 1,
-												backgroundColor: "white",
-												borderRadius: { xs: "0.5rem", md: "1rem" },
-												p: "2rem",
-												// pl: "2rem",
+												backgroundColor: "#323232",
+												borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
+												borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
 											}}
 										>
 											<Typography
-												variant="h6"
-												color="#323232"
+												variant="body"
+												color="#fed300"
 												display="flex"
 												justifyContent="center"
-												align="center"
-												mb="2rem"
-												pt={{ xs: "2rem", md: "0" }}
+												align="justify"
+												fontWeight="bold"
 											>
-												Jornada No formal de ejemplo
+												JORNADAS NO FORMALES
 											</Typography>
-											<Button
-												variant="contained"
-												size="large"
-												color="darkButton"
-												onClick={handleOpenModal}
+										</Box>
+										{jornadaNoFormal !== null ? (
+											<Box
+												display="flex"
+												flexDirection="column"
+												alignItems="center"
+												justifyContent="center"
 												sx={{
-													boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-													transition: "all 0.5s ease",
-													// backgroundColor: "#543884",
-													width: { xs: "100%", md: "50%" },
-													// borderRadius: "2rem 2rem 2rem 2rem",
-													"&:hover": {
-														// backgroundColor: "#7E328B !important",
-														transform: "translate(-5px, -5px)",
-														boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-													},
+													minHeight: "10rem",
+													height: "100%",
+													boxShadow: 1,
+													backgroundColor: "white",
+													borderRadius: { xs: "0.5rem", md: "1rem" },
+													p: "2rem",
+													pt: "3rem",
 												}}
 											>
-												Comenzar Votación
-											</Button>
-										</Box>
-									</Box>
-								)}
-							</Box>
-						</Grid>
-					) : (
-						<></>
-					)}
-
-					{consultaCiudadana !== null ? (
-						<Grid item xs={12} md={12}>
-							<Box width="100%" height="100%" position="relative">
-								<Box
-									height="auto"
-									zIndex={9999}
-									position="absolute"
-									width="100%"
-									px={2}
-									py={1}
-									sx={{
-										backgroundColor: "#323232",
-										borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
-										borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
-									}}
-								>
-									<Typography
-										variant="body"
-										color="#fed300"
-										display="flex"
-										justifyContent="center"
-										align="justify"
-										fontWeight="bold"
-									>
-										CONSULTAS CIUDADANAS
-									</Typography>
-								</Box>
-								{consultaCiudadana !== null ? (
-									<Box
-										display="flex"
-										flexDirection="column"
-										alignItems="center"
-										justifyContent="center"
-										sx={{
-											minHeight: "10rem",
-											height: "100%",
-											boxShadow: 1,
-											backgroundColor: "white",
-											borderRadius: { xs: "0.5rem", md: "1rem" },
-											p: "2rem",
-											pt: "3rem",
-											// pl: "2rem",
-										}}
-									>
-										<Typography
-											variant="h6"
-											color="#323232"
-											display="flex"
-											justifyContent="center"
-											align="center"
-											mb="1rem"
-											pt={{ xs: "1.5rem", md: "0" }}
-											alignContent="center"
-											alignItems="center"
-											// height="35%"
-										>
-											{consultaCiudadana.nombreJornada}
-										</Typography>
-										<Box>
-											{statusBoton.consultaCiudadana === "en espera" ? (
-												<TemporizadorInicio
-													fechaInicio={
-														consultaCiudadana.requestConfigJornada
-															.inicioRecepVoto
+												<Typography
+													variant="h6"
+													color="#323232"
+													display="flex"
+													justifyContent="center"
+													align="center"
+													mb="1rem"
+													pt={{ xs: "1.5rem", md: "0" }}
+													alignContent="center"
+													alignItems="center"
+													// height="35%"
+												>
+													{jornadaNoFormal.nombreJornada}
+												</Typography>
+												<Box>
+													{statusBoton.jornadaNoFormal === "en espera" ? (
+														<TemporizadorInicio
+															fechaInicio={
+																jornadaNoFormal.requestConfigJornada
+																	.inicioRecepVoto
+															}
+															setStatusBoton={setStatusBoton}
+															statusBoton={
+																statusBoton.jornadaNoFormal
+															}
+															boton={"jornadaNoFormal"}
+														/>
+													) : (
+														<TemporizadorFin
+															fechaFin={
+																jornadaNoFormal.requestConfigJornada
+																	.finRecepVoto
+															}
+															setStatusBoton={setStatusBoton}
+															statusBoton={
+																statusBoton.jornadaNoFormal
+															}
+															boton={"jornadaNoFormal"}
+															idProceso={jornadaNoFormal.idJornada}
+															curp={username}
+														/>
+													)}
+												</Box>
+												<Button
+													variant="contained"
+													size="large"
+													color="darkButton"
+													onClick={handleComezarjornadaNoFormal}
+													disabled={
+														statusBoton.jornadaNoFormal ===
+															"en espera" ||
+														statusBoton.jornadaNoFormal ===
+															"terminada" ||
+														status === "checking"
 													}
-													setStatusBoton={setStatusBoton}
-													statusBoton={statusBoton.consultaCiudadana}
-													boton={"consultaCiudadana"}
-												/>
-											) : (
-												<TemporizadorFin
-													fechaFin={
-														consultaCiudadana.requestConfigJornada
-															.finRecepVoto
-													}
-													setStatusBoton={setStatusBoton}
-													statusBoton={statusBoton.consultaCiudadana}
-													boton={"consultaCiudadana"}
-													idProceso={consultaCiudadana.idJornada}
-													curp={username}
-												/>
-											)}
-										</Box>
-										<Button
-											variant="contained"
-											size="large"
-											color="darkButton"
-											disabled={
-												statusBoton.consultaCiudadana === "en espera" ||
-												statusBoton.consultaCiudadana === "terminada" ||
-												status === "checking"
-											}
-											onClick={handleComezarConsultaCiudadana}
-											sx={{
-												boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
-												transition: "all 0.5s ease",
-												// backgroundColor: "#543884",
-												width: { xs: "100%", md: "50%" },
-												// borderRadius: "2rem 2rem 2rem 2rem",
-												"&:hover": {
-													// backgroundColor: "#7E328B !important",
-													transform: "translate(-5px, -5px)",
-													boxShadow: "5px 5px 1px rgba(0, 0, 0, 0.3)",
-												},
-											}}
-										>
-											COMENZAR CONSULTA
-										</Button>
-									</Box>
-								) : (
-									<Box width="100%" height="100%" position="relative">
-										<Box
-											display="flex"
-											flexDirection="column"
-											alignItems="center"
-											justifyContent="center"
-											height="100%"
-											width="100%"
-											zIndex={10}
-											position="absolute"
-											p="2rem"
-											sx={{
-												background: "rgba(120, 120, 120, 0.75 )",
-												borderRadius: { xs: "0.5rem", md: "1rem" },
-												backdropFilter: "blur( 10px )",
-												WebkitBackdropFilter: "blur( 10px )",
-												border: "1px solid rgba( 255, 255, 255, 0.18 )",
-											}}
-										>
-											<Box
-												p={2}
-												mt={4}
-												border="1px solid #f8f7f3"
-												borderRadius="2rem"
-											>
-												{statusJornadas === "checking" ? (
-													<Box sx={{ display: "flex" }}>
-														<CircularProgress color="base" />
+													sx={{
+														boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+														transition: "all 0.5s ease",
+														// backgroundColor: "#543884",
+														width: { xs: "100%", md: "50%" },
+														// borderRadius: "2rem 2rem 2rem 2rem",
+														"&:hover": {
+															// backgroundColor: "#7E328B !important",
+															transform: "translate(-5px, -5px)",
+															boxShadow:
+																"5px 5px 1px rgba(0, 0, 0, 0.3)",
+														},
+													}}
+												>
+													COMENZAR VOTACIÓN
+												</Button>
+											</Box>
+										) : (
+											<Box width="100%" height="100%" position="relative">
+												<Box
+													display="flex"
+													flexDirection="column"
+													alignItems="center"
+													justifyContent="center"
+													height="100%"
+													width="100%"
+													zIndex={10}
+													position="absolute"
+													p="2rem"
+													sx={{
+														background: "rgba(120, 120, 120, 0.75 )",
+														borderRadius: { xs: "0.5rem", md: "1rem" },
+														backdropFilter: "blur( 10px )",
+														WebkitBackdropFilter: "blur( 10px )",
+														border: "1px solid rgba( 255, 255, 255, 0.18 )",
+													}}
+												>
+													<Box
+														p={2}
+														mt={4}
+														border="1px solid #f8f7f3"
+														borderRadius="2rem"
+													>
+														{statusJornadas === "checking" ? (
+															<Box sx={{ display: "flex" }}>
+																<CircularProgress color="base" />
+															</Box>
+														) : (
+															<Typography
+																variant="body1"
+																color="#f8f7f3"
+																display="flex"
+																justifyContent="center"
+																align="center"
+															>
+																No tienes ninguna jornada no formal
+																por contestar
+															</Typography>
+														)}
 													</Box>
-												) : (
+												</Box>
+												<Box
+													display="flex"
+													flexDirection="column"
+													alignItems="center"
+													justifyContent="center"
+													// zIndex={1}
+													// position="absolute"
+													sx={{
+														minHeight: "10rem",
+														height: "100%",
+														boxShadow: 1,
+														backgroundColor: "white",
+														borderRadius: { xs: "0.5rem", md: "1rem" },
+														p: "2rem",
+														// pl: "2rem",
+													}}
+												>
 													<Typography
-														variant="body1"
-														color="#f8f7f3"
+														variant="h6"
+														color="#323232"
 														display="flex"
 														justifyContent="center"
 														align="center"
+														mb="2rem"
+														pt={{ xs: "2rem", md: "0" }}
 													>
-														No tienes ninguna consulta ciudadana por
-														contestar
+														Jornada No formal de ejemplo
 													</Typography>
-												)}
+													<Button
+														variant="contained"
+														size="large"
+														color="darkButton"
+														onClick={handleOpenModal}
+														sx={{
+															boxShadow:
+																"0px 0px 0px rgba(0, 0, 0, 0.3)",
+															transition: "all 0.5s ease",
+															// backgroundColor: "#543884",
+															width: { xs: "100%", md: "50%" },
+															// borderRadius: "2rem 2rem 2rem 2rem",
+															"&:hover": {
+																// backgroundColor: "#7E328B !important",
+																transform: "translate(-5px, -5px)",
+																boxShadow:
+																	"5px 5px 1px rgba(0, 0, 0, 0.3)",
+															},
+														}}
+													>
+														Comenzar Votación
+													</Button>
+												</Box>
 											</Box>
-										</Box>
+										)}
+									</Box>
+								</Grid>
+							) : (
+								<></>
+							)}
+
+							{consultaCiudadana !== null ? (
+								<Grid item xs={12} md={12}>
+									<Box width="100%" height="100%" position="relative">
 										<Box
-											display="flex"
-											flexDirection="column"
-											alignItems="center"
-											justifyContent="center"
-											// zIndex={1}
-											// position="absolute"
+											height="auto"
+											zIndex={9999}
+											position="absolute"
+											width="100%"
+											px={2}
+											py={1}
 											sx={{
-												minHeight: "10rem",
-												height: "100%",
-												boxShadow: 1,
-												backgroundColor: "white",
-												borderRadius: { xs: "0.5rem", md: "1rem" },
-												p: "2rem",
-												// pl: "2rem",
+												backgroundColor: "#323232",
+												borderTopLeftRadius: { xs: "0.5rem", md: "1rem" },
+												borderTopRightRadius: { xs: "0.5rem", md: "1rem" },
 											}}
 										>
 											<Typography
-												variant="h6"
-												color="#323232"
+												variant="body"
+												color="#fed300"
 												display="flex"
 												justifyContent="center"
-												align="center"
-												mb="2rem"
-												pt={{ xs: "2rem", md: "0" }}
+												align="justify"
+												fontWeight="bold"
 											>
-												Consulta ciudadana de ejemplo
+												CONSULTAS CIUDADANAS
 											</Typography>
 										</Box>
+										{consultaCiudadana !== null ? (
+											<Box
+												display="flex"
+												flexDirection="column"
+												alignItems="center"
+												justifyContent="center"
+												sx={{
+													minHeight: "10rem",
+													height: "100%",
+													boxShadow: 1,
+													backgroundColor: "white",
+													borderRadius: { xs: "0.5rem", md: "1rem" },
+													p: "2rem",
+													pt: "3rem",
+													// pl: "2rem",
+												}}
+											>
+												<Typography
+													variant="h6"
+													color="#323232"
+													display="flex"
+													justifyContent="center"
+													align="center"
+													mb="1rem"
+													pt={{ xs: "1.5rem", md: "0" }}
+													alignContent="center"
+													alignItems="center"
+													// height="35%"
+												>
+													{consultaCiudadana.nombreJornada}
+												</Typography>
+												<Box>
+													{statusBoton.consultaCiudadana ===
+													"en espera" ? (
+														<TemporizadorInicio
+															fechaInicio={
+																consultaCiudadana
+																	.requestConfigJornada
+																	.inicioRecepVoto
+															}
+															setStatusBoton={setStatusBoton}
+															statusBoton={
+																statusBoton.consultaCiudadana
+															}
+															boton={"consultaCiudadana"}
+														/>
+													) : (
+														<TemporizadorFin
+															fechaFin={
+																consultaCiudadana
+																	.requestConfigJornada
+																	.finRecepVoto
+															}
+															setStatusBoton={setStatusBoton}
+															statusBoton={
+																statusBoton.consultaCiudadana
+															}
+															boton={"consultaCiudadana"}
+															idProceso={consultaCiudadana.idJornada}
+															curp={username}
+														/>
+													)}
+												</Box>
+												<Button
+													variant="contained"
+													size="large"
+													color="darkButton"
+													disabled={
+														statusBoton.consultaCiudadana ===
+															"en espera" ||
+														statusBoton.consultaCiudadana ===
+															"terminada" ||
+														status === "checking"
+													}
+													onClick={handleComezarConsultaCiudadana}
+													sx={{
+														boxShadow: "0px 0px 0px rgba(0, 0, 0, 0.3)",
+														transition: "all 0.5s ease",
+														// backgroundColor: "#543884",
+														width: { xs: "100%", md: "50%" },
+														// borderRadius: "2rem 2rem 2rem 2rem",
+														"&:hover": {
+															// backgroundColor: "#7E328B !important",
+															transform: "translate(-5px, -5px)",
+															boxShadow:
+																"5px 5px 1px rgba(0, 0, 0, 0.3)",
+														},
+													}}
+												>
+													COMENZAR CONSULTA
+												</Button>
+											</Box>
+										) : (
+											<Box width="100%" height="100%" position="relative">
+												<Box
+													display="flex"
+													flexDirection="column"
+													alignItems="center"
+													justifyContent="center"
+													height="100%"
+													width="100%"
+													zIndex={10}
+													position="absolute"
+													p="2rem"
+													sx={{
+														background: "rgba(120, 120, 120, 0.75 )",
+														borderRadius: { xs: "0.5rem", md: "1rem" },
+														backdropFilter: "blur( 10px )",
+														WebkitBackdropFilter: "blur( 10px )",
+														border: "1px solid rgba( 255, 255, 255, 0.18 )",
+													}}
+												>
+													<Box
+														p={2}
+														mt={4}
+														border="1px solid #f8f7f3"
+														borderRadius="2rem"
+													>
+														{statusJornadas === "checking" ? (
+															<Box sx={{ display: "flex" }}>
+																<CircularProgress color="base" />
+															</Box>
+														) : (
+															<Typography
+																variant="body1"
+																color="#f8f7f3"
+																display="flex"
+																justifyContent="center"
+																align="center"
+															>
+																No tienes ninguna consulta ciudadana
+																por contestar
+															</Typography>
+														)}
+													</Box>
+												</Box>
+												<Box
+													display="flex"
+													flexDirection="column"
+													alignItems="center"
+													justifyContent="center"
+													// zIndex={1}
+													// position="absolute"
+													sx={{
+														minHeight: "10rem",
+														height: "100%",
+														boxShadow: 1,
+														backgroundColor: "white",
+														borderRadius: { xs: "0.5rem", md: "1rem" },
+														p: "2rem",
+														// pl: "2rem",
+													}}
+												>
+													<Typography
+														variant="h6"
+														color="#323232"
+														display="flex"
+														justifyContent="center"
+														align="center"
+														mb="2rem"
+														pt={{ xs: "2rem", md: "0" }}
+													>
+														Consulta ciudadana de ejemplo
+													</Typography>
+												</Box>
+											</Box>
+										)}
 									</Box>
-								)}
-							</Box>
-						</Grid>
-					) : (
-						<></>
+								</Grid>
+							) : (
+								<></>
+							)}
+						</>
 					)}
 				</Grid>
 			</Container>

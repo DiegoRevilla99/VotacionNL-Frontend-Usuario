@@ -1,7 +1,7 @@
 import { Box, Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-import { Button, Grid, IconButton, LinearProgress, TextField } from "@mui/material";
+import { Button, Divider, Grid, IconButton, LinearProgress, TextField } from "@mui/material";
 import { TarjetaRepresentante } from "../components/TarjetaRepresentante";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
@@ -25,6 +25,7 @@ export const EditarBoleta = () => {
 	// const [noBoleta, setNoBoleta] = useState(params.noBoleta + 1);
 	const [candidaturaNoRegistrada, setCandidaturaNoRegistrada] = useState("");
 	const [seleccionados, setSeleccionados] = useState([]);
+	const [esNulo, setEsNulo] = useState(false);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -60,6 +61,159 @@ export const EditarBoleta = () => {
 			setSeleccionados(votos[params.noBoleta]);
 		}
 	}, []);
+
+	useEffect(() => {
+		let partidos = [];
+		if (jornadaActual.tipoJornada === "JornadaFormal") {
+			if (seleccionados.length === 0) {
+			} else {
+				partidos = seleccionados.map((idPartido, indesBoleta) => {
+					if (idPartido === 100)
+						return {
+							clavePartido: "CANORE",
+							idCandidato: 99998,
+						};
+					else if (idPartido === 200)
+						return {
+							clavePartido: "NULO",
+							idCandidato: 99999,
+						};
+					else {
+						const index = boletaActual.candidatos.findIndex((i) => i.id === idPartido);
+						return {
+							claveCoalicion: boletaActual.candidatos[index].claveCoalicion,
+							clavePartido: boletaActual.candidatos[index].clavePartido,
+							idCandidato: boletaActual.candidatos[index].idCandidato,
+						};
+					}
+				});
+			}
+
+			console.log("Cambia");
+			const esNuloVer = verificarCoalicionesPreEnvio(partidos);
+
+			console.log("ES NULO FINAL?", esNuloVer);
+
+			setEsNulo(esNuloVer);
+		} else {
+			if (seleccionados.length === 0) {
+			} else {
+				const partidos = seleccionados.map((idPartido) => {
+					if (idPartido === 100)
+						return {
+							idCandAso: "CANORE",
+							modalidad:
+								boletaActual.modalidad === "REPRESENTANTE"
+									? 1
+									: boletaActual.modalidad === "COMITE"
+									? 2
+									: 3,
+							// nombreCandidato: candidaturaNoRegistrada[indexBoleta],
+						};
+					else if (idPartido === 200)
+						return {
+							idCandAso: "NULO",
+							modalidad:
+								boletaActual.modalidad === "REPRESENTANTE"
+									? 1
+									: boletaActual.modalidad === "COMITE"
+									? 2
+									: 3,
+						};
+					else {
+						return {
+							idCandAso: idPartido,
+							modalidad:
+								boletaActual.modalidad === "REPRESENTANTE"
+									? 1
+									: boletaActual.modalidad === "COMITE"
+									? 2
+									: 3,
+						};
+					}
+				});
+				console.log("PARTIDOS PLANILLAS", partidos);
+				const esNuloFinal = verificarAsociacionesPreEnvio(partidos, boletaActual.modalidad);
+				console.log("ES NULO?", esNuloFinal);
+				const x = esNuloFinal;
+				setEsNulo(x);
+			}
+		}
+	}, [seleccionados]);
+
+	const verificarAsociacionesPreEnvio = (partidos, modalidad) => {
+		const nuevos = [];
+		const array = [];
+		let final = false;
+		console.log("PARTIDOS QUE LLEGAN", partidos, modalidad);
+		if (modalidad !== "PLANILLA") return false;
+		else {
+			console.log("entra primer else");
+			if (partidos[0].idCandAso === "CANORE") {
+				return false;
+			}
+			if (partidos[0].idCandAso === "NULO") {
+				return false;
+			}
+			// const idBoleta = boletaActual.idEstructuraBoleta;
+
+			// const boletaCurrent = boletas.find((boleta) => boleta.idEstructuraBoleta === idBoleta);
+
+			const planillaCurrent = boletaActual.candidatos.find(
+				(planilla) => planilla.id === partidos[0].idCandAso
+			);
+
+			const candidatosId = planillaCurrent.candidatos.map((candidato) => candidato.id);
+
+			partidos.every((seleccion, indexSeleccion) => {
+				const planillaAComparar = boletaActual.candidatos.find(
+					(planilla) => planilla.id === seleccion.idCandAso
+				);
+
+				const candidatosAComparar = planillaAComparar.candidatos.map(
+					(candidato) => candidato.id
+				);
+
+				console.log(`candidatosAComparar`, candidatosAComparar);
+
+				let nulo = false;
+				candidatosId.every((candidato) => {
+					const result = candidatosAComparar.some((candidatoX) => {
+						return candidatoX == candidato;
+					});
+
+					if (result) {
+						// array[index] = false;
+						nulo = true;
+					} else {
+						// array[index] = true;
+						// return false;
+						nulo = false;
+					}
+				});
+				// console.log("nulooooo", nulo);
+				final = nulo;
+				return nulo;
+			});
+			// console.log("FINAL?", final);
+			return !final;
+		}
+		// setCoalicionInvalida(array);
+	};
+
+	const verificarCoalicionesPreEnvio = (partidos) => {
+		const nuevos = [];
+		const array = [];
+		console.log("Partidos", partidos);
+		if (partidos.length === 0) return false;
+		const numero = partidos[0].claveCoalicion;
+		let nulo = partidos.some((partido) => {
+			// if (voto.partidos.length > 1) return partido.claveCoalicion === "SinCoalicion";
+			// if (partido.claveCoalicion === "SinCoalicion")
+			return partido.claveCoalicion !== numero;
+		});
+		return nulo;
+	};
 
 	if (statusPeticion === "checking") return <LinearProgress color="linearProgress" />;
 	else
@@ -191,6 +345,35 @@ export const EditarBoleta = () => {
 									</Grid>
 								</Grid>
 
+								{jornadaActual?.tipoJornada === "JornadaNoFormal" && (
+									<Box>
+										<Box display="flex" justifyContent="center" pb="1rem">
+											<Typography
+												variant="body1"
+												color="initial"
+												align="center"
+											>
+												{boletaActual.modalidad === "COMITE"
+													? `Seleccione ${boletaActual.maxOpciones} opciones`
+													: boletaActual.modalidad === "REPRESENTANTE"
+													? "Seleccione una opción"
+													: "Seleccione las planillas por las que desea votar"}
+											</Typography>
+										</Box>
+										<Divider />
+									</Box>
+								)}
+								<Box
+									sx={{ display: { xs: "none", lg: "flex" } }}
+									justifyContent="center"
+								>
+									<Typography variant="body1" color="error" align="center">
+										{esNulo
+											? "Tu selección dará como resultado voto nulo por coalición invalida"
+											: ""}
+									</Typography>
+								</Box>
+
 								<Grid
 									container
 									spacing={{ xs: 2, md: 3 }}
@@ -267,6 +450,17 @@ export const EditarBoleta = () => {
 										</Grid>
 									)}
 								</Grid>
+								<Box
+									display="flex"
+									pb={2}
+									sx={{ display: { xs: "flex", lg: "none" } }}
+								>
+									<Typography variant="body2" color="error" align="center">
+										{esNulo
+											? "Tu selección dará como resultado voto nulo por coalición invalida"
+											: ""}
+									</Typography>
+								</Box>
 							</Box>
 							<Box
 								sx={{

@@ -265,6 +265,12 @@ export const onComenzarJornadaNoFormal = (jornadaNoFormal, curp, navigate = () =
 	};
 };
 
+export const onSetSesionFalse = (curp) => {
+	return async (dispatch) => {
+		statusVotando(false, curp);
+	};
+};
+
 export const onGetBoletasDeVotante = (uid) => {
 	return async (dispatch) => {
 		// dispatch(onChecking());

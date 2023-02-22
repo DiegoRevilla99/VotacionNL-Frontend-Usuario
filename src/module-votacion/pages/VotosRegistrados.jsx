@@ -296,6 +296,10 @@ export const VotosRegistrados = () => {
 					array.push(false);
 					return;
 				}
+				if (voto.selecciones[0].idCandAso === "NULO") {
+					array.push(false);
+					return;
+				}
 				console.log("VOTO QUE LLEGA CANORE", voto);
 				const idBoleta = voto.boletaModel.idEstructuraBoleta;
 
