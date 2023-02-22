@@ -4,7 +4,7 @@ import { Chart as chartJS } from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useParams } from "react-router-dom";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
-
+const patronURL = /^(ftp|http|https):\/\/[^ "]+$/;
 export const ChartJFormales = ({
   chartData = [
     { votos: 50 },
@@ -53,26 +53,15 @@ export const ChartJFormales = ({
         ],
         image: result.map((data) => {
           // console.log("img:", data);
-          const imgs = data?.partidos?.map((part) => {
-            let link = part.logo;
-            if (!link.includes("http")) {
-              return "";
-            } else {
+          const imgs = data.partidos.map((part) => {
+            if (patronURL.test(part.logo)) {
               return part.logo;
+            } else {
+              return "https://cdn-icons-png.flaticon.com/512/4470/4470321.png";
             }
           });
-          // console.log(imgs);
-          return imgs;
-          /* const link = data.foto ? data.foto : "";
 
-              if (!link.includes("http")) {
-                return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-              } else {
-                if (!link.includes("jpg") || !link.includes("jpg")) {
-                  return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-                } else
-                  return "https://cdn-icons-png.flaticon.com/512/1475/1475137.png";
-            } */
+          return imgs;
         }),
         labels: chartData.map((data) => data.nombre),
       },
@@ -125,8 +114,8 @@ export const ChartJFormales = ({
       ctx.save();
       const imageSize = options.layout.padding.bottom;
       data.datasets[0].image.forEach((imageLink, index) => {
-        imageLink.forEach((imagen, index2) => {
-          try {
+        try {
+          imageLink.forEach((imagen, index2) => {
             const logo = new Image();
             logo.src = imagen;
             ctx.drawImage(
@@ -152,8 +141,8 @@ export const ChartJFormales = ({
               30,
               30
             );
-          } catch (error) {}
-        });
+          });
+        } catch (error) {}
       });
     },
   };
