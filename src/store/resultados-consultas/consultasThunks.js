@@ -1,5 +1,6 @@
 import { convResult } from "../../module-resultados/helpers/AdapaterData";
 import {
+  getConfigConsultaProvider,
   getConsultasCiudadanasProvider,
   getPapeletaByIDProvider,
   getPapeletasProvider,
@@ -10,10 +11,12 @@ import {
   setPapeleta,
   setPapeletas,
   setResultados,
+  setConfigConsulta,
   startLoadingJornadas,
   startLoadingPapeleta,
   startLoadingPapeletas,
   startLoadingResultados,
+  startLoadingConfigConsulta,
 } from "./consultasSlice";
 
 export const getJornadasConsultas = () => {
@@ -72,6 +75,21 @@ export const getResult = (idJornada, idConsulta) => {
 
       dispatch(setResultados({ resultados: convData }));
     } else {
+      dispatch(setResultados({ resultados: false }));
+    }
+  };
+};
+
+export const getConfigConsulta = (id) => {
+  return async (dispatch, getState) => {
+    dispatch(setConfigConsulta({ configConsulta: false }));
+
+    dispatch(startLoadingConfigConsulta());
+    const { ok, data, errorMessage } = await getConfigConsultaProvider(id);
+    if (ok) {
+      dispatch(setConfigConsulta({ configConsulta: data }));
+    } else {
+      dispatch(setConfigConsulta({ configConsulta: false }));
     }
   };
 };

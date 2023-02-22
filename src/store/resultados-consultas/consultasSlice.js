@@ -9,7 +9,9 @@ export const consultasSlice = createSlice({
     isLoadingPapeletas: false,
     isLoadingPapeleta: false,
     isLoadingResultados: false,
+    isLoadingConfigConsulta: false,
     resultados: false,
+    configConsulta: false,
     papeletas: [],
     status: "",
     errorMessage: "",
@@ -46,6 +48,15 @@ export const consultasSlice = createSlice({
       state.isLoadingPapeletas = false;
       state.papeletas = action.payload.papeletas;
     },
+
+    startLoadingConfigConsulta: (state /* action */) => {
+      state.isLoadingConfigConsulta = true;
+    },
+    setConfigConsulta: (state, action) => {
+      state.isLoadingConfigConsulta = false;
+      state.configConsulta = action.payload.configConsulta;
+    },
+
     onOkPeticion: (state) => {
       state.statusPeticion = "ok";
     },
@@ -68,6 +79,8 @@ export const {
   setResultados,
   startLoadingPapeleta,
   setPapeleta,
+  startLoadingConfigConsulta,
+  setConfigConsulta,
 } = consultasSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

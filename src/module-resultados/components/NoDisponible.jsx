@@ -27,15 +27,28 @@ export const NoDisponible = ({ titulo = "" }) => {
           height: "auto",
         }}
       >
-        <Typography
-          textAlign={"center"}
-          sx={{
-            fontSize: { lg: "25px", md: "20px", xs: "18px" },
-            fontWeight: "bold",
-          }}
-        >
-          RESULTADOS NO DISPONIBLES DE "{titulo}"
-        </Typography>
+        {titulo === "" ? (
+          <Typography
+            textAlign={"center"}
+            sx={{
+              fontSize: { lg: "25px", md: "20px", xs: "18px" },
+              fontWeight: "bold",
+            }}
+          >
+            RESULTADOS NO DISPONIBLES
+          </Typography>
+        ) : (
+          <Typography
+            textAlign={"center"}
+            sx={{
+              fontSize: { lg: "25px", md: "20px", xs: "18px" },
+              fontWeight: "bold",
+            }}
+          >
+            RESULTADOS NO DISPONIBLES DE "{titulo}"
+          </Typography>
+        )}
+
         <img
           width={"200px"}
           height="200px"

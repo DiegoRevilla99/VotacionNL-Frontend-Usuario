@@ -29,13 +29,18 @@ import { Resumen } from "../components/Resumen";
 import { GridCandNoFormales } from "../components/noFormales/GridCandNoFormales";
 import { GraficasRepComite } from "../components/GraficasRepComite";
 import { ChartEjemplo } from "../components/formales/chartEjemplo";
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 
 export const ResultadosRepNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
-  const { resultados, isLoadingResultados, boleta } = useSelector(
-    (state) => state.noformales
-  );
+  const {
+    resultados,
+    isLoadingResultados,
+    isLoadingConfigJornada,
+    boleta,
+    configJornada,
+  } = useSelector((state) => state.noformales);
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
   const smsize = useMediaQuery(theme.breakpoints.down("sm"));
@@ -47,12 +52,12 @@ export const ResultadosRepNF = ({}) => {
     // setUpdate(true);
     // console.log("jornada:", jornada);
     // console.log("consulta:", id);
-    // dispatch(getResult(jornada, id));
+    dispatch(getResult(jornada, id));
     dispatch(getBoletaBYIDFormales(id));
   }, []);
 
   useEffect(() => {
-    // console.log("boleta:", boleta);
+    console.log("boleta:", boleta);
   }, [boleta]);
 
   /* useEffect(() => {
@@ -70,6 +75,7 @@ export const ResultadosRepNF = ({}) => {
     console.log("cambio");
   }, [resultados]); */
 
+  console.log("Configuracion", configJornada);
   return (
     <>
       {isLoadingResultados ? (
@@ -87,7 +93,7 @@ export const ResultadosRepNF = ({}) => {
           </Typography>
           <CircularProgress color="primary" />
         </Stack>
-      ) : true ? (
+      ) : boleta ? (
         <Box
           display={"flex"}
           width={"100%"}
@@ -97,6 +103,27 @@ export const ResultadosRepNF = ({}) => {
           alignItems="center"
           className="animate__animated animate__fadeInUp"
         >
+          <BreadCrumbsCustom
+            routes={[
+              {
+                name: "INICIO",
+                url: "/resultados/inicio/",
+              },
+              {
+                name: "JORNADAS NO FORMALES",
+                url: "/resultados/noformales/",
+              },
+
+              {
+                name: !isLoadingConfigJornada
+                  ? configJornada?.eleccionModel?.nombreEleccion
+                  : "...",
+                url: `/resultados/boletas-noformales/${configJornada?.eleccionModel?.idEleccion}/`,
+              },
+            ]}
+            currentRoute={!isLoadingConfigJornada ? boleta?.boleta : "..."}
+            //currentRoute={"ELECCIONES DE REPRESENTANTE ESTUDIANTIL"}
+          ></BreadCrumbsCustom>
           <Typography
             sx={{
               mb: 3,

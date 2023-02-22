@@ -2,14 +2,17 @@ import { toNoFormal } from "../../module-resultados/helpers/AdapaterData";
 import {
   getBoletaNFProvider,
   getBoletasNFProvider,
+  getConfigJornadaNFProvider,
   getJornadasNFProvider,
   getResultadosNFProvider,
 } from "../../providers/Micro-JornadaNoFormal/providerNoFormal";
 import {
   setBoleta,
   setBoletas,
+  setConfigJornada,
   setJornadas,
   setResultados,
+  startConfigJornada,
   startLoadingBoleta,
   startLoadingBoletas,
   startLoadingJornadas,
@@ -66,6 +69,8 @@ export const getResultNoFormal = (idJornada, idConsulta) => {
 
       if (newData) {
         convData = toNoFormal(newData);
+      } else {
+        dispatch(setBoleta({ boleta: false }));
       }
 
       console.log(convData);
@@ -73,6 +78,21 @@ export const getResultNoFormal = (idJornada, idConsulta) => {
       dispatch(setResultados({ resultados: data }));
       dispatch(setBoleta({ boleta: convData }));
     } else {
+    }
+  };
+};
+
+export const getConfigJornada = (idJornada) => {
+  return async (dispatch, getState) => {
+    dispatch(setConfigJornada({ configJornada: false }));
+    dispatch(startConfigJornada());
+    const { ok, data, errorMessage } = await getConfigJornadaNFProvider(
+      idJornada
+    );
+    if (ok) {
+      dispatch(setConfigJornada({ configJornada: data }));
+    } else {
+      dispatch(setConfigJornada({ configJornada: false }));
     }
   };
 };

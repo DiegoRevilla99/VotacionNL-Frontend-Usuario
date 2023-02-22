@@ -8,12 +8,14 @@ export const formalesSlice = createSlice({
     isLoadingBoletas: false,
     isLoadingBoleta: false,
     isLoadingResultados: false,
+    isLoadingConfigJornadaFormal: false,
     resultados: false,
     boletas: [],
     boleta: false,
     resultados: false,
     isLoadingBoletaInfo: false,
     boletaInfo: false,
+    configJornadaFormal: false,
     status: "",
     errorMessage: "",
     statusPeticion: "off",
@@ -55,6 +57,14 @@ export const formalesSlice = createSlice({
       state.boletaInfo = action.payload.boletaInfo;
     },
 
+    startLoadingConfigJornadaFormal: (state /* action */) => {
+      state.isLoadingConfigJornadaFormal = true;
+    },
+    setConfigJornadaFormal: (state, action) => {
+      state.isLoadingConfigJornadaFormal = false;
+      state.configJornadaFormal = action.payload.configJornadaFormal;
+    },
+
     onOkPeticion: (state) => {
       state.statusPeticion = "ok";
     },
@@ -79,6 +89,8 @@ export const {
   setBoleta,
   startLoadingBoletaInfo,
   setBoletaInfo,
+  startLoadingConfigJornadaFormal,
+  setConfigJornadaFormal,
 } = formalesSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;

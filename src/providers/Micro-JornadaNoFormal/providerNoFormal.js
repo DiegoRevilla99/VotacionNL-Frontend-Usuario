@@ -56,3 +56,16 @@ export const getResultadosNFProvider = async (idJornada) => {
     return { ok: false };
   }
 };
+
+export const getConfigJornadaNFProvider = async (idJornada) => {
+  try {
+    // **FETCH
+    const response = await jornadaNoFormalApi.get(
+      "jornada/no_formal/" + idJornada + "/informacion"
+    );
+    console.log(response);
+    return { ok: true, data: response.data };
+  } catch (error) {
+    return { ok: false };
+  }
+};

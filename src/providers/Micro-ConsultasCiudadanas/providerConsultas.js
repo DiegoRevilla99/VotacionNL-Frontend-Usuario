@@ -48,3 +48,17 @@ export const getPapeletaByIDProvider = async (idBallot) => {
     return { ok: false, errorMessage: error.message };
   }
 };
+
+export const getConfigConsultaProvider = async (idBallot) => {
+  try {
+    // **FETCH
+
+    const { data } = await consultasAPI.get(
+      "jornada/consulta/" + idBallot + "/informacion"
+    );
+    console.log("jornadaConsulta", data);
+    return { ok: true, data: data };
+  } catch (error) {
+    return { ok: false, errorMessage: error.message };
+  }
+};

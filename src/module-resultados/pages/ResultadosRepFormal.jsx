@@ -25,18 +25,25 @@ import { CardCandidatos } from "../components/formales/CardCandidatos";
 import { NoDisponible } from "../components/NoDisponible";
 import {
   getBoletaBYIDFormales,
+  getConfigJornadaFormal,
   getResultFormales,
 } from "../../store/resultados-formales/formalesThunks";
 import { GridCandFormales } from "../components/formales/GridCandFormales";
 import { Resumen } from "../components/Resumen";
 import { ChartJFormales } from "../components/formales/chartJFormales";
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 
 export const ResultadosRepFormal = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
-  const { resultados, isLoadingResultados, boleta, boletaInfo } = useSelector(
-    (state) => state.formales
-  );
+  const {
+    resultados,
+    isLoadingResultados,
+    boleta,
+    boletaInfo,
+    isLoadingConfigJornadaFormal,
+    configJornadaFormal,
+  } = useSelector((state) => state.formales);
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
   const smsize = useMediaQuery(theme.breakpoints.only("sm"));
@@ -73,8 +80,10 @@ export const ResultadosRepFormal = ({}) => {
     // console.log("jornada:", jornada);
     // console.log("consulta:", id);
     // dispatch(getResult(jornada, id));
+
     dispatch(getBoletaBYIDFormales(id));
     dispatch(getResultFormales(jornada, id));
+    dispatch(getConfigJornadaFormal(jornada));
   }, []);
 
   useEffect(() => {
@@ -123,6 +132,28 @@ export const ResultadosRepFormal = ({}) => {
           alignItems="center"
           className="animate__animated animate__fadeInUp"
         >
+          <BreadCrumbsCustom
+            routes={[
+              {
+                name: "INICIO",
+                url: "/resultados/inicio/",
+              },
+              {
+                //
+                name: "JORNADAS FORMALES",
+                url: "/resultados/formales/",
+              },
+              {
+                name: !isLoadingConfigJornadaFormal
+                  ? configJornadaFormal?.eleccionModel?.nombreJornada
+                  : "...",
+                url: `/resultados/boletas-formales/${configJornadaFormal?.eleccionModel?.idJornada}/`,
+              },
+            ]}
+            currentRoute={
+              !isLoadingResultados ? boletaInfo?.nombreEstructuraBoleta : "..."
+            }
+          ></BreadCrumbsCustom>
           <Typography
             sx={{
               mb: 3,

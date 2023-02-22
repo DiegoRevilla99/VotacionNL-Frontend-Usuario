@@ -1,6 +1,7 @@
 import {
   getBoletabyIDProvider,
   getBoletasFormalesProvider,
+  getConfigJornadaFormalesProvider,
   getJornadasFormalesProvider,
   getResultadosFormalesProvider,
 } from "../../providers/Micro-JornadaFormal/providerFormal";
@@ -10,11 +11,13 @@ import {
   setBoletas,
   setJornadas,
   setResultados,
+  setConfigJornadaFormal,
   startLoadingBoleta,
   startLoadingBoletaInfo,
   startLoadingBoletas,
   startLoadingJornadas,
   startLoadingResultados,
+  startLoadingConfigJornadaFormal,
 } from "./formalesSlice";
 
 export const getJornadasFormales = () => {
@@ -135,5 +138,20 @@ const toRepFormal = (data) => {
     cnr: totalcnr,
     acumuladas,
     winner: candidatos[0],
+  };
+};
+
+export const getConfigJornadaFormal = (idJornada) => {
+  return async (dispatch, getState) => {
+    dispatch(setConfigJornadaFormal({ configJornadaFormal: false }));
+    dispatch(startLoadingConfigJornadaFormal());
+    const { ok, data, errorMessage } = await getConfigJornadaFormalesProvider(
+      idJornada
+    );
+    if (ok) {
+      dispatch(setConfigJornadaFormal({ configJornadaFormal: data }));
+    } else {
+      dispatch(setConfigJornadaFormal({ configJornadaFormal: false }));
+    }
   };
 };

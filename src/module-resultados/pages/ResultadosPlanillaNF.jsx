@@ -31,13 +31,17 @@ import { GraficasRepComite } from "../components/GraficasRepComite";
 import { ChartEjemplo } from "../components/formales/chartEjemplo";
 import { ChartPlanilla } from "../components/noFormales/chartPlanillla";
 import { GridPlanilla } from "../components/noFormales/GridPlanilla";
-
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 export const ResultadosPlanillaNF = ({}) => {
   const { jornada, id } = useParams();
   const dispatch = useDispatch();
-  const { resultados, isLoadingResultados, boleta } = useSelector(
-    (state) => state.noformales
-  );
+  const {
+    resultados,
+    isLoadingResultados,
+    isLoadingConfigJornada,
+    configJornada,
+    boleta,
+  } = useSelector((state) => state.noformales);
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
   const smsize = useMediaQuery(theme.breakpoints.down("sm"));
@@ -99,6 +103,26 @@ export const ResultadosPlanillaNF = ({}) => {
           alignItems="center"
           className="animate__animated animate__fadeInUp"
         >
+          <BreadCrumbsCustom
+            routes={[
+              {
+                name: "INICIO",
+                url: "/resultados/inicio/",
+              },
+              {
+                name: "JORNADAS NO FORMALES",
+                url: "/resultados/noformales/",
+              },
+
+              {
+                name: !isLoadingConfigJornada
+                  ? configJornada?.eleccionModel?.nombreEleccion
+                  : "...",
+                url: `/resultados/boletas-noformales/${configJornada?.eleccionModel?.idEleccion}/`,
+              },
+            ]}
+            currentRoute={!isLoadingResultados ? boleta?.boleta : "..."}
+          ></BreadCrumbsCustom>
           <Typography
             sx={{
               mb: 3,

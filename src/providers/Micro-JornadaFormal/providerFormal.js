@@ -78,3 +78,14 @@ export const getResultadosFormalesProvider = async (idJornada) => {
     return { ok: false };
   }
 }; */
+
+export const getConfigJornadaFormalesProvider = async (idJornada) => {
+  try {
+    const response = await jornadaFormalApi.get(
+      "/jornada/electoral/configuraciones_disp/" + idJornada
+    );
+    return { ok: true, data: response.data.data };
+  } catch (error) {
+    return { ok: false };
+  }
+};

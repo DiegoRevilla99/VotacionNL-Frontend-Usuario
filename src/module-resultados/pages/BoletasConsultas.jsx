@@ -12,15 +12,23 @@ import { GridBoletas } from "../components/GridBoletas";
 import { GridBoletasConsultas } from "../components/GridBoletasConsultas";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getPapletas } from "../../store/resultados-consultas/consultasThunks";
+import {
+  getConfigConsulta,
+  getPapletas,
+} from "../../store/resultados-consultas/consultasThunks";
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 
 export const BoletasConsultas = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [jornada, setjornada] = useState(null);
-  const { jornadas, papeletas, isLoadingPapeletas } = useSelector(
-    (state) => state.consultas
-  );
+  const {
+    jornadas,
+    papeletas,
+    isLoadingPapeletas,
+    isLoadingConfigConsulta,
+    configConsulta,
+  } = useSelector((state) => state.consultas);
 
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
@@ -50,6 +58,7 @@ export const BoletasConsultas = () => {
   };
   useEffect(() => {
     dispatch(getPapletas(id));
+    dispatch(getConfigConsulta(id));
     const jornadaa = getJornada(id);
     console.log(jornadaa);
     console.log(jornadas);
@@ -64,6 +73,24 @@ export const BoletasConsultas = () => {
       justifyContent="center"
       sx={{ mt: 5, width: "100%", height: "auto" }}
     >
+      <BreadCrumbsCustom
+        routes={[
+          {
+            name: "INICIO",
+            url: "/resultados/inicio/",
+          },
+          {
+            //
+            name: "CONSULTAS",
+            url: "/resultados/consultas/",
+          },
+        ]}
+        currentRoute={
+          !isLoadingConfigConsulta
+            ? configConsulta?.jornadaModel?.nombreJornada
+            : "..."
+        }
+      ></BreadCrumbsCustom>
       <Box
         display={"flex"}
         flexDirection="column"
@@ -87,7 +114,7 @@ export const BoletasConsultas = () => {
             fontWeight: "bold",
           }}
         >
-          {jornada?.nombreJornada ? jornada.nombreJornada : "Elige"}
+          {configConsulta?.jornadaModel?.nombreJornada}
         </Typography>
         <SearchCustome
           buscador={buscador}
