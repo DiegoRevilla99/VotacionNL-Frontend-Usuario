@@ -34,7 +34,10 @@ export const ChartJFormales = ({
 
   const [data, setData] = useState({
     // labels: chartData.map((data) => data.nombre),
-    labels: result.map((data) => data.nombre),
+    labels: result.map((data) => {
+      let nl = data.nombre.split(" ");
+      return nl;
+    }),
     datasets: [
       {
         label: "Votos",
@@ -137,7 +140,7 @@ export const ChartJFormales = ({
                     : 1)) *
                   (index2 + 1),
               // x.getPixelForValue(index) - 80 + 80 / (index2 * index2 + 1),
-              y.getPixelForValue(0) + 30,
+              y.getPixelForValue(0) + 100,
               30,
               30
             );
@@ -209,7 +212,7 @@ export const ChartJFormales = ({
           responsive: true,
           layout: {
             padding: {
-              bottom: 60,
+              bottom: 80,
             },
           },
 

@@ -79,7 +79,10 @@ export function Graficas({ titulo, resultados, etiquetas, img }) {
   };
 
   const [data, setData] = useState({
-    labels: etiquetas.map((data) => "                   " + data + ""),
+    labels: etiquetas.map((data) => {
+      let nl = data.split(" ");
+      return nl;
+    }),
     datasets: [
       {
         label: "Votos",
