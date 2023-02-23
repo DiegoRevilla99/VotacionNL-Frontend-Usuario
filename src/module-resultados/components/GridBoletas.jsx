@@ -3,7 +3,7 @@ import React from "react";
 import { BoletaCard } from "./BoletaCard";
 import { EleccionCard } from "./EleccionCard";
 
-export const GridBoletas = ({ more = false, boletas = [] }) => {
+export const GridBoletas = ({ disponible, more = false, boletas = [] }) => {
   return (
     <Box
       className="animate__animated animate__fadeInUp"
@@ -14,7 +14,9 @@ export const GridBoletas = ({ more = false, boletas = [] }) => {
       width={"100%"}
     >
       {boletas?.length > 0 ? (
-        boletas?.map((boleta) => <BoletaCard boleta={boleta}></BoletaCard>)
+        boletas?.map((boleta) => (
+          <BoletaCard disponible={disponible} boleta={boleta}></BoletaCard>
+        ))
       ) : (
         <Typography>No se encontró información</Typography>
       )}

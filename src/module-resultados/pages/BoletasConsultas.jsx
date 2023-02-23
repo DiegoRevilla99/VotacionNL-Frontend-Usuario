@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   CircularProgress,
   IconButton,
@@ -32,6 +33,8 @@ export const BoletasConsultas = () => {
 
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
+  const [disponible, setDisponible] = useState(true);
+
   const handleSearch = (event) => {
     setBuscador(event.target.value);
     searching(papeletas, event.target.value);
@@ -50,6 +53,17 @@ export const BoletasConsultas = () => {
     setDataSearch(papeletas);
   }, [papeletas]);
 
+  useEffect(() => {
+    const now = new Date();
+    const fin = new Date(configConsulta?.configuracionModel?.finRecepVoto);
+    console.log("FIN: ", fin);
+    if (now > fin) {
+      setDisponible(true);
+    } else {
+      setDisponible(false);
+    }
+  }, [configConsulta]);
+
   const getJornada = (id) => {
     return jornadas.find((jornada) => {
       console.log(jornada);
@@ -60,8 +74,7 @@ export const BoletasConsultas = () => {
     dispatch(getPapletas(id));
     dispatch(getConfigConsulta(id));
     const jornadaa = getJornada(id);
-    console.log(jornadaa);
-    console.log(jornadas);
+
     setjornada(jornadaa);
   }, []);
 
@@ -116,6 +129,14 @@ export const BoletasConsultas = () => {
         >
           {configConsulta?.jornadaModel?.nombreJornada}
         </Typography>
+
+        {/* {JSON.stringify(configConsulta?.configuracionModel?.finRecepVoto)} */}
+
+        {!disponible && (
+          <Alert sx={{ mb: 3 }} severity="warning">
+            Los resultados de esta jornada aún no estan disponibles
+          </Alert>
+        )}
         <SearchCustome
           buscador={buscador}
           handleSearch={handleSearch}
@@ -150,7 +171,10 @@ export const BoletasConsultas = () => {
             </Stack>
           ) : (
             <Box sx={{ width: "100%", p: 3, mt: 3 }}>
-              <GridBoletasConsultas papeletas={dataSearch} />
+              <GridBoletasConsultas
+                disponible={disponible}
+                papeletas={dataSearch}
+              />
             </Box>
           )}
         </Box>

@@ -4,7 +4,11 @@ import { BoletaCard } from "./BoletaCard";
 import { BoletaConsultaCard } from "./BoletaConsultaCard";
 import { EleccionCard } from "./EleccionCard";
 
-export const GridBoletasConsultas = ({ more = false, papeletas = [] }) => {
+export const GridBoletasConsultas = ({
+  disponible,
+  more = false,
+  papeletas = [],
+}) => {
   return (
     <Box
       className="animate__animated animate__fadeInUp"
@@ -15,7 +19,9 @@ export const GridBoletasConsultas = ({ more = false, papeletas = [] }) => {
       width={"100%"}
     >
       {papeletas?.length > 0 ? (
-        papeletas.map((papeleta) => <BoletaConsultaCard papeleta={papeleta} />)
+        papeletas.map((papeleta) => (
+          <BoletaConsultaCard disponible={disponible} papeleta={papeleta} />
+        ))
       ) : (
         <Typography> No se encontró información</Typography>
       )}

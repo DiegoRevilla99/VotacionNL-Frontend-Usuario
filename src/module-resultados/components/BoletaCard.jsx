@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const BoletaCard = ({ boleta }) => {
+export const BoletaCard = ({ disponible, boleta }) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -47,6 +47,7 @@ export const BoletaCard = ({ boleta }) => {
         >
           <Typography textAlign={"center"}>{boleta?.municipio}</Typography>
           <Button
+            disabled={!disponible}
             sx={{ mt: 2, background: "#2D2B28", color: "#fff" }}
             onClick={() => {
               goTo(

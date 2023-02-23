@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   CircularProgress,
   IconButton,
@@ -30,6 +32,7 @@ export const BoletasFormales = () => {
   } = useSelector((state) => state.formales);
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
+  const [disponible, setDisponible] = useState(true);
   const handleSearch = (event) => {
     setBuscador(event.target.value);
     searching(boletas, event.target.value);
@@ -54,7 +57,6 @@ export const BoletasFormales = () => {
 
   const getJornada = (id) => {
     return jornadas.find((jornada) => {
-      console.log(jornada);
       if (jornada.idJornada.toString() === id.toString()) return jornada;
     });
   };
@@ -63,10 +65,19 @@ export const BoletasFormales = () => {
     dispatch(getBoletasFormales(id));
     dispatch(getConfigJornadaFormal(id));
     const jornadaa = getJornada(id);
-    console.log(jornadaa);
-    console.log(jornadas);
     setjornada(jornadaa);
   }, []);
+
+  useEffect(() => {
+    const now = new Date();
+    const fin = new Date(configJornadaFormal?.configuracionModel?.finRecepVoto);
+    console.log("FIN: ", fin);
+    if (now > fin) {
+      setDisponible(true);
+    } else {
+      setDisponible(false);
+    }
+  }, [configJornadaFormal]);
 
   return (
     <Box
@@ -94,6 +105,7 @@ export const BoletasFormales = () => {
             : "..."
         }
       ></BreadCrumbsCustom>
+      {/* {JSON.stringify(configJornadaFormal?.configuracionModel?.finRecepVoto)} */}
       <Box
         display={"flex"}
         flexDirection="column"
@@ -115,11 +127,18 @@ export const BoletasFormales = () => {
             p: 2,
             fontSize: { lg: "22px", sm: "18px", xs: "15px" },
             fontWeight: "bold",
-            mb: 3,
+            mb: 2,
           }}
         >
           {configJornadaFormal?.eleccionModel?.nombreJornada}
         </Typography>
+
+        {!disponible && (
+          <Alert sx={{ mb: 3 }} severity="warning">
+            Los resultados de esta jornada aún no estan disponibles
+          </Alert>
+        )}
+
         <SearchCustome
           buscador={buscador}
           handleSearch={handleSearch}
@@ -157,7 +176,7 @@ export const BoletasFormales = () => {
               </Stack>
             ) : (
               <Box sx={{ width: "100%", p: 3, mt: 3 }}>
-                <GridBoletas boletas={dataSearch} />
+                <GridBoletas disponible={disponible} boletas={dataSearch} />
               </Box>
             )}
           </Box>

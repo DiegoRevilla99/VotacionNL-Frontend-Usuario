@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   CircularProgress,
   IconButton,
@@ -32,6 +33,7 @@ export const BoletasNoFormales = () => {
 
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
+  const [disponible, setDisponible] = useState(true);
   const handleSearch = (event) => {
     setBuscador(event.target.value);
     searching(boletas, event.target.value);
@@ -69,6 +71,17 @@ export const BoletasNoFormales = () => {
     setjornada(jornadaa);
   }, []);
 
+  useEffect(() => {
+    const now = new Date();
+    const fin = new Date(configJornada?.configuracionModel?.finRecepVoto);
+    console.log("FIN: ", fin);
+    if (now > fin) {
+      setDisponible(true);
+    } else {
+      setDisponible(false);
+    }
+  }, [configJornada]);
+
   return (
     <Box
       display={"flex"}
@@ -95,6 +108,7 @@ export const BoletasNoFormales = () => {
             : "..."
         }
       ></BreadCrumbsCustom>
+      {/* {JSON.stringify(configJornada?.configuracionModel?.finRecepVoto)} */}
       <Box
         display={"flex"}
         flexDirection="column"
@@ -121,6 +135,12 @@ export const BoletasNoFormales = () => {
         >
           {configJornada?.eleccionModel?.nombreEleccion}
         </Typography>
+        {!disponible && (
+          <Alert sx={{ mb: 3 }} severity="warning">
+            Los resultados de esta jornada aún no estan disponibles
+          </Alert>
+        )}
+
         <SearchCustome
           buscador={buscador}
           handleSearch={handleSearch}
@@ -156,7 +176,7 @@ export const BoletasNoFormales = () => {
             </Stack>
           ) : (
             <Box sx={{ width: "100%", p: 3, mt: 3 }}>
-              <GridBoletasNF boletas={dataSearch} />
+              <GridBoletasNF disponible={disponible} boletas={dataSearch} />
             </Box>
           )}
         </Box>

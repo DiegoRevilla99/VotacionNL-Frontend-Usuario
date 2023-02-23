@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const BoletaNFCard = ({ boleta }) => {
+export const BoletaNFCard = ({ disponible, boleta }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const goTo = (url) => {
@@ -49,6 +49,7 @@ export const BoletaNFCard = ({ boleta }) => {
             sx={{ mt: 2, background: "#fff", color: "#000" }}
             color="inherit"
             variant="contained"
+            disabled={!disponible}
             onClick={() =>
               goTo(
                 "/resultados/result-noformal/" +
