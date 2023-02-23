@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { object, string, ref } from "yup";
 import { onLoginWithEmailAndPassword } from "../../store/auth/authThunks";
-
+import { PasswordTextField } from "../components/PasswordTextField";
 const validationSchema = object({
 	curp: string("").required("Este campo es requerido"),
 	password: string("").required("Este campo es requerido"),
