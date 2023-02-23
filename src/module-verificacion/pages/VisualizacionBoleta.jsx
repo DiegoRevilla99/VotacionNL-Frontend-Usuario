@@ -1,3 +1,7 @@
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import SearchIcon from '@mui/icons-material/Search';
+import ReactPaginate from 'react-paginate';
+
 import {
   Box,
   Button, Grid, LinearProgress, TextField, Typography
@@ -5,43 +9,54 @@ import {
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { Container } from "@mui/system";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-  //   import { useJornadaStore } from "../hooks/useJornadaStore";
-  //   import {
-  //     onDeleteJornada,
-  //     onGetjornadas,
-  //     // onGetJornadasFormales,
-  //   } from "../../store/module-preparacion/jornada/ThunksJornada";
-  //   import { onSetJornadaSelected } from "../../store/module-preparacion/jornada/SliceJornada";
-  import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useParams } from "react-router-dom";
-  // ----------- Bradcrumbs ----------
-// import { experimentalStyled as styled } from '@mui/material/styles';
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { Container } from "@mui/system";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
 import { BotonBack } from "../components/botonback";
 import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
-// ----------- Bradcrumbs ----------
+import '../styles/style.css';
+
   export const VisualizacionBoleta = () => {
     const navigate = useNavigate();
+
+    const [searchBoleta, setSearchBoleta] = useState('');
+    const params = useParams();
+    const { jornadasFolio } = useVerficacionStore();
+    const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
+    
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 6;
+    
+    const handlePageChange = ({ selected }) => {
+      setCurrentPage(selected);
+    };
+    
+    const [boletasFiltradas, setBoletasFiltradas] = useState(jornadaEncontrar.boletas);
+    
+    useEffect(() => {
+      const filtered = jornadaEncontrar.boletas.filter((boleta) =>
+        boleta.idBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
+      );
+      setBoletasFiltradas(filtered);
+      setCurrentPage(0);
+    }, [searchBoleta, jornadaEncontrar]);
+    
+    const paginatedBoletas = useMemo(() => {
+      const startIndex = currentPage * itemsPerPage;
+      return boletasFiltradas.slice(startIndex, startIndex + itemsPerPage);
+    }, [currentPage, boletasFiltradas]);
+    
+    const handleSearchChange = event => {
+      const value = event.target.value.toLowerCase();
+      setSearchBoleta(value);
+    };
+    
   	const plantilla1 = (idBoleta) => {
       navigate("/verificacion/visualizacion/boleta/"+params.id+"/group/"+idBoleta);
     };
 
-    const params = useParams();
-    // console.log("imprimimos el store",params);
-    const { jornadasFolio } = useVerficacionStore();
-    // console.log("imprimimos el stro",jornadasFolio);
-    const [searchBoleta, setSearchBoleta] = useState('');
-
-    const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
-
-    const boletasFiltradas = jornadaEncontrar.boletas.filter((boleta) =>
-    boleta.idBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
-  );
     if (status === "checking")
       return (
         <Box sx={{ width: "100%" }}>
@@ -142,41 +157,60 @@ import { useVerficacionStore } from '../hooks/useVerificacionStore';
               </Box>
               <Box ml={1} mr={1} mt={4} mb={1}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {boletasFiltradas.map((boleta, index) => (
+                  {paginatedBoletas.map((boleta, index) => (
                     <Grid item xs={4} sm={4} md={6} key={index}>
-                        <Card 
-                        sx={{ minWidth: 247 }} 
+                      <Card
+                        sx={{ minWidth: 247 }}
                         onClick={() => plantilla1(boleta.idBoleta)}
-                        style={{ 
+                        style={{
                           backgroundColor: "#5438849e",
                           color: "#FFFFFF",
-                      }} >
-                          <CardContent>
-                            <Typography sx={{ fontSize: 14 }} color="text" gutterBottom>
-                              Boleta {index}
-                            </Typography>
-                            <Typography variant="h6" component="div">
-                              {boleta.idBoleta}
-                            </Typography>
-                          </CardContent>
-                          <CardActions>
-                            <Button 
-                          // onClick={plantilla1}
+                        }}
+                      >
+                        <CardContent>
+                          <Typography sx={{ fontSize: 14, opacity: 1 }} color="text" gutterBottom>
+                          BOLETA PERTENECIENTE A LA JORNADA:
+                          </Typography>
+                          <Typography sx={{ fontSize: 14, opacity: 0.8 }} color="yellow" gutterBottom>
+                           {jornadaEncontrar.jornadaModel.nombreJornada}
+                          </Typography>
+                          <Typography variant="h7" component="div">
+                            ID DE LA BOLETA:
+                          </Typography>
+                          <Typography variant="h6" component="div">
+                            {boleta.idBoleta}
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Button
                             onClick={() => plantilla1(boleta.idBoleta)}
-                            sx={{ 
-                              color: "#364691", 
-                              "&:hover": {
-                                // background: "linear-gradient(45deg, #f0b91a8a 30%, #f0b91a8a 90%)",
-                                // color: "#FFFFFF",
-                              }, }}
-                            size="large" 
-                            endIcon = {<ArrowOutwardIcon/>} >Detalles</Button>
-                          </CardActions>
-                        </Card>
-
-                            </Grid>
-                            ))}
-                        </Grid>
+                            sx={{
+                              color: "#364691",
+                              "&:hover": {},
+                            }}
+                            size="large"
+                            endIcon={<ArrowOutwardIcon />}
+                          >
+                            Detalles
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+                <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <ReactPaginate
+        previousLabel={"Anterior"}
+        nextLabel={"Siguiente"}
+        pageCount={Math.ceil(boletasFiltradas.length / itemsPerPage)}
+        onPageChange={handlePageChange}
+        containerClassName={"pagination"}
+        previousLinkClassName={"pagination__link"}
+        nextLinkClassName={"pagination__link"}
+        disabledClassName={"pagination__link--disabled"}
+        activeClassName={"pagination__link--active"}
+      />
+    </div>
                 </Box>
                 </>
                 ):
