@@ -53,7 +53,7 @@ export const EstablecerContrasenia = () => {
 					// pl: "2rem",
 				}}
 			>
-				{status === "error" ? (
+				{status === "error" || curp === null ? (
 					<Box>
 						{status === "checking" ? (
 							<Box

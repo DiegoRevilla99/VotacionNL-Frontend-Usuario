@@ -15,8 +15,9 @@ export const loginWithEmailAndPassword = async (email, password) => {
 			refreshToken: data.refreshToken,
 		};
 	} catch (error) {
-		console.log(error);
-		return { ok: false, errorMessage: error.message };
+		// const { error: m } = error.response.data;
+		console.log("PER ERROR", error.response.status);
+		return { ok: false, errorMessage: error.message, status: error.response.status };
 	}
 };
 export const logout = async (email, password) => {

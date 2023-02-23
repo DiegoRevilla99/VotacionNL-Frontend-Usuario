@@ -11,7 +11,7 @@ export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}
 	return async (dispatch) => {
 		dispatch(onChecking());
 
-		const { ok, accessToken, username, refreshToken, errorMessage } =
+		const { ok, accessToken, username, refreshToken, errorMessage, status } =
 			await loginWithEmailAndPassword(email, password);
 
 		if (ok) {
@@ -21,7 +21,7 @@ export const onLoginWithEmailAndPassword = (email, password, navigate = () => {}
 			setRefreshToken(refreshToken);
 			navigate();
 		} else {
-			dispatch(onError(errorMessage));
+			dispatch(onError(status === 401 ? "Credenciales inválidas" : errorMessage));
 		}
 	};
 };
