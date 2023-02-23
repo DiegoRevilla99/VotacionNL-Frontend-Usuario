@@ -168,7 +168,7 @@ import '../styles/style.css';
                         }}
                       >
                         <CardContent>
-                          <Typography sx={{ fontSize: 14, opacity: 1 }} color="text" gutterBottom>
+                          <Typography sx={{ fontSize: 16, opacity: 1 }} color="text" gutterBottom>
                           BOLETA PERTENECIENTE A LA JORNADA:
                           </Typography>
                           <Typography sx={{ fontSize: 14, opacity: 0.8 }} color="yellow" gutterBottom>
