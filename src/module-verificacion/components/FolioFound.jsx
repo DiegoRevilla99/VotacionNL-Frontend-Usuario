@@ -1,5 +1,5 @@
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import { Box, Button, Card, CardContent, CardMedia, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -7,7 +7,10 @@ import { useNavigate, useParams } from "react-router-dom";
 // import { onGetData } from "../../store/verificacion-voto/verificacionThunks";
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
 // import { ModalBoleta } from "./ModalBoleta";
+
+
 export const FolioFound = () => {
+
 	const navigate = useNavigate();
     const params = useParams();
     const dispatch = useDispatch();
@@ -116,13 +119,13 @@ export const FolioFound = () => {
                     <Grid container spacing={2}>
   {votos.map((voto, index) => (
     <Grid item key={index} xs={12} sm={6} md={4}>
-      <Card sx={{ height: '100%' }}>
-        <CardMedia
+      <Card sx={{ height: '100%' }} background="#FFFDD0">
+        {/* <CardMedia
           component="img"
           height="140"
           image={`https://source.unsplash.com/400x400/?${voto.nombrePartido}`}
           alt={voto.nombrePartido}
-        />
+        /> */}
         <CardContent>
           <Typography variant="h6" gutterBottom>
             {voto.nombrePartido}
