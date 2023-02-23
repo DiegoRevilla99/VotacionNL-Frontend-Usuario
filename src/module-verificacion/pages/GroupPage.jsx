@@ -221,7 +221,7 @@ const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
         (
                 <>
             <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
-                No se encontraron folios pertenecientes esta boleta por el momento, intente más tarde.
+                No se encontraron folios pertenecientes a esta boleta por el momento, intente más tarde.
             </Typography>
 
             <Button

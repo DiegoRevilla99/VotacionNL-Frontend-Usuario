@@ -65,8 +65,8 @@ export const ModalVerificarCuenta = ({
   const mdsize = useMediaQuery(theme.breakpoints.only("md"));
   const lgsize = useMediaQuery(theme.breakpoints.only("lg"));
   const xlsize = useMediaQuery(theme.breakpoints.only("xl"));
-	let img1= "https://media.discordapp.net/attachments/825115444800258088/1078083538785669180/image.png?width=528&height=480";
-	let img2= "https://media.discordapp.net/attachments/825115444800258088/1078083844412026881/imageMostrar01.png";
+	let img2= "https://media.discordapp.net/attachments/825115444800258088/1078083538785669180/image.png?width=528&height=480";
+	let img1= "https://media.discordapp.net/attachments/825115444800258088/1078083844412026881/imageMostrar01.png";
 	let img3= "https://media.discordapp.net/attachments/825115444800258088/1078084391907106846/image.png?width=510&height=480";
 
 	return (
