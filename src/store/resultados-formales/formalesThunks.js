@@ -27,6 +27,7 @@ export const getJornadasFormales = () => {
     if (ok) {
       dispatch(setJornadas({ jornadas: data }));
     } else {
+      dispatch(setJornadas({ jornadas: [] }));
     }
   };
 };
