@@ -17,82 +17,82 @@ import { PublicRoutes } from "./PublicRoutes";
 import { Alert, Snackbar } from "@mui/material";
 
 export const AppRouter = () => {
-	// initAxiosInterceptors();
-	// const { status } = useSelector((state) => state.auth);
-	const [isOnline, setIsOnline] = useState(navigator.onLine);
+  // initAxiosInterceptors();
+  // const { status } = useSelector((state) => state.auth);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-	useEffect(() => {
-		function handleOnlineStatus() {
-			setIsOnline(navigator.onLine);
-		}
+  useEffect(() => {
+    function handleOnlineStatus() {
+      setIsOnline(navigator.onLine);
+    }
 
-		window.addEventListener("online", handleOnlineStatus);
-		window.addEventListener("offline", handleOnlineStatus);
+    window.addEventListener("online", handleOnlineStatus);
+    window.addEventListener("offline", handleOnlineStatus);
 
-		return () => {
-			window.removeEventListener("online", handleOnlineStatus);
-			window.removeEventListener("offline", handleOnlineStatus);
-		};
-	}, []);
+    return () => {
+      window.removeEventListener("online", handleOnlineStatus);
+      window.removeEventListener("offline", handleOnlineStatus);
+    };
+  }, []);
 
-	const { status } = useCheckAuth();
-	// const status = "checking";
+  const { status } = useCheckAuth();
+  // const status = "logged";
 
-	const location = useLocation();
-	// console.log(location);
-	sessionStorage.setItem("Location", location.pathname);
+  const location = useLocation();
+  // console.log(location);
+  sessionStorage.setItem("Location", location.pathname);
 
-	if (status === "checking") {
-		return <CheckingPage />;
-	} else
-		return (
-			<>
-				<Snackbar
-					open={!isOnline}
-					autoHideDuration={90000}
-					// onClose={handleClose}
-					// message="Note archived"
-					// action={action}
-				>
-					<Alert severity="error">No tienes conexión a internet</Alert>
-				</Snackbar>
-				<Routes>
-					<Route
-						path="/*"
-						element={
-							<PublicRoutes>
-								<CiudadanoRoutes />
-							</PublicRoutes>
-						}
-					/>
+  if (status === "checking") {
+    return <CheckingPage />;
+  } else
+    return (
+      <>
+        <Snackbar
+          open={!isOnline}
+          autoHideDuration={90000}
+          // onClose={handleClose}
+          // message="Note archived"
+          // action={action}
+        >
+          <Alert severity="error">No tienes conexión a internet</Alert>
+        </Snackbar>
+        <Routes>
+          <Route
+            path="/*"
+            element={
+              <PublicRoutes>
+                <CiudadanoRoutes />
+              </PublicRoutes>
+            }
+          />
 
-					<Route
-						path="/auth/*"
-						element={
-							<AuthPublicRoutes status={status}>
-								<AuthRoutes />
-							</AuthPublicRoutes>
-						}
-					/>
+          <Route
+            path="/auth/*"
+            element={
+              <AuthPublicRoutes status={status}>
+                <AuthRoutes />
+              </AuthPublicRoutes>
+            }
+          />
 
-					<Route
-						path="/votacion/*"
-						element={
-							<PrivateRoutes status={status}>
-								<VotacionRoutes />
-							</PrivateRoutes>
-						}
-					/>
+          <Route
+            path="/votacion/*"
+            element={
+              <PrivateRoutes status={status}>
+                <VotacionRoutes />
+              </PrivateRoutes>
+            }
+          />
 
-					<Route
-						path="/resultados/*"
-						element={
-							<PublicRoutes>
-								<ResultadosRoutes />
-							</PublicRoutes>
-						}
-					/>
-				</Routes>
-			</>
-		);
+          <Route
+            path="/resultados/*"
+            element={
+              <PublicRoutes>
+                <ResultadosRoutes />
+              </PublicRoutes>
+            }
+          />
+        </Routes>
+      </>
+    );
 };
