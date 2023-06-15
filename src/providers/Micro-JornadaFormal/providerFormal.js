@@ -5,7 +5,6 @@ export const getJornadasFormalesProvider = async () => {
   return jornadaFormalApi
     .get(`jornada/electoral/`)
     .then((response) => {
-      console.log("jornada Form ---", response.data);
       if (response.data) {
         return { ok: true, data: response.data, errorMessage: "" };
       } else {
