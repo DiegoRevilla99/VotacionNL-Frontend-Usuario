@@ -239,6 +239,43 @@ export const InicioVotante = () => {
           isOnModalToken={isOnModalToken}
         />
         <Grid container display="flex" spacing={5} height="100%" pt={5}>
+          {!jornadaFormal &&
+          !jornadaNoFormal &&
+          !consultaCiudadana &&
+          statusPeticion !== "checking" ? (
+            <>
+              <Grid item xs={12}>
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  sx={{
+                    minHeight: "10rem",
+                    height: "100%",
+                    boxShadow: 1,
+                    backgroundColor: "white",
+                    borderRadius: { xs: "0.5rem", md: "1rem" },
+                    p: "2rem",
+                    // pl: "2rem",
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#323232"
+                    display="flex"
+                    justifyContent="center"
+                    align="justify"
+                    mb="2rem"
+                  >
+                    No tienes ningún proceso pendiente
+                  </Typography>
+                </Box>
+              </Grid>
+            </>
+          ) : (
+            <></>
+          )}
           {jornadaFormal && (
             <Grid item xs={12}>
               <Box
