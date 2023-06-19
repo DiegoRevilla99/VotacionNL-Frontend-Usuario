@@ -16,10 +16,8 @@ export const getJornadasNFProvider = async () => {
 export const getBoletasNFProvider = async (idJornada) => {
   try {
     // **FETCH
-    const { data } = await jornadaNoFormalApi.get(
-      "jornada/no_formal/" + idJornada + "/boletas"
-    );
-    console.log(data);
+    const { data } = await jornadaNoFormalApi.get("jornada/no_formal/" + idJornada + "/boletas");
+    console.log("boletas no formales", data);
     return { ok: true, data: data.listBoletas };
   } catch (error) {
     return { ok: false };
