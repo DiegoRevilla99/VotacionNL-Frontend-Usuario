@@ -65,6 +65,7 @@ export const getResultFormales = (idJornada, idConsulta) => {
     );
 
     if (ok) {
+      console.log("Todo ok");
       let convData = false;
       const newData = data.boletas.find((boleta) => {
         if (boleta.idBoleta.toString() === idConsulta) {
@@ -76,8 +77,8 @@ export const getResultFormales = (idJornada, idConsulta) => {
         convData = toRepFormal(newData);
       }
 
-      dispatch(setResultados({ resultados: data }));
       dispatch(setBoleta({ boleta: convData }));
+      dispatch(setResultados({ resultados: data }));
     } else {
     }
   };
@@ -92,29 +93,29 @@ const toRepFormal = (data) => {
     candidad: 0,
   };
   let acumuladas = 0;
-
-  let cnr = data.candidaturasNoReg;
-
-  let candidatos = data.boletaCandidatos.map((candi) => {
-    if (candi.datosCandidato === null) {
-      console.log(candi);
-      if (candi.name === "Voto nulo") {
-        nulo = candi;
-      } else {
-        cnr = candi;
+  let cnr = data.candidaturasNoReg ? data.candidaturasNoReg : [];
+  let candidatos = [];
+  if (data.boletaCandidatos) {
+    candidatos = data.boletaCandidatos.map((candi) => {
+      if (candi.datosCandidato === null) {
+        if (candi.name === "Voto nulo") {
+          nulo = candi;
+        } else {
+          cnr = candi;
+        }
+        return null;
       }
-      return null;
-    }
 
-    acumuladas += candi.candidad;
+      acumuladas += candi.candidad;
 
-    return {
-      nombre: candi.name,
-      foto: candi.datosCandidato.candidatoModel.fotoCandidato,
-      partidos: candi.datosCandidato.partidos,
-      candidad: candi.candidad,
-    };
-  });
+      return {
+        nombre: candi.name,
+        foto: candi.datosCandidato.candidatoModel.fotoCandidato,
+        partidos: candi.datosCandidato.partidos,
+        candidad: candi.candidad,
+      };
+    });
+  }
 
   candidatos = candidatos.filter((c) => {
     if (c) return c;
@@ -125,13 +126,10 @@ const toRepFormal = (data) => {
     totalcnr += c.candidad;
   });
 
-  console.log("Antes: ", candidatos);
   candidatos.sort((a, b) => {
     console.log(a.candidad);
     return b.candidad - a.candidad;
   });
-
-  console.log("ordenado: ", candidatos);
 
   return {
     candidatos,

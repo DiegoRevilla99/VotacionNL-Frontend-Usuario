@@ -5,25 +5,16 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useParams } from "react-router-dom";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 const patronURL = /^(ftp|http|https):\/\/[^ "]+$/;
-export const ChartJFormales = ({
-  chartData = [
-    { votos: 50 },
-    { votos: 10 },
-    { votos: 100 },
-    { votos: 140 },
-    { votos: 80 },
-  ],
-  candidatos = [],
-  totalV = 1,
-}) => {
+export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
   const total = 50;
   const chartRef = useRef(null);
   const params = useParams();
   const [result, setresult] = useState(candidatos);
   const [totalS, setTotalS] = useState(totalV);
+  const [flag, setFlag] = useState(true);
+
   useEffect(() => {
-    console.log("grafica", candidatos);
-    console.log("grafica", candidatos);
+    console.log("candidatos", candidatos);
     setresult(candidatos);
   }, [candidatos]);
 
@@ -32,80 +23,112 @@ export const ChartJFormales = ({
     setTotalS(totalV);
   }, [totalV]);
 
-  const [data, setData] = useState({
-    // labels: chartData.map((data) => data.nombre),
-    labels: result.map((data) => {
-      let nl = data.nombre.split(" ");
-      return nl;
-    }),
-    datasets: [
-      {
-        label: "Votos",
-        data: result.map((data) => data.candidad),
-        backgroundColor: [
-          "#8B3232",
-          "#8B5232",
-          "#8B7D32",
-          "#598B32",
-          "#328B70",
-          "#32768B",
-          "#32468B",
-          "#59328B",
-          "#89328B",
-          "#8B3252",
-        ],
-        image: result.map((data) => {
-          // console.log("img:", data);
-          const imgs = data.partidos.map((part) => {
-            if (patronURL.test(part.logo)) {
-              return part.logo;
-            } else {
-              return "https://cdn-icons-png.flaticon.com/512/4470/4470321.png";
-            }
-          });
-
-          return imgs;
+  const [data, setData] = useState(() => {
+    try {
+      return {
+        labels: result.map((data) => {
+          let nl = data.nombre.split(" ");
+          return nl;
         }),
-        labels: chartData.map((data) => data.nombre),
-      },
-      {
-        label: "Votos",
+        datasets: [
+          {
+            label: "Votos",
+            data: result.map((data) => data.candidad),
+            backgroundColor: [
+              "#8B3232",
+              "#8B5232",
+              "#8B7D32",
+              "#598B32",
+              "#328B70",
+              "#32768B",
+              "#32468B",
+              "#59328B",
+              "#89328B",
+              "#8B3252",
+            ],
 
-        data: chartData.map((data) => totalS),
-        backgroundColor: ["#ededed"],
-        grouped: false,
-        order: 1,
-        hoverBackgroundColor: "#ededed",
-      },
-    ],
+            image: result.map((data) => {
+              const imgs = data.partidos.map((part) => {
+                console.log("logo_: ", part.logo);
+                return part.logo;
+              });
+
+              return imgs;
+            }),
+
+            labels: result.map((data) => {
+              let nl = data.nombre.split(" ");
+              return nl;
+            }),
+          },
+          {
+            label: "Votos",
+
+            data: result.map((data) => totalS),
+            backgroundColor: ["#ededed"],
+            grouped: false,
+            order: 1,
+            hoverBackgroundColor: "#ededed",
+          },
+        ],
+      };
+    } catch (error) {
+      console.error("Error al inicializar el estado 'data':", error);
+      return null;
+    }
   });
 
-  /* const imageItems = {
-    id: "imageItems",
-    beforeDatasetsDraw(chart, args, pluginOptions) {
-      const {
-        ctx,
-        options,
-        data,
-        scales: { x, y },
-      } = chart;
-      ctx.save();
-      const imageSize = options.layout.padding.bottom;
-      data.datasets[0].image.forEach((imageLink, index) => {
-        const logo = new Image();
-        logo.src = imageLink;
-        ctx.drawImage(
-          logo,
-          x.getPixelForValue(index) - 40 / 2,
-          y.getPixelForValue(0) + 60,
-          30,
-          30
-        );
-      });
-    },
-  }; */
+  useEffect(() => {
+    console.log("data", data);
+    setImageItems({
+      id: "imageItems",
+      beforeDatasetsDraw(chart, args, pluginOptions) {
+        const {
+          ctx,
+          options,
+          data,
+          scales: { x, y },
+        } = chart;
+        ctx.save();
+        const imageSize = options.layout.padding.bottom;
+        data.datasets[0].image.forEach((imageLink, index) => {
+          try {
+            imageLink.forEach((imagen, index2) => {
+              const logo = new Image();
+              logo.src = imagen;
+              ctx.drawImage(
+                logo,
+                // x.getPixelForValue(index) - 90 + 90 / (imageLink.length + (1 / 2) * index2),
+                x.getPixelForValue(index) -
+                  90 +
+                  (75 /
+                    (imageLink.length === 1
+                      ? 1
+                      : imageLink.length === 2
+                      ? 1.5
+                      : imageLink.length === 3
+                      ? 2
+                      : imageLink.length === 4
+                      ? 2.5
+                      : imageLink.length === 5
+                      ? 3
+                      : 1)) *
+                    (index2 + 1),
+                // x.getPixelForValue(index) - 80 + 80 / (index2 * index2 + 1),
+                y.getPixelForValue(0) + 100,
+                30,
+                30
+              );
+            });
+          } catch (error) {
+            console.log("errorPPPPP", error);
+          }
+        });
+      },
+    });
+  }, [data]);
 
-  const imageItems = {
+  const [imageItems, setImageItems] = useState({
     id: "imageItems",
     beforeDatasetsDraw(chart, args, pluginOptions) {
       const {
@@ -145,161 +168,127 @@ export const ChartJFormales = ({
               30
             );
           });
-        } catch (error) {}
+        } catch (error) {
+          console.log("errorPPPPP", error);
+        }
       });
     },
-  };
+  });
 
-  const tooltipLabels = {
-    id: "tooltipLabels",
-    beforeEvent(chart, args, pluginOptions) {
-      const {
-        ctx,
-        options,
-        data,
-        scales: { x, y },
-      } = chart;
+  useEffect(() => {
+    console.log("REF", chartRef);
+    console.log("data_", data);
+    console.log("array", [ChartDataLabels, imageItems]);
+  }, []);
 
-      // console.log("ESCALAS DEL 1", x.getPixelForValue(0) - 40 / 2, y.getPixelForValue(0) + 5);
-
-      const event = args.event;
-
-      if (event.type === "mousemove") {
-        // if (
-        // 	event.x >= x.getPixelForValue(0) - 20 &&
-        // 	event.x <= x.getPixelForValue(0) + 20 &&
-        // 	event.y >= y.getPixelForValue(0) &&
-        // 	event.y <= y.getPixelForValue(0) + 40
-        // ) {
-        const tooltip = chart.tooltip;
-
-        // console.log("ENTRA AL EVENTO");
-        const chartArea = chart.chartArea;
-        // console.log("area", chartArea);
-        tooltip.setActiveElements(
-          [
-            {
-              datasetIndex: 0,
-              index: 0,
-            },
-            {
-              datasetIndex: 1,
-              index: 0,
-            },
-          ],
-          {
-            x: (chartArea.left + chartArea.right) / 2,
-            y: (chartArea.top + chartArea.bottom) / 2,
-          }
-        );
-        chart.update();
-        // }
-        // }
-      }
-    },
-  };
-
-  return (
-    <>
-      <Chart
-        type="bar"
-        height={500}
-        ref={chartRef}
-        data={data}
-        plugins={[ChartDataLabels, imageItems]}
-        options={{
-          maintainAspectRatio: false,
-          responsive: true,
-          layout: {
-            padding: {
-              bottom: 80,
-            },
-          },
-
-          interaction: {
-            intersect: false,
-            mode: "index",
-          },
-          indexAxis: "x",
-
-          plugins: {
-            title: {
-              display: true,
+  try {
+    return (
+      <>
+        <Chart
+          type="bar"
+          height={500}
+          ref={chartRef}
+          data={data}
+          plugins={[ChartDataLabels, imageItems]}
+          options={{
+            maintainAspectRatio: false,
+            responsive: true,
+            layout: {
               padding: {
-                top: 10,
-                bottom: 30,
+                bottom: 80,
               },
-              text: "Porcentaje de votos",
             },
-            tooltip: {
-              filter: function (tooltipItem) {
-                // console.log("TOOLTIPITEM", tooltipItem);
-                return tooltipItem.datasetIndex === 0;
-              },
-              usePointStyle: true,
-              callbacks: {
-                labelPointStyle: (context) => {
-                  // console.log(context);
-                  // console.log("Imagen", context.dataset.image[context.dataIndex]);
-                  const image = new Image(15, 15);
-                  image.src = context.dataset.image[context.dataIndex];
-                  return {
-                    pointStyle: image,
-                  };
+
+            interaction: {
+              intersect: false,
+              mode: "index",
+            },
+            indexAxis: "x",
+
+            plugins: {
+              title: {
+                display: true,
+                padding: {
+                  top: 10,
+                  bottom: 30,
                 },
-                beforeTitle: (context) => {
-                  return context[0].dataset.labels[context[0].dataIndex];
+                text: "Porcentaje de votos",
+              },
+              tooltip: {
+                filter: function (tooltipItem) {
+                  // console.log("TOOLTIPITEM", tooltipItem);
+                  return tooltipItem.datasetIndex === 0;
                 },
-              },
-            },
-            legend: {
-              display: false,
-            },
-            datalabels: {
-              display: function (data) {
-                return data.datasetIndex === 0;
-              },
-              labels: {
-                // events: ["mousemove"],
-                title: {
-                  display: function (data) {
-                    return data.datasetIndex === 0;
+                usePointStyle: true,
+                callbacks: {
+                  labelPointStyle: (context) => {
+                    // console.log(context);
+                    // console.log("Imagen", context.dataset.image[context.dataIndex]);
+                    const image = new Image(15, 15);
+                    image.src = context.dataset.image[context.dataIndex];
+                    return {
+                      pointStyle: image,
+                    };
                   },
-                  formatter: function (value, context) {
-                    return value + "\nvotos";
+                  beforeTitle: (context) => {
+                    return context[0].dataset.labels[context[0].dataIndex];
                   },
-                  textAlign: "center",
-                  color: "white",
-                },
-                value: {
-                  // display: function (data) {
-                  // 	return data.datasetIndex === 0;
-                  // },
-                  formatter: function (value, context) {
-                    return ((value * 100) / totalS).toFixed(2) + "%";
-                  },
-                  anchor: "end",
-                  align: "top",
-                  color: "black",
                 },
               },
-            },
-          },
-          aspectRatio: 3,
-          scales: {
-            y: {
-              grid: {
+              legend: {
                 display: false,
               },
-            },
-            x: {
-              grid: {
-                display: false,
+              datalabels: {
+                display: function (data) {
+                  return data.datasetIndex === 0;
+                },
+                labels: {
+                  // events: ["mousemove"],
+                  title: {
+                    display: function (data) {
+                      return data.datasetIndex === 0;
+                    },
+                    formatter: function (value, context) {
+                      return value + "\nvotos";
+                    },
+                    textAlign: "center",
+                    color: "white",
+                  },
+                  value: {
+                    // display: function (data) {
+                    // 	return data.datasetIndex === 0;
+                    // },
+                    formatter: function (value, context) {
+                      return ((value * 100) / totalS).toFixed(2) + "%";
+                    },
+                    anchor: "end",
+                    align: "top",
+                    color: "black",
+                  },
+                },
               },
             },
-          },
-        }}
-      />
-    </>
-  );
+            aspectRatio: 3,
+            scales: {
+              y: {
+                grid: {
+                  display: false,
+                },
+              },
+              x: {
+                grid: {
+                  display: false,
+                },
+              },
+            },
+          }}
+        />
+      </>
+    );
+  } catch (error) {
+    console.log("ERROR", error);
+    return (
+      <div>Error al cargar la gráfica. Por favor, inténtalo nuevamente.</div>
+    );
+  }
 };

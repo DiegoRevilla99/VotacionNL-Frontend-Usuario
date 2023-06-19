@@ -30,6 +30,9 @@ export const noformalesSlice = createSlice({
     startLoadingResultados: (state /* action */) => {
       state.isLoadingResultados = true;
     },
+    endLoadingResultados: (state /* action */) => {
+      state.isLoadingResultados = false;
+    },
     setResultados: (state, action) => {
       state.isLoadingResultados = false;
       state.resultados = action.payload.resultados;
@@ -91,6 +94,7 @@ export const {
   setBoletaInfo,
   setConfigJornada,
   startConfigJornada,
+  endLoadingResultados,
 } = noformalesSlice.actions;
 
 // export default consultaCiudadanaSlice.reducer;
