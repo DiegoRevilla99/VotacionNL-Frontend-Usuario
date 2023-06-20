@@ -22,7 +22,7 @@ export const ChartEjemplo = ({
   const [result, setresult] = useState(candidatos);
   const [totalS, setTotalS] = useState(totalV);
   useEffect(() => {
-    console.log("grafica", candidatos);
+    console.log("cnadidatos", candidatos);
     console.log("grafica", candidatos);
     setresult(candidatos);
   }, [candidatos]);
@@ -183,7 +183,7 @@ export const ChartEjemplo = ({
                 // console.log("TOOLTIPITEM", tooltipItem);
                 return tooltipItem.datasetIndex === 0;
               },
-              usePointStyle: true,
+              /*  usePointStyle: true,
               callbacks: {
                 labelPointStyle: (context) => {
                   // console.log(context);
@@ -197,7 +197,7 @@ export const ChartEjemplo = ({
                 beforeTitle: (context) => {
                   return context[0].dataset.labels[context[0].dataIndex];
                 },
-              },
+              }, */
             },
             legend: {
               display: false,

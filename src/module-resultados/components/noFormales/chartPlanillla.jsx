@@ -190,7 +190,7 @@ export const ChartPlanilla = ({
                 // console.log("TOOLTIPITEM", tooltipItem);
                 return tooltipItem.datasetIndex === 0;
               },
-              usePointStyle: true,
+              /* usePointStyle: true,
               callbacks: {
                 labelPointStyle: (context) => {
                   // console.log(context);
@@ -204,7 +204,7 @@ export const ChartPlanilla = ({
                 beforeTitle: (context) => {
                   return context[0].dataset.labels[context[0].dataIndex];
                 },
-              },
+              }, */
             },
             legend: {
               display: false,

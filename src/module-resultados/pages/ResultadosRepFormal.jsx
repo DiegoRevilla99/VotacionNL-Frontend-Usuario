@@ -57,6 +57,7 @@ export const ResultadosRepFormal = ({}) => {
   /* useEffect(() => {
     console.log("Cambio boleta****:", boleta);
   }, [boleta]); */
+
   useEffect(() => {
     console.log("isLoadingResultados****:", isLoadingResultados);
     console.log("Cambio boleta:", boleta);
@@ -157,7 +158,18 @@ export const ResultadosRepFormal = ({}) => {
                 align="center"
                 sx={{ fontWeight: "bold" }}
               >
-                {boleta?.winner?.nombre}
+                {boleta?.winner?.isEmpate ? (
+                  <>
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      Empate:{" "}
+                    </Typography>
+                    {boleta.winner.winners.map((win, index) => {
+                      return <Typography>{win}</Typography>;
+                    })}
+                  </>
+                ) : (
+                  <>{boleta?.winner?.nombre}</>
+                )}
               </Typography>
 
               {/* {resultados.ganadores?.map((gan, index) => {

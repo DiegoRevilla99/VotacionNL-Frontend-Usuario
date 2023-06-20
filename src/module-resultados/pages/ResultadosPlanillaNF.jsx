@@ -168,9 +168,8 @@ export const ResultadosPlanillaNF = ({}) => {
                     align="center"
                     sx={{ fontWeight: "bold" }}
                   >
-                    {win?.nombreCandidato}
-                    {win?.apellidoPCandidato}
-                    {win?.apellidoMCandidato}
+                    {win?.nombreCandidato} {win?.apellidoPCandidato}{" "}
+                    {win?.apellidoMCandidato}{" "}
                   </Typography>
                 );
               })}

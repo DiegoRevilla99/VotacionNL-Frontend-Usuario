@@ -146,8 +146,6 @@ const toComite = (data) => {
     }
   }
 
-  console.log("paseeeee");
-
   let newArray = data.representanteResultado;
   newArray.sort((a, b) => {
     return b.candidad - a.candidad;
@@ -155,7 +153,7 @@ const toComite = (data) => {
 
   let maxWinnwerValidation =
     newArray.length < cantWin ? newArray.length : cantWin;
-  console.log("paseeeee2", newArray, cantWin);
+
   let winers = [];
   for (let i = 0; i < maxWinnwerValidation; i++) {
     const ganador = data.boletaCandidatos.candidatoModels.find((gan) => {
@@ -163,7 +161,6 @@ const toComite = (data) => {
     });
     winers.push({ ...ganador, votos: newArray[i].candidad });
   }
-  console.log("paseeeee3");
 
   let nulo = resultados.find((r) => {
     console.log(r);
@@ -183,6 +180,89 @@ const toComite = (data) => {
 };
 
 const toRep = (data) => {
+  console.log("representante NOFORMAL");
+  const resultados = data?.representanteResultado;
+  const boleta = data.boletaCandidatos.boletaModel.encabezadoBoleta;
+  let total = 0;
+  let candidatos = resultados.map((res, index) => {
+    total = total + res.candidad;
+    const candidatoN = data.boletaCandidatos.candidatoModels.find((cand) => {
+      if (cand.claveCandidato === res.id) return res;
+    });
+    if (candidatoN) return { ...candidatoN, votos: res.candidad };
+    else null;
+  });
+
+  candidatos = candidatos.filter((cand) => {
+    if (cand) return cand;
+  });
+
+  for (let i = 0; i < data.candidaturasNoRegistradas.length; i++) {
+    total = total + data.candidaturasNoRegistradas[i].candidad;
+    const nc = {
+      apellidoMCandidato: "",
+      apellidoPCandidato: "",
+      fotoCandidato:
+        "https://www.jornada.com.mx/ultimas/2021/04/24/politicos-y-candidatos-en-michoacan-bajo-la-mira-del-crimen-organizado-6807.html/cesar.jpg-4686.html/image_large",
+      nombreCandidato: data.candidaturasNoRegistradas[i].id,
+      votos: data.candidaturasNoRegistradas[i].candidad,
+    };
+    candidatos.push(nc);
+  }
+
+  let newArray = data.representanteResultado;
+  console.log("newArray", newArray);
+  newArray.sort((a, b) => {
+    return b.candidad - a.candidad;
+  });
+
+  let ganador;
+  let isEmpate = false;
+  let empateCandidatos = [];
+
+  if (newArray.length > 0) {
+    ganador = data.boletaCandidatos.candidatoModels.find((gan) => {
+      if (gan.claveCandidato === newArray[0].id) return gan;
+    });
+
+    const maxVotes = newArray[0].candidad;
+    empateCandidatos = newArray.filter((c) => c.candidad === maxVotes);
+
+    if (empateCandidatos.length > 1) {
+      isEmpate = true;
+      empateCandidatos = empateCandidatos.map((c) => {
+        const candidato = data.boletaCandidatos.candidatoModels.find((can) => {
+          if (can.claveCandidato === c.id) return can;
+        });
+        return candidato;
+      });
+    }
+  }
+
+  let nulo = resultados.find((r) => {
+    console.log(r);
+    if (r.id === "NULO") return r.candidad;
+  });
+
+  empateCandidatos = empateCandidatos.map((cand) => {
+    const nwC = candidatos.find((c) => c.claveCandidato === cand.id);
+    return nwC;
+  });
+
+  return {
+    candidatos,
+    winers: ganador,
+    isEmpate,
+    empateCandidatos,
+    total,
+    cnr: data.candidaturasNoRegistradas.length,
+    boleta,
+    nulo: nulo ? nulo : 0,
+  };
+};
+
+/* const toRep = (data) => {
+  console.log("representante NOFORMAL");
   const resultados = data?.representanteResultado;
   const boleta = data.boletaCandidatos.boletaModel.encabezadoBoleta;
   let total = 0;
@@ -235,7 +315,7 @@ const toRep = (data) => {
     boleta,
     nulo: nulo ? nulo : 0,
   };
-};
+}; */
 
 const toPlanilla = (data) => {
   console.log("planilla");

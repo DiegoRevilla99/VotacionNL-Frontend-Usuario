@@ -162,18 +162,35 @@ export const ResultadosRepNF = ({}) => {
               >
                 CANDIDATO GANADOR:
               </Typography>
-
-              <Typography
-                mt={2}
-                mb={2}
-                color="initial"
-                align="center"
-                sx={{ fontWeight: "bold" }}
-              >
-                {boleta.winers?.nombreCandidato}
-                {boleta.winers?.apellidoPCandidato}
-                {boleta.winers?.apellidoMCandidato}
-              </Typography>
+              {!boleta.isEmpate ? (
+                <Typography
+                  mt={2}
+                  mb={2}
+                  color="initial"
+                  align="center"
+                  sx={{ fontWeight: "bold" }}
+                >
+                  {boleta.winers?.nombreCandidato}{" "}
+                  {boleta.winers?.apellidoPCandidato}{" "}
+                  {boleta.winers?.apellidoMCandidato}
+                </Typography>
+              ) : (
+                <>
+                  Hay empate:
+                  {boleta.empateCandidatos.map((cand, index) => {
+                    <Typography
+                      mt={2}
+                      mb={2}
+                      color="initial"
+                      align="center"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {cand?.nombreCandidato} {cand?.apellidoPCandidato}{" "}
+                      {cand?.apellidoMCandidato}
+                    </Typography>;
+                  })}
+                </>
+              )}
 
               <Box
                 borderRight="1px solid"
