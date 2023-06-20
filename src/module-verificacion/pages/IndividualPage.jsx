@@ -1,15 +1,34 @@
+import HelpIcon from '@mui/icons-material/Help';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import { Container } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { onError } from "../../store/verificacion-voto/verificacionSlice";
 import { onGetValidarVoto } from "../../store/verificacion-voto/verificacionThunks";
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(16), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
+const TooltipContainer = styled('div')({
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+  });
 const validationSchema = object({
 	folio: string("").required("Este campo es requerido").matches(/^[a-zA-Z0-9-]+$/, "Solo se permiten números, letras y guiones")
 });
@@ -67,7 +86,29 @@ export const IndividualPage = () => {
 						}}
 					>
 						INGRESE EL FOLIO DE SU BOLETA ELECTRÓNICA
+						<HtmlTooltip placement="right"
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1rem",
+								xl: "1rem",
+							},
+						}}>Ingrese en el cuadro de texto su folio para poder buscarlo, por favor.</Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" sx={{ ml: "1rem"}}/>
+      </HtmlTooltip>
 					</Typography>
+
+
+
                     <Formik
 						initialValues={{
 							folio: "",
