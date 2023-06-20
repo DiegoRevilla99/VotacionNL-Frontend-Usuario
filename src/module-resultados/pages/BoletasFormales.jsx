@@ -68,7 +68,7 @@ export const BoletasFormales = () => {
     setjornada(jornadaa);
   }, []);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const now = new Date();
     const fin = new Date(configJornadaFormal?.configuracionModel?.finRecepVoto);
     console.log("FIN: ", fin);
@@ -77,7 +77,7 @@ export const BoletasFormales = () => {
     } else {
       setDisponible(false);
     }
-  }, [configJornadaFormal]);
+  }, [configJornadaFormal]); */
 
   return (
     <Box

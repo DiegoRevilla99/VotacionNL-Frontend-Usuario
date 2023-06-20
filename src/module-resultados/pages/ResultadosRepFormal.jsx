@@ -32,6 +32,7 @@ import { GridCandFormales } from "../components/formales/GridCandFormales";
 import { Resumen } from "../components/Resumen";
 import { ChartJFormales } from "../components/formales/chartJFormales";
 import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
+import { startLoadingResultados } from "../../store/resultados-formales/formalesSlice";
 
 export const ResultadosRepFormal = ({}) => {
   const { jornada, id } = useParams();
@@ -46,64 +47,20 @@ export const ResultadosRepFormal = ({}) => {
   } = useSelector((state) => state.formales);
   const theme = useTheme();
   const xssize = useMediaQuery(theme.breakpoints.only("xs"));
-  const smsize = useMediaQuery(theme.breakpoints.only("sm"));
-  const mdsize = useMediaQuery(theme.breakpoints.only("md"));
-  const lgsize = useMediaQuery(theme.breakpoints.only("lg"));
-  const xlsize = useMediaQuery(theme.breakpoints.only("xl"));
-  const [etiquetas, setetiquetas] = useState([]);
-  const [datosN, setDatosN] = useState([]);
-  const [titulo, settitulo] = useState("");
-  const [update, setUpdate] = useState(true);
-  const [winer, setWiner] = useState("");
-  const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-  ];
-  const datos = [100, 500, 30, 300, 1000, 300, 350];
-  const images = [
-    "https://upload.wikimedia.org/wikipedia/commons/5/5c/PAN_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/b/b5/PRI_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/8/8f/PRD_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/e/e7/Worker%27s_Party_logo_%28Mexico%29.svg",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-    "https://upload.wikimedia.org/wikipedia/commons/a/ae/Logo-partido-verde-2020.png",
-  ];
 
   useEffect(() => {
-    // setUpdate(true);
-    // console.log("jornada:", jornada);
-    // console.log("consulta:", id);
-    // dispatch(getResult(jornada, id));
-
     dispatch(getBoletaBYIDFormales(id));
     dispatch(getResultFormales(jornada, id));
     dispatch(getConfigJornadaFormal(jornada));
   }, []);
 
-  useEffect(() => {
-    console.log("boleta:", boleta);
-  }, [boleta]);
-
   /* useEffect(() => {
-    console.log("Resultados:", resultados);
-    if (resultados) {
-      console.log(resultados.resultados.lista);
-      setetiquetas(resultados.pregunta.lista);
-      setDatosN(resultados.resultados.lista);
-      settitulo(resultados.pregunta.descripcion);
-      setUpdate(true);
-      setWiner();
-    } else {
-      setUpdate(false);
-    }
-    console.log("cambio");
-  }, [resultados]); */
+    console.log("Cambio boleta****:", boleta);
+  }, [boleta]); */
+  useEffect(() => {
+    console.log("isLoadingResultados****:", isLoadingResultados);
+    console.log("Cambio boleta:", boleta);
+  }, [isLoadingResultados]);
 
   return (
     <>
@@ -273,19 +230,18 @@ export const ResultadosRepFormal = ({}) => {
                 height: "auto",
               }}
             >
-              {isLoadingResultados ? (
-                <Typography>Esperando</Typography>
-              ) : xssize ? (
+              <Box display={xssize ? "flex" : "none"}>
                 <GridCandFormales
                   total={boleta?.acumuladas + boleta.cnr + boleta.nulo}
                   candidatos={boleta.candidatos}
                 />
-              ) : (
+              </Box>
+              <Box display={!xssize ? "flex" : "none"}>
                 <ChartJFormales
                   totalV={boleta?.acumuladas + boleta.cnr + boleta.nulo}
                   candidatos={boleta.candidatos}
                 />
-              )}
+              </Box>
             </Box>
           </Box>
         </Box>

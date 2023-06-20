@@ -63,7 +63,7 @@ export const getBoletabyIDProvider = async (idBoleta) => {
 export const getResultadosFormalesProvider = async (idJornada) => {
   try {
     const response = await jornadaFormalVotoApi.get(
-      "votos_seguros/jornadaelectoral/" + idJornada + "/resultados"
+      "votos_seguros/jornadaelectoral/" + idJornada + "/resultadosv2"
     );
     return { ok: true, data: response.data };
   } catch (error) {

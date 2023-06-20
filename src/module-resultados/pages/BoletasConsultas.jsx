@@ -53,7 +53,7 @@ export const BoletasConsultas = () => {
     setDataSearch(papeletas);
   }, [papeletas]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const now = new Date();
     const fin = new Date(configConsulta?.configuracionModel?.finRecepVoto);
     console.log("FIN: ", fin);
@@ -62,7 +62,7 @@ export const BoletasConsultas = () => {
     } else {
       setDisponible(false);
     }
-  }, [configConsulta]);
+  }, [configConsulta]); */
 
   const getJornada = (id) => {
     return jornadas.find((jornada) => {

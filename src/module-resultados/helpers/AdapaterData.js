@@ -146,18 +146,24 @@ const toComite = (data) => {
     }
   }
 
+  console.log("paseeeee");
+
   let newArray = data.representanteResultado;
   newArray.sort((a, b) => {
     return b.candidad - a.candidad;
   });
 
+  let maxWinnwerValidation =
+    newArray.length < cantWin ? newArray.length : cantWin;
+  console.log("paseeeee2", newArray, cantWin);
   let winers = [];
-  for (let i = 0; i < cantWin; i++) {
+  for (let i = 0; i < maxWinnwerValidation; i++) {
     const ganador = data.boletaCandidatos.candidatoModels.find((gan) => {
       if (gan.claveCandidato === newArray[i].id) return gan;
     });
     winers.push({ ...ganador, votos: newArray[i].candidad });
   }
+  console.log("paseeeee3");
 
   let nulo = resultados.find((r) => {
     console.log(r);

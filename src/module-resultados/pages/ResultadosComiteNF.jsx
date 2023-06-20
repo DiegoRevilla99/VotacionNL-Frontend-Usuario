@@ -57,7 +57,11 @@ export const ResultadosComiteNF = ({}) => {
   }, []);
 
   useEffect(() => {
-    // console.log("boleta:", boleta);
+    console.log("Is loading res:", isLoadingResultados);
+  }, [isLoadingResultados]);
+
+  useEffect(() => {
+    console.log("boleta:", boleta);
   }, [boleta]);
 
   /* useEffect(() => {
