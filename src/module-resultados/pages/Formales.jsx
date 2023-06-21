@@ -24,7 +24,7 @@ export const Formales = () => {
   const { jornadas, isLoadingJornadas } = useSelector(
     (state) => state.formales
   );
-  const [rangFecha, setRangFecha] = React.useState("");
+  const [rangFecha, setRangFecha] = React.useState("month");
   const [buscador, setBuscador] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
   const handleSearch = (event) => {
@@ -84,7 +84,10 @@ export const Formales = () => {
         return 0;
       }
     });
-    setDataSearch(newD);
+
+    // setDataSearch(newD);
+    filterForDate(newD, rangFecha);
+    console.log("Jornadad fecha: ", newD);
   }, [jornadas]);
 
   useEffect(() => {
@@ -192,15 +195,18 @@ export const Formales = () => {
             )}
           </Box>
 
-          {/* <IconButton
-            sx={{ mt: 2 }}
-            color="primary"
-            aria-label="upload picture"
-            component="label"
-          >
-            <Typography sx={{ mr: 2 }}>Ver más</Typography>
-            <ExpandCircleDownIcon />
-          </IconButton> */}
+          {jornadas.length !== dataSearch.length && (
+            <IconButton
+              sx={{ mt: 2 }}
+              color="primary"
+              aria-label="upload picture"
+              component="label"
+              onClick={() => setDataSearch(jornadas)}
+            >
+              <Typography sx={{ mr: 2 }}>Ver todas</Typography>
+              <ExpandCircleDownIcon />
+            </IconButton>
+          )}
         </Box>
       </Box>
     </Box>

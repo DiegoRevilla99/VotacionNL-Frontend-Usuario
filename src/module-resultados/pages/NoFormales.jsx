@@ -26,7 +26,7 @@ export const NoFormales = () => {
   );
 
   const [buscador, setBuscador] = useState("");
-  const [rangFecha, setRangFecha] = React.useState("");
+  const [rangFecha, setRangFecha] = React.useState("month");
   const [dataSearch, setDataSearch] = useState([]);
   const handleSearch = (event) => {
     setBuscador(event.target.value);
@@ -84,7 +84,8 @@ export const NoFormales = () => {
         return 0;
       }
     });
-    setDataSearch(newD);
+    // setDataSearch(newD);
+    filterForDate(newD, rangFecha);
   }, [jornadas]);
 
   useEffect(() => {
@@ -190,15 +191,18 @@ export const NoFormales = () => {
             )}
           </Box>
 
-          {/* <IconButton
-            sx={{ mt: 2 }}
-            color="primary"
-            aria-label="upload picture"
-            component="label"
-          >
-            <Typography sx={{ mr: 2 }}>Ver más</Typography>
-            <ExpandCircleDownIcon />
-          </IconButton> */}
+          {jornadas.length !== dataSearch.length && (
+            <IconButton
+              sx={{ mt: 2 }}
+              color="primary"
+              aria-label="upload picture"
+              component="label"
+              onClick={() => setDataSearch(jornadas)}
+            >
+              <Typography sx={{ mr: 2 }}>Ver todas</Typography>
+              <ExpandCircleDownIcon />
+            </IconButton>
+          )}
         </Box>
       </Box>
     </Box>
