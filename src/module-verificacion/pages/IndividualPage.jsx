@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { onError } from "../../store/verificacion-voto/verificacionSlice";
-import { onGetValidarVoto } from "../../store/verificacion-voto/verificacionThunks";
+import { onGetValidarVoto, onGetValidarVotoConsulta } from "../../store/verificacion-voto/verificacionThunks";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
 	<Tooltip {...props} classes={{ popper: className }} />
@@ -41,20 +41,42 @@ export const IndividualPage = () => {
 	const [ error, setError ] = useState();
 	useEffect(() => {
 		setError(errorMessage);
+		console.log("imprimimos el store",status)
 	  }, [errorMessage]);
 	  
+	// const onSubmit = (values) => {
+	//   dispatch(onGetValidarVoto(
+	// 	values.folio,
+	// 	() => {
+	// 	  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
+	// 	},
+	//   ));
+	// };
 	const onSubmit = (values) => {
-	  dispatch(onGetValidarVoto(
-		values.folio,
-		() => {
-		  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
-		},
-	  ));
-	};
+		console.log('valuessssss', values);
+		if (values.folio.startsWith('ELEC')) {
+		  dispatch(
+			onGetValidarVoto(values.folio, () => {
+			  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
+			})
+		  );
+		} else if (values.folio.startsWith('CONSULTA')) {
+		  console.log("ELECTORAL", values);
+		  dispatch(
+			onGetValidarVotoConsulta(values.folio, () => {
+			  navigate(`/verificacion/individual/${values.folio}/ConsultaFound`);
+			})
+		  );
+		} else {
+			dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro")); // Agregar dispatch de error en caso de texto no reconocido
+  		}
+	  };
+	  
+	  
 	// console.log(error);
 	const onCancel = () => {
 	  navigate("/verificacion");
-	  dispatch(onError());
+	//   dispatch(onError());
 	};
   
 	
@@ -154,7 +176,7 @@ export const IndividualPage = () => {
 									>
 								<Button
 									onClick={onCancel}
-									disabled={status === "checking" ? true : false}
+									disabled={status === "checking"}
 									startIcon={<ReplyIcon size="large" fontSize="inherit"/>}
 									color="inherit"
 									sx={{ mr: 1,
@@ -170,14 +192,14 @@ export const IndividualPage = () => {
 								<Box sx={{ flex: '1 1 auto' }} 
 									marginBottom={{xs: "1rem"}}/>
 									<Button 
-									disabled={status === "checking" ? true : false}
-									startIcon={
-										status === "checking" ? (
-											<CircularProgress color="base" />
-										) : (
-											""
-										)
-									}
+									disabled={status === "checking"}
+									// startIcon={
+									// 	status === "checking" ? (
+									// 		<CircularProgress color="base" />
+									// 	) : (
+									// 		""
+									// 	)
+									// }
 									type="submit"
 									endIcon={<SendIcon size="large" fontSize="inherit"/>}
 									sx={{
@@ -206,6 +228,7 @@ export const IndividualPage = () => {
 											transition: "all 0.5s ease",
 										},
 									}}>
+										{status === "checking" && <CircularProgress color="base" />}
 									verificar folio
 									</Button>
 								</Box>

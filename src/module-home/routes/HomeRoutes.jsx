@@ -1,8 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { PasosPage } from "../../module-auth/pages/PasosPage";
-import { ReenviarToken } from "../../module-auth/pages/ReenviarToken";
 import { RenviarEnlaceBlanco } from "../../module-auth/pages/RenviarEnlaceBlanco";
-import { ReenvioEmail } from "../../module-auth/pages/ReenvioEmail";
+import { ConsultaFound } from "../../module-verificacion/components/ConsultaFound";
 import { FolioFound } from "../../module-verificacion/components/FolioFound";
 import { Jornadas } from "../../module-verificacion/components/Jornadas";
 import { JornadasNoFormales } from "../../module-verificacion/components/JornadasNoFormales";
@@ -22,6 +21,8 @@ export const HomeRoutes = () => {
 			<Route path="verificacion/individual" element={<IndividualPage />} />
 			<Route path="verificacion/individual/FoundFolio" element={<FolioFound />} />
 			<Route path="/verificacion/individual/:folio/FoundFolio" element={<FolioFound />} />
+			<Route path="/verificacion/individual/:folio/ConsultaFound" element={<ConsultaFound />} />
+			{/* <Route path="/verificacion/individual/FoundFolio" element={<FolioFound />} /> */}
 			{/* No Logueado */}
 			<Route path="verificacion/visualizacion" element={<Jornadas />} />
 			<Route path="verificacion/visualizacion/boleta" element={<VisualizacionBoleta />} />

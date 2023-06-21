@@ -294,9 +294,9 @@ export const VerificacionPage = () => {
                                 sx={{
                                     height: {
                                       xs: '150px',
-                                      sm: '200px',
-                                      md: '250px',
-                                      lg: '300px',
+                                      sm: '250px',
+                                      md: '215px',
+                                      lg: '270px',
                                       xl: '350px',
                                     },
                                     maxWidth: '100%',

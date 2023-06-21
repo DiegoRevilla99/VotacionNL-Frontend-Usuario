@@ -1,3 +1,4 @@
+import HelpIcon from '@mui/icons-material/Help';
 import ReplyAllIcon from "@mui/icons-material/ReplyAll";
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
@@ -9,33 +10,26 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// ----------- Bradcrumbs ----------
-// import { experimentalStyled as styled } from '@mui/material/styles';
-import { useParams } from "react-router-dom";
 import { BreadCrumbsCustom } from '../components/BreadCrumbsCustom';
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
-const rows = [
-  { id: 1, folio:'JE22-ORD-GHR41S', sentido: 'Matias Oropeza Oropeza '},
-  { id: 2, folio:'JE22-ORD-GHR42S', sentido: 'Isidoro Arriaga Arriaga'},
-  { id: 3, folio:'JE22-ORD-GHR43S', sentido: 'Octaviano Cristobal'},
-  { id: 4, folio:'JE22-ORD-GHR44S', sentido: 'Gerard Hermilo Buenrostro'},
-  { id: 5, folio:'JE22-ORD-GHR45S', sentido: 'Paola Gaspar Hurtado'},
-  { id: 6, folio:'JE22-ORD-GHR46S', sentido: 'Melissa Librado Rojas'}, 
-  { id: 7, folio:'JE22-ORD-GHR47S', sentido: 'Karime Nereida Pardo'},
-  { id: 8, folio:'JE22-ORD-GHR48S', sentido: 'Elizabeth Cristian Balam'}, 
-  { id: 9, folio:'JE22-ORD-GHR49S', sentido: 'Nahomi Elvia Vilchis'},
-  { id: 10, folio:'JE22-ORD-GHR411S', sentido: 'Matias Oropeza Oropeza '},
-  { id: 11, folio:'JE22-ORD-GHR412S', sentido: 'Isidoro Arriaga Arriaga'},
-  { id: 12, folio:'JE22-ORD-GHR413S', sentido: 'Octaviano Cristobal'},
-  { id: 13, folio:'JE22-ORD-GHR414S', sentido: 'Gerard Hermilo Buenrostro'},
-  { id: 14, folio:'JE22-ORD-GHR415S', sentido: 'Paola Gaspar Hurtado'},
-  { id: 15, folio:'JE22-ORD-GHR416S', sentido: 'Melissa Librado Rojas'}, 
-  { id: 16, folio:'JE22-ORD-GHR417S', sentido: 'Karime Nereida Pardo'},
-  { id: 17, folio:'JE22-ORD-GHR418S', sentido: 'Elizabeth Cristian Balam'}, 
-  { id: 18, folio:'JE22-ORD-GHR419S', sentido: 'Nahomi Elvia Vilchis'},
-];
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(20), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
+
+import { useParams } from "react-router-dom";
+
 
 
 
@@ -131,6 +125,26 @@ const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
                       }}
                     >
                        DETALLES DE LA BOLETA CON EL FOLIO: {boletaEncontrar.idBoleta}
+                       <HtmlTooltip 
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1.5rem",
+								xl: "1.5rem",
+							},
+						}}>Se muestran los datos recopilados con el folio seleccionado anteriormente. </Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+            {/* {"En caso de no encontrar la deseada, intentelo más tarde."} */}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" fontSize="large"/>
+      </HtmlTooltip>
 					</Typography>
           <Box 
             ml={{											
