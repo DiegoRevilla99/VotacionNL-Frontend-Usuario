@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { onError } from "../../store/verificacion-voto/verificacionSlice";
-import { onGetValidarVoto, onGetValidarVotoConsulta } from "../../store/verificacion-voto/verificacionThunks";
+import { onGetValidarVoto, onGetValidarVotoConsulta, onGetValidarVotoNFML } from "../../store/verificacion-voto/verificacionThunks";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
 	<Tooltip {...props} classes={{ popper: className }} />
@@ -43,16 +43,8 @@ export const IndividualPage = () => {
 		setError(errorMessage);
 		console.log("imprimimos el store",status)
 	  }, [errorMessage]);
-	  
-	// const onSubmit = (values) => {
-	//   dispatch(onGetValidarVoto(
-	// 	values.folio,
-	// 	() => {
-	// 	  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
-	// 	},
-	//   ));
-	// };
-	const onSubmit = (values) => {
+
+	  const onSubmit = (values) => {
 		console.log('valuessssss', values);
 		if (values.folio.startsWith('ELEC')) {
 		  dispatch(
@@ -67,10 +59,38 @@ export const IndividualPage = () => {
 			  navigate(`/verificacion/individual/${values.folio}/ConsultaFound`);
 			})
 		  );
+		} else if (values.folio.startsWith('NFML')) {
+		  // Agregar acción para el código "NFML"
+		  dispatch(
+			onGetValidarVotoNFML(values.folio, () => {
+			  navigate(`/verificacion/individual/${values.folio}/PopularesFound`);
+			})
+		  );
 		} else {
-			dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro")); // Agregar dispatch de error en caso de texto no reconocido
-  		}
+		  dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro"));
+		}
 	  };
+	  
+	  
+	// const onSubmit = (values) => {
+	// 	console.log('valuessssss', values);
+	// 	if (values.folio.startsWith('ELEC')) {
+	// 	  dispatch(
+	// 		onGetValidarVoto(values.folio, () => {
+	// 		  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
+	// 		})
+	// 	  );
+	// 	} else if (values.folio.startsWith('CONSULTA')) {
+	// 	  console.log("ELECTORAL", values);
+	// 	  dispatch(
+	// 		onGetValidarVotoConsulta(values.folio, () => {
+	// 		  navigate(`/verificacion/individual/${values.folio}/ConsultaFound`);
+	// 		})
+	// 	  );
+	// 	} else {
+	// 		dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro")); // Agregar dispatch de error en caso de texto no reconocido
+  	// 	}
+	//   };
 	  
 	  
 	// console.log(error);

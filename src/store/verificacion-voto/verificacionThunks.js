@@ -1,5 +1,7 @@
 import {
-    getValidarVoto, getValidarVotoConsulta, getValidarVotosJornada, getVerificacionRespuesta, getVerificacionRespuestaFormal
+    getValidarVoto, getValidarVotoConsulta,
+    getValidarVotoNFML,
+    getValidarVotosJornada, getVerificacionRespuesta, getVerificacionRespuestaFormal
 } from '../../providers/Micro-Verificacion/providerVerificacion';
 import { OnClearError, onCheckingPeticion, onCheckingVerificacion, onError, onFillJornadaSentidos, onFillVoto, onNoVerificando, onOkPeticion, onVerificado } from './verificacionSlice';
 
@@ -32,6 +34,26 @@ export const onGetValidarVotoConsulta = (claveVoto, navigate = () => {}) => {
 		dispatch(onCheckingPeticion());
         // dispatch(onError());
         const { ok, data } = await getValidarVotoConsulta(claveVoto);
+        console.log("data", data);
+        if (ok) {
+            dispatch(onFillVoto(data));
+            dispatch(onVerificado());
+            dispatch(OnClearError());
+            navigate();
+        }
+		 else {
+            // console.log("entro al error");
+			dispatch(onNoVerificando());
+			dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro"));
+		}
+	};
+}
+export const onGetValidarVotoNFML = (claveVoto, navigate = () => {}) => {
+    return async (dispatch) => {
+		dispatch(onCheckingVerificacion());
+		dispatch(onCheckingPeticion());
+        // dispatch(onError());
+        const { ok, data } = await getValidarVotoNFML(claveVoto);
         console.log("data", data);
         if (ok) {
             dispatch(onFillVoto(data));

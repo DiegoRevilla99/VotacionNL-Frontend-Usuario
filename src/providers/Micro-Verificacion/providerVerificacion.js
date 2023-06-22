@@ -1,9 +1,9 @@
-import { votosSegurosAPI } from "./config";
+import { votosNoFormalAPI, votosSegurosAPI } from "./config";
 import { votoConsultaAPI } from "./configConsulta";
 export const getValidarVoto = async (claveVoto) => {
     try{
         // console.log("claveVoto", claveVoto);
-        const { data } = await votosSegurosAPI.get(`verificacion/${claveVoto}`);
+        const { data } = await votosSegurosAPI.get(`votos_seguros/verificacion/${claveVoto}`);
         // https://ms-jornada-voto-seguro.herokuapp.com/votos_seguros/verificacion/ELECTORAL-ESIAK-KQHPV
         // https://ms-jornada-voto-seguro.herokuapp.com/votos_seguros/verificacion/ELECTORAL-NLGQX-AGAKJ
         // console.log("data", data.seleccionesPorBoleta);
@@ -25,10 +25,23 @@ export const getValidarVotoConsulta = async (claveVoto) => {
         return { ok: false };
     }
 };
+export const getValidarVotoNFML = async (claveVoto) => {
+    try{
+        // console.log("claveVoto", claveVoto);
+        const { data } = await votosNoFormalAPI.get(`boleta/${claveVoto}`);
+        // votos/no/formal/verificar/boleta/NFML-YVTRSD-EVTAVB
+        // https://ms-jornada-voto-seguro.herokuapp.com/votos_seguros/verificacion/ELECTORAL-NLGQX-AGAKJ
+        // console.log("data", data.seleccionesPorBoleta);
+        console.log("data", data);
+        return { ok: true, data: data };
+    } catch (error) {
+        return { ok: false };
+    }
+};
 export const getValidarVotosJornada = async () => {
     try{
         // console.log("claveVoto", claveVoto);
-        const { data } = await votosSegurosAPI.get(`verificacion`);
+        const { data } = await votosSegurosAPI.get(`votos_seguros/verificacion`);
         // https://ms-jornada-voto-seguro.herokuapp.com/votos_seguros/verificacion
         console.log("data", data);
         return { ok: true, data: data };
