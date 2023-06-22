@@ -1,5 +1,5 @@
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import { Box, Button, Card, CardContent, CardMedia, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -21,7 +21,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     border: '1px solid #dadde9',
   },
 }));
-export const FolioFound = () => {
+export const ConsultaFound = () => {
 
 	const navigate = useNavigate();
     const params = useParams();
@@ -29,18 +29,11 @@ export const FolioFound = () => {
 
     const plantilla2 = () => {
       navigate("/verificacion/individual");
-      
     };
     const { votos } = useVerficacionStore();
 
     console.log("VOTOOOOOOOOOOS",votos);
 
-    // const [statusModal, setStatusModal] = useState(false);
-    // const handleCloseModal = () => setStatusModal(false);
-    // const handleOpenModal = () => {
-    //     // toastOffOperation();
-    //     setStatusModal(true);
-    //     };
 	return (
 		<Box pt="1.5rem"
         sx={{						
@@ -129,63 +122,34 @@ export const FolioFound = () => {
                                 },
                             }}
                         > 
-                        PRESENTA LOS SIGUIENTES DATOS:
-					</Typography>
-                    <Typography
-                        color="initial"
-                            mb="0.5rem"
-                            align="center"
-                            sx={{
-                                fontSize: {
-                                    xs: "1rem",
-                                    sm: "1rem",
-                                    md: "1rem",
-                                    lg: "1rem",
-                                    xl: "1rem",
-                                },
-                            }}
-                        > 
-                        PARTIDOS CON SU RESPECTIVO CANDIDATO VOTADO
+                        LA CONSULTA PRESENTA LOS SIGUIENTES DATOS:
 					</Typography>
 
 
-                    <Grid container spacing={2} justifyContent="center" alignItems="center">
-  {votos.map((voto, index) => (
-    <Grid item key={index} xs={12} sm={6} md={4} >
+                    <Grid container spacing={2} justifyContent="center" alignItems="center" mt={1}>
+
       <Card sx={{ height: '100%' , backgroundColor: '#E5CCFF' }}>
-        <CardMedia
-          component="img"
-          // height="auto"
-          // width="30%"
-          // style={{ objectFit: 'cover' }}
-          style={{ maxHeight: '100px', width: '100%', objectFit: 'contain', marginTop: '30px' }}
-          image={`${voto.urlPartido}`}
-          alt={voto.urlPartido}
-        />
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            Partido: '{voto.nombrePartido}'
+            Pregunta: {votos.pregunta.descPregunta}
           </Typography>
-          <CardMedia
-          component="img"
-          // height="auto"
-          // width="30%"
-          // style={{ objectFit: 'cover' }}
-          style={{ maxHeight: '130px', width: '100%', objectFit: 'contain' }}
-          image={`${voto.urlFoto}`}
-          alt={voto.urlFoto}
-        />
-          <Typography variant="subtitle1" gutterBottom>
-            Candidato: '{voto.nombreCandidato}'
+          <Typography variant="subtitle2" gutterBottom>
+          ID Pregunta: {votos.pregunta.idPregunta}
           </Typography>
+          <Typography variant="subtitle2" gutterBottom>
+          Tipo de respuesta: '{votos.pregunta.tipoRespuesta}'
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Respuesta: {votos.datosDeLaBd.sentidoModel.respuesta}
+          </Typography>
+
           <Typography color="textSecondary">
-            ID de selección: {voto.idSeleccion}
+            ID de selección: {votos.datosDeLaBd.sentidoModel.idSeleccion}
           </Typography>
         </CardContent>
       </Card>
     </Grid>
-  ))}
-</Grid>
+
 
 
 

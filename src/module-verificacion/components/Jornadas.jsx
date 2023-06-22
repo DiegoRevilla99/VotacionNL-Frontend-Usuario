@@ -9,11 +9,23 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { onGetFoliosJornadas } from '../../store/verificacion-voto/verificacionThunks';
 // import { onSetJornadaSelected } from '../../store/verificacion-voto/verificacionSlice';
+import HelpIcon from '@mui/icons-material/Help';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
-// ----------- Bradcrumbs ----------
-// import { experimentalStyled as styled } from '@mui/material/styles';
-import { BotonBack } from './botonback';
 import { BreadCrumbsCustom } from './BreadCrumbsCustom';
+import { BotonBack } from './botonback';
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(20), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
 
   export const Jornadas = () => {
       const navigate = useNavigate();
@@ -80,6 +92,26 @@ import { BreadCrumbsCustom } from './BreadCrumbsCustom';
 						}}
 					>
                         A CONTINUACIÓN SE MUESTRAN LAS JORNADAS ELECTORALES DISPONIBLES
+                        <HtmlTooltip 
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1.5rem",
+								xl: "1.5rem",
+							},
+						}}>Seleccione la jornada electoral que deseé. </Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+            {"En caso de no encontrar la deseada, intentelo más tarde."}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" fontSize="large"/>
+      </HtmlTooltip>
 					</Typography>
                     <Box 
                     ml={{											

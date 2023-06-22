@@ -1,19 +1,23 @@
 import {
-    getValidarVoto, getValidarVotosJornada, getVerificacionRespuesta, getVerificacionRespuestaFormal
+    getValidarVoto, getValidarVotoConsulta,
+    getValidarVotoNFML,
+    getValidarVotosJornada, getVerificacionRespuesta, getVerificacionRespuestaFormal
 } from '../../providers/Micro-Verificacion/providerVerificacion';
-import { onCheckingPeticion, onCheckingVerificacion, onError, onFillJornadaSentidos, onFillVoto, onNoVerificando, onOkPeticion, onVerificado } from './verificacionSlice';
+import { OnClearError, onCheckingPeticion, onCheckingVerificacion, onError, onFillJornadaSentidos, onFillVoto, onNoVerificando, onOkPeticion, onVerificado } from './verificacionSlice';
 
 
 
 export const onGetValidarVoto = (claveVoto, navigate = () => {}) => {
     return async (dispatch) => {
 		dispatch(onCheckingVerificacion());
-        dispatch(onError());
+        dispatch(onCheckingPeticion());
+        // dispatch(onError());
         const { ok, data } = await getValidarVoto(claveVoto);
         console.log("data", data);
         if (ok) {
             dispatch(onFillVoto(data));
             dispatch(onVerificado());
+            dispatch(OnClearError());
             navigate();
         }
 		 else {
@@ -23,6 +27,49 @@ export const onGetValidarVoto = (claveVoto, navigate = () => {}) => {
 		}
 	};
 }
+
+export const onGetValidarVotoConsulta = (claveVoto, navigate = () => {}) => {
+    return async (dispatch) => {
+		dispatch(onCheckingVerificacion());
+		dispatch(onCheckingPeticion());
+        // dispatch(onError());
+        const { ok, data } = await getValidarVotoConsulta(claveVoto);
+        console.log("data", data);
+        if (ok) {
+            dispatch(onFillVoto(data));
+            dispatch(onVerificado());
+            dispatch(OnClearError());
+            navigate();
+        }
+		 else {
+            // console.log("entro al error");
+			dispatch(onNoVerificando());
+			dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro"));
+		}
+	};
+}
+export const onGetValidarVotoNFML = (claveVoto, navigate = () => {}) => {
+    return async (dispatch) => {
+		dispatch(onCheckingVerificacion());
+		dispatch(onCheckingPeticion());
+        // dispatch(onError());
+        const { ok, data } = await getValidarVotoNFML(claveVoto);
+        console.log("data", data);
+        if (ok) {
+            dispatch(onFillVoto(data));
+            dispatch(onVerificado());
+            dispatch(OnClearError());
+            navigate();
+        }
+		 else {
+            // console.log("entro al error");
+			dispatch(onNoVerificando());
+			dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro"));
+		}
+	};
+}
+
+
 
 export const onGetData = (values) => {
     return async (dispatch) => {
