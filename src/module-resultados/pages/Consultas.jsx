@@ -84,7 +84,8 @@ export const Consultas = () => {
         return 0;
       }
     });
-    setDataSearch(newD);
+    // setDataSearch(newD);
+    filterForDate(newD, rangFecha);
   }, [jornadas]);
 
   useEffect(() => {
@@ -190,15 +191,18 @@ export const Consultas = () => {
             )}
           </Box>
 
-          {/* <IconButton
-            sx={{ mt: 2 }}
-            color="primary"
-            aria-label="upload picture"
-            component="label"
-          >
-            <Typography sx={{ mr: 2 }}>Ver más</Typography>
-            <ExpandCircleDownIcon />
-          </IconButton> */}
+          {jornadas.length !== dataSearch.length && (
+            <IconButton
+              sx={{ mt: 2 }}
+              color="primary"
+              aria-label="upload picture"
+              component="label"
+              onClick={() => setDataSearch(jornadas)}
+            >
+              <Typography sx={{ mr: 2 }}>Ver todas</Typography>
+              <ExpandCircleDownIcon />
+            </IconButton>
+          )}
         </Box>
       </Box>
     </Box>

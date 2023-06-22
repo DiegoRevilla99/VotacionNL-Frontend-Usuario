@@ -88,6 +88,8 @@ export const getResultFormales = (idJornada, idConsulta) => {
 
 const toRepFormal = (data) => {
   console.log("Inicial:", data);
+  console.log("VOTOS NULOS:", data.votosNulos);
+
   let nulo = {
     name: "Voto nulo",
     datosCandidato: null,
@@ -143,7 +145,8 @@ const toRepFormal = (data) => {
 
   const result = {
     candidatos,
-    nulo: nulo.candidad,
+    // nulo: nulo.candidad,
+    nulo: data.votosNulos,
     cnr: totalcnr,
     acumuladas,
     winner: {

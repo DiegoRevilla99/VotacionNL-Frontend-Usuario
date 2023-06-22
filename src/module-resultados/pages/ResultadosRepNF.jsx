@@ -178,16 +178,16 @@ export const ResultadosRepNF = ({}) => {
                 <>
                   Hay empate:
                   {boleta.empateCandidatos.map((cand, index) => {
-                    <Typography
-                      mt={2}
-                      mb={2}
-                      color="initial"
-                      align="center"
-                      sx={{ fontWeight: "bold" }}
-                    >
-                      {cand?.nombreCandidato} {cand?.apellidoPCandidato}{" "}
-                      {cand?.apellidoMCandidato}
-                    </Typography>;
+                    return (
+                      <Typography
+                        color="initial"
+                        align="center"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        {cand?.nombreCandidato} {cand?.apellidoPCandidato}{" "}
+                        {cand?.apellidoMCandidato}
+                      </Typography>
+                    );
                   })}
                 </>
               )}
