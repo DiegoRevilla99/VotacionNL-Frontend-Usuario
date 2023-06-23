@@ -158,14 +158,12 @@ export const ResultadosRepFormal = ({}) => {
                 align="center"
                 sx={{ fontWeight: "bold" }}
               >
-                {boleta?.winner?.isEmpate ? (
+                {boleta?.isEmpate ? (
                   <>
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Empate:{" "}
-                    </Typography>
-                    {boleta.winner.winners.map((win, index) => {
+                    <Typography sx={{ fontWeight: "bold" }}>Empate </Typography>
+                    {/*  {boleta.empatados.map((win, index) => {
                       return <Typography>{win}</Typography>;
-                    })}
+                    })} */}
                   </>
                 ) : (
                   <>{boleta?.winner?.nombre}</>
@@ -212,8 +210,7 @@ export const ResultadosRepFormal = ({}) => {
             alignItems={"center"}
             sx={{
               height: "auto",
-              pr: 2,
-              pl: 2,
+
               pt: 5,
               pb: 5,
               mt: 2,
@@ -236,19 +233,24 @@ export const ResultadosRepFormal = ({}) => {
               display={"flex"}
               width={"100%"}
               justifyContent="center"
+              alignContent={"center"}
               flexDirection={"column"}
               alignItems={"center"}
               sx={{
                 height: "auto",
               }}
             >
-              <Box display={xssize ? "flex" : "none"}>
+              <Box
+                width={"100%"}
+                justifyContent="center"
+                display={xssize ? "flex" : "none"}
+              >
                 <GridCandFormales
                   total={boleta?.acumuladas + boleta.cnr + boleta.nulo}
                   candidatos={boleta.candidatos}
                 />
               </Box>
-              <Box display={!xssize ? "flex" : "none"}>
+              <Box width={"100%"} display={!xssize ? "flex" : "none"}>
                 <ChartJFormales
                   totalV={boleta?.acumuladas + boleta.cnr + boleta.nulo}
                   candidatos={boleta.candidatos}

@@ -61,23 +61,12 @@ const userPhoto = {
   justifyContent: "center",
 };
 
-export const CardCandidatos = ({ total, candidato }) => {
-  const [porncentaje, setPorncentaje] = useState(
-    (100 * candidato.candidad) / total
-  );
+export const CardRespuesta = ({ res = "", cant = 0, total = 0 }) => {
+  const [porncentaje, setPorncentaje] = useState((100 * cant) / total);
   return (
     <Box sx={card}>
       <Box sx={header} className="header">
-        <Box sx={userPhoto} className="header">
-          <img
-            width={"100%"}
-            height={"100%"}
-            style={{ borderRadius: "50%" }}
-            src={candidato.foto}
-            class="photo"
-          />
-        </Box>
-        <Typography sx={{ m: 1 }}>{candidato?.nombre}</Typography>
+        <Typography sx={{ m: 1 }}>Respuesta: {res}</Typography>
       </Box>
       <Box sx={{ padding: "20px" }} className="body">
         <Box sx={skill}>
@@ -92,32 +81,9 @@ export const CardCandidatos = ({ total, candidato }) => {
 
         <Box sx={skill}>
           <Box sx={skillName}>Total votos</Box>
-          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>
-            {candidato?.candidad} votos
-          </Box>
+          <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>{cant} votos</Box>
         </Box>
 
-        <Divider></Divider>
-        <Box
-          display={"flex"}
-          alignItems="center"
-          flexDirection="column"
-          sx={{ mt: 2, width: "100%" }}
-        >
-          <Typography
-            mb={"10px"}
-            sx={{ fontWeight: "bold" }}
-            textAlign={"center"}
-          >
-            Partido(s)
-          </Typography>
-
-          <Box>
-            {candidato?.partidos.map((partido) => {
-              return <img width={"50px"} height="50px" src={partido.logo} />;
-            })}
-          </Box>
-        </Box>
         <Box sx={skill}></Box>
       </Box>
     </Box>

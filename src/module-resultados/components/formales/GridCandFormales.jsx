@@ -9,8 +9,9 @@ export const GridCandFormales = ({ total, candidatos }) => {
     <Box
       display={"flex"}
       alignItems="center"
+      justifyContent="center"
       flexDirection={"column"}
-      width={"100%"}
+      width={"99%"}
     >
       {candidatos?.map((candi) => {
         return <CardCandidatos total={total} candidato={candi} />;

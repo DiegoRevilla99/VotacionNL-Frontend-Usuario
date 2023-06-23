@@ -131,10 +131,12 @@ const toRepFormal = (data) => {
   candidatos.sort((a, b) => b.candidad - a.candidad);
 
   let winner = null;
+  let empatados = [];
   let isEmpate = false;
   if (candidatos.length > 0) {
     const maxVotes = candidatos[0].candidad;
     const winners = candidatos.filter((c) => c.candidad === maxVotes);
+    console.log("Ganadores: ", winners);
     if (winners.length === 1) {
       winner = winners[0];
     } else {
@@ -142,6 +144,7 @@ const toRepFormal = (data) => {
       winner = winners.map((w) => w.nombre);
     }
   }
+  console.log("Ganador:::", winner);
 
   const result = {
     candidatos,
@@ -149,10 +152,9 @@ const toRepFormal = (data) => {
     nulo: data.votosNulos,
     cnr: totalcnr,
     acumuladas,
-    winner: {
-      winners: [...winner],
-      isEmpate,
-    },
+    empatados,
+    isEmpate,
+    winner,
   };
 
   console.log("Final:", result);

@@ -155,29 +155,34 @@ export const ResultadosComiteNF = ({}) => {
             }}
           >
             <Box display={"flex"} flexDirection="column" alignItems="center">
-              <Typography
-                variant="body2"
-                mt={1}
-                mb={1}
-                color="initial"
-                align="center"
-              >
-                COMITÉ GANADOR:
-              </Typography>
-              {boleta.winers?.map((win, index) => {
-                return (
+              {boleta.isEmpate ? (
+                <>Hay empate</>
+              ) : (
+                <>
                   <Typography
+                    variant="body2"
+                    mt={1}
+                    mb={1}
                     color="initial"
                     align="center"
-                    sx={{ fontWeight: "bold" }}
                   >
-                    {index + 1}.-
-                    {win?.nombreCandidato}
-                    {win?.apellidoPCandidato}
-                    {win?.apellidoMCandidato}
+                    COMITÉ GANADOR:
                   </Typography>
-                );
-              })}
+                  {boleta.winers?.map((win, index) => {
+                    return (
+                      <Typography
+                        color="initial"
+                        align="center"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        {index + 1}.-
+                        {win?.nombreCandidato} {win?.apellidoPCandidato}{" "}
+                        {win?.apellidoMCandidato}{" "}
+                      </Typography>
+                    );
+                  })}
+                </>
+              )}
 
               <Box
                 borderRight="1px solid"

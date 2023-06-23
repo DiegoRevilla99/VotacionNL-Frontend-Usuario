@@ -176,8 +176,8 @@ export const ResultadosRepNF = ({}) => {
                 </Typography>
               ) : (
                 <>
-                  Hay empate:
-                  {boleta.empateCandidatos.map((cand, index) => {
+                  Hay empate
+                  {/* {boleta.empateCandidatos.map((cand, index) => {
                     return (
                       <Typography
                         color="initial"
@@ -188,7 +188,7 @@ export const ResultadosRepNF = ({}) => {
                         {cand?.apellidoMCandidato}
                       </Typography>
                     );
-                  })}
+                  })} */}
                 </>
               )}
 
