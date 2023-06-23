@@ -250,7 +250,7 @@ export const ResultadosRepFormal = ({}) => {
                   candidatos={boleta.candidatos}
                 />
               </Box>
-              <Box width={"100%"} display={!xssize ? "flex" : "none"}>
+              <Box width={"95%"} display={!xssize ? "flex" : "none"}>
                 <ChartJFormales
                   totalV={boleta?.acumuladas + boleta.cnr + boleta.nulo}
                   candidatos={boleta.candidatos}

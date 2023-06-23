@@ -35,7 +35,7 @@ export const NoDisponible = ({ titulo = "" }) => {
               fontWeight: "bold",
             }}
           >
-            RESULTADOS NO DISPONIBLES
+            RESULTADOS NO DISPONIBLES, REGRESA MÁS TARDE
           </Typography>
         ) : (
           <Typography
