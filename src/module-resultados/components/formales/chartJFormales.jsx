@@ -14,12 +14,10 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
   const [flag, setFlag] = useState(true);
 
   useEffect(() => {
-    console.log("candidatos", candidatos);
     setresult(candidatos);
   }, [candidatos]);
 
   useEffect(() => {
-    console.log("total", totalV);
     setTotalS(totalV);
   }, [totalV]);
 
@@ -48,18 +46,15 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
             ],
 
             image: result.map((data) => {
-              const imgs = data.partidos.map((part) => {
-                console.log("logo_: ", part.logo);
-                return part.logo;
-              });
+              const imgs = data.partidos.map((part) => part.logo || "none");
 
               return imgs;
             }),
 
-            labels: result.map((data) => {
+            /* labels: result.map((data) => {
               let nl = data.nombre.split(" ");
               return nl;
-            }),
+            }), */
           },
           {
             label: "Votos",
@@ -78,7 +73,7 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
     }
   });
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("data", data);
     setImageItems({
       id: "imageItems",
@@ -93,32 +88,36 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
         const imageSize = options.layout.padding.bottom;
         data.datasets[0].image.forEach((imageLink, index) => {
           try {
+            // Dentro del useEffect:
             imageLink.forEach((imagen, index2) => {
               const logo = new Image();
+              logo.onload = () => {
+                ctx.drawImage(
+                  logo,
+                  x.getPixelForValue(index) -
+                    90 +
+                    (75 /
+                      (imageLink.length === 1
+                        ? 1
+                        : imageLink.length === 2
+                        ? 1.5
+                        : imageLink.length === 3
+                        ? 2
+                        : imageLink.length === 4
+                        ? 2.5
+                        : imageLink.length === 5
+                        ? 3
+                        : 1)) *
+                      (index2 + 1),
+                  y.getPixelForValue(0) + 100,
+                  30,
+                  30
+                );
+              };
+              logo.onerror = () => {
+                console.error("Error al cargar la imagen:", imagen);
+              };
               logo.src = imagen;
-              ctx.drawImage(
-                logo,
-                // x.getPixelForValue(index) - 90 + 90 / (imageLink.length + (1 / 2) * index2),
-                x.getPixelForValue(index) -
-                  90 +
-                  (75 /
-                    (imageLink.length === 1
-                      ? 1
-                      : imageLink.length === 2
-                      ? 1.5
-                      : imageLink.length === 3
-                      ? 2
-                      : imageLink.length === 4
-                      ? 2.5
-                      : imageLink.length === 5
-                      ? 3
-                      : 1)) *
-                    (index2 + 1),
-                // x.getPixelForValue(index) - 80 + 80 / (index2 * index2 + 1),
-                y.getPixelForValue(0) + 100,
-                30,
-                30
-              );
             });
           } catch (error) {
             console.log("errorPPPPP", error);
@@ -127,7 +126,7 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
       },
     });
   }, [data]);
-
+ */
   const [imageItems, setImageItems] = useState({
     id: "imageItems",
     beforeDatasetsDraw(chart, args, pluginOptions) {
@@ -140,46 +139,50 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
       ctx.save();
       const imageSize = options.layout.padding.bottom;
       data.datasets[0].image.forEach((imageLink, index) => {
-        try {
-          imageLink.forEach((imagen, index2) => {
-            const logo = new Image();
-            logo.src = imagen;
-            ctx.drawImage(
-              logo,
-              // x.getPixelForValue(index) - 90 + 90 / (imageLink.length + (1 / 2) * index2),
-              x.getPixelForValue(index) -
-                90 +
-                (75 /
-                  (imageLink.length === 1
-                    ? 1
-                    : imageLink.length === 2
-                    ? 1.5
-                    : imageLink.length === 3
-                    ? 2
-                    : imageLink.length === 4
-                    ? 2.5
-                    : imageLink.length === 5
-                    ? 3
-                    : 1)) *
-                  (index2 + 1),
-              // x.getPixelForValue(index) - 80 + 80 / (index2 * index2 + 1),
-              y.getPixelForValue(0) + 100,
-              30,
-              30
-            );
-          });
-        } catch (error) {
-          console.log("errorPPPPP", error);
-        }
+        imageLink.forEach((imagen, index2) => {
+          const logo = new Image();
+          logo.onload = () => {
+            try {
+              ctx.drawImage(
+                logo,
+                x.getPixelForValue(index) -
+                  90 +
+                  (75 /
+                    (imageLink.length === 1
+                      ? 1
+                      : imageLink.length === 2
+                      ? 1.9
+                      : imageLink.length === 3
+                      ? 2.5
+                      : imageLink.length === 4
+                      ? 2.5
+                      : imageLink.length === 5
+                      ? 3
+                      : 1)) *
+                    (index2 + 1),
+                y.getPixelForValue(0) + 100,
+                30,
+                30
+              );
+            } catch (error) {
+              console.error("Error al dibujar la imagen:", error);
+            }
+          };
+          logo.onerror = () => {
+            console.error("Error al cargar la imagen:", imagen);
+            logo.src = "";
+          };
+          logo.src = imagen;
+        });
       });
     },
   });
 
-  useEffect(() => {
+  /*  useEffect(() => {
     console.log("REF", chartRef);
     console.log("data_", data);
     console.log("array", [ChartDataLabels, imageItems]);
-  }, []);
+  }, []); */
 
   try {
     return (
@@ -219,7 +222,7 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
                   // console.log("TOOLTIPITEM", tooltipItem);
                   return tooltipItem.datasetIndex === 0;
                 },
-                usePointStyle: true,
+                /* usePointStyle: true,
                 callbacks: {
                   labelPointStyle: (context) => {
                     // console.log(context);
@@ -231,9 +234,12 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
                     };
                   },
                   beforeTitle: (context) => {
-                    return context[0].dataset.labels[context[0].dataIndex];
+                    if (context[0].dataset.labels) {
+                      return context[0].dataset.labels[context[0].dataIndex];
+                    }
+                    return ""; // Handle the case when dataset.labels is undefined
                   },
-                },
+                }, */
               },
               legend: {
                 display: false,
@@ -268,6 +274,7 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
                 },
               },
             },
+
             aspectRatio: 3,
             scales: {
               y: {

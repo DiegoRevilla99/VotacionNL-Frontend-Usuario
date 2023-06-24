@@ -12,6 +12,7 @@ import {
   Stack,
   ThemeProvider,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { Graficas } from "../components/Graficas";
 import "../../styles/generalContainer.css";
@@ -26,6 +27,8 @@ import {
 } from "../../store/resultados-consultas/consultasThunks";
 import { NoDisponible } from "../components/NoDisponible";
 import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
+import { useTheme } from "@mui/material/styles";
+import { GridConsultas2 } from "../components/consultas/GridConsultas2";
 
 export const ResultadosConsulta = ({
   chartData = [
@@ -45,6 +48,8 @@ export const ResultadosConsulta = ({
     isLoadingConfigConsulta,
     configConsulta,
   } = useSelector((state) => state.consultas);
+  const theme = useTheme();
+  const xssize = useMediaQuery(theme.breakpoints.only("xs"));
   const [etiquetas, setetiquetas] = useState([]);
   const [datosN, setDatosN] = useState([]);
   const [titulo, settitulo] = useState("");
@@ -183,7 +188,7 @@ export const ResultadosConsulta = ({
               >
                 {titulo}
               </Typography>
-              <Typography
+              {/* <Typography
                 variant="body2"
                 mt={2}
                 mb={2}
@@ -207,7 +212,7 @@ export const ResultadosConsulta = ({
                 } else {
                   return <Typography>""</Typography>;
                 }
-              })}
+              })} */}
 
               <Box
                 borderRight="1px solid"
@@ -355,14 +360,31 @@ export const ResultadosConsulta = ({
               {isLoadingResultados ? (
                 <Typography>Esperando</Typography>
               ) : (
-                update && (
-                  <Intermedio
-                    titulo={titulo}
-                    datos={datosN}
-                    labels={etiquetas}
-                    img={[]}
-                  ></Intermedio>
-                )
+                <>
+                  <Box
+                    width={"100%"}
+                    justifyContent="center"
+                    display={xssize ? "flex" : "none"}
+                  >
+                    <GridConsultas2
+                      datos={{
+                        total: resultados?.acumulados + resultados?.nulos,
+                        respuestas: resultados.pregunta.lista,
+                        resultados: resultados.resultados.lista,
+                      }}
+                    />
+                  </Box>
+                  <Box width={"100%"} display={!xssize ? "flex" : "none"}>
+                    {update && (
+                      <Intermedio
+                        titulo={titulo}
+                        datos={datosN}
+                        labels={etiquetas}
+                        img={[]}
+                      ></Intermedio>
+                    )}
+                  </Box>
+                </>
               )}
             </Box>
           </Box>

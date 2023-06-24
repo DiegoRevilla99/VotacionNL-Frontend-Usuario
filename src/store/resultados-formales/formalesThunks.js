@@ -87,6 +87,83 @@ export const getResultFormales = (idJornada, idConsulta) => {
 //_________________________jornada electoral_______________________
 
 const toRepFormal = (data) => {
+  console.log("Inicial:", data);
+  console.log("VOTOS NULOS:", data.votosNulos);
+
+  let nulo = {
+    name: "Voto nulo",
+    datosCandidato: null,
+    candidad: 0,
+  };
+  let acumuladas = 0;
+  let cnr = data.candidaturasNoReg ? data.candidaturasNoReg : [];
+  let candidatos = [];
+
+  if (data.boletaCandidatos) {
+    candidatos = data.boletaCandidatos.map((candi) => {
+      if (candi.datosCandidato === null) {
+        if (candi.name === "Voto nulo") {
+          nulo.candidad += 1;
+        } else {
+          cnr.push(candi);
+        }
+        return null;
+      }
+
+      acumuladas += candi.candidad;
+
+      return {
+        nombre: candi.name,
+        foto: candi.datosCandidato.candidatoModel.fotoCandidato,
+        partidos: candi.datosCandidato.partidos,
+        candidad: candi.candidad,
+      };
+    });
+  }
+
+  candidatos = candidatos.filter((c) => c !== null);
+
+  let totalcnr = 0;
+  cnr.forEach((c) => {
+    totalcnr += c.candidad;
+  });
+
+  candidatos.sort((a, b) => b.candidad - a.candidad);
+
+  let winner = null;
+  let empatados = [];
+  let isEmpate = false;
+  if (candidatos.length > 0) {
+    const maxVotes = candidatos[0].candidad;
+    const winners = candidatos.filter((c) => c.candidad === maxVotes);
+    console.log("Ganadores: ", winners);
+    if (winners.length === 1) {
+      winner = winners[0];
+    } else {
+      isEmpate = true;
+      winner = winners.map((w) => w.nombre);
+    }
+  }
+  console.log("Ganador:::", winner);
+
+  const result = {
+    candidatos,
+    // nulo: nulo.candidad,
+    nulo: data.votosNulos,
+    cnr: totalcnr,
+    acumuladas,
+    empatados,
+    isEmpate,
+    winner,
+  };
+
+  console.log("Final:", result);
+
+  return result;
+};
+
+/* const toRepFormal = (data) => {
+  console.log("Inicial:", data);
   let nulo = {
     name: "Voto nulo",
     datosCandidato: null,
@@ -99,7 +176,7 @@ const toRepFormal = (data) => {
     candidatos = data.boletaCandidatos.map((candi) => {
       if (candi.datosCandidato === null) {
         if (candi.name === "Voto nulo") {
-          nulo = candi;
+          nulo = nulo.candidad + 1;
         } else {
           cnr = candi;
         }
@@ -127,8 +204,15 @@ const toRepFormal = (data) => {
   });
 
   candidatos.sort((a, b) => {
-    console.log(a.candidad);
     return b.candidad - a.candidad;
+  });
+
+  console.log("Final:", {
+    candidatos,
+    nulo: nulo.candidad,
+    cnr: totalcnr,
+    acumuladas,
+    winner: candidatos[0],
   });
 
   return {
@@ -138,7 +222,7 @@ const toRepFormal = (data) => {
     acumuladas,
     winner: candidatos[0],
   };
-};
+}; */
 
 export const getConfigJornadaFormal = (idJornada) => {
   return async (dispatch, getState) => {

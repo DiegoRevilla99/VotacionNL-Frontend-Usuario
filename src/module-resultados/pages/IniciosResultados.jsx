@@ -51,7 +51,7 @@ export const IniciosResultados = () => {
               imagen="https://imagesvotacion.s3.eu-north-1.amazonaws.com/1676860180419_JornadaNF.jpg"
               type={2}
               url="/resultados/noformales"
-              name="OTRAS ELECCIONES"
+              name="ELECCIONES POPULARES"
             ></OptionCard>
           </Box>
         </Box>

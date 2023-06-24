@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { PasosPage } from "../../module-auth/pages/PasosPage";
-import { ReenviarToken } from "../../module-auth/pages/ReenviarToken";
 import { RenviarEnlaceBlanco } from "../../module-auth/pages/RenviarEnlaceBlanco";
-import { ReenvioEmail } from "../../module-auth/pages/ReenvioEmail";
+import { ConsultaFound } from "../../module-verificacion/components/ConsultaFound";
 import { FolioFound } from "../../module-verificacion/components/FolioFound";
 import { Jornadas } from "../../module-verificacion/components/Jornadas";
 import { JornadasNoFormales } from "../../module-verificacion/components/JornadasNoFormales";
+import { PopularesFound } from "../../module-verificacion/components/PopularesFound";
 import { GroupPage } from "../../module-verificacion/pages/GroupPage";
 import { GroupPageLogged } from "../../module-verificacion/pages/GroupPageLogged";
 import { IndividualPage } from "../../module-verificacion/pages/IndividualPage";
@@ -20,8 +20,12 @@ export const HomeRoutes = () => {
 			<Route path="pasosVerificacion" element={<PasosPage />} />
 			<Route path="verificacion" element={<VerificacionPage />} />
 			<Route path="verificacion/individual" element={<IndividualPage />} />
-			<Route path="verificacion/individual/FoundFolio" element={<FolioFound />} />
+			{/* <Route path="verificacion/individual/FoundFolio" element={<FolioFound />} /> */}
 			<Route path="/verificacion/individual/:folio/FoundFolio" element={<FolioFound />} />
+			<Route path="/verificacion/individual/:folio/ConsultaFound" element={<ConsultaFound />} />
+			<Route path="/verificacion/individual/:folio/PopularesFound" element={<PopularesFound />} />
+			{/* <Route path="/verificacion/individual/PopularesFound" element={<PopularesFound />} /> */}
+			{/* <Route path="/verificacion/individual/FoundFolio" element={<FolioFound />} /> */}
 			{/* No Logueado */}
 			<Route path="verificacion/visualizacion" element={<Jornadas />} />
 			<Route path="verificacion/visualizacion/boleta" element={<VisualizacionBoleta />} />

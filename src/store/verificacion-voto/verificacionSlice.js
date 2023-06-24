@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const verificacionSlice = createSlice({
     name: "verificacion",
     initialState: {
-        status: "noVerificado", //checking verficado noVerificado
-        // status: "noVerificando", //noVerificando, verificando, checking
+        // status: "noVerificado", //checking verficado noVerificado
+        status: "", //noVerificando, verificando, checking
         errorMessage: "",
         statusPeticion: "off", //checking, ok, fail, off
         claveVoto: "",
@@ -38,11 +38,14 @@ export const verificacionSlice = createSlice({
         onOffPeticion: (state) => {
             state.statusPeticion = "off";
         },
+        OnClearError: (state) => {
+            state.errorMessage = "";
+        },
         onCheckingVerificacion: (state) => {
             state.status = "checking";
         },
         onVerificado: (state, {payload}) => {
-            state.status = "verficado";
+            state.status = "verificado";
             // state.claveVoto = payload.claveVoto;
         },
         onNoVerificando: (state) => {
@@ -81,6 +84,7 @@ export const {
     onVerificado,
     onNoVerificando,
     onSetJornadaSelected,
+    OnClearError,
     onError,
     onFillVoto,
     onValidarVoto,

@@ -78,6 +78,9 @@ export const getResultNoFormal = (idJornada, idConsulta) => {
       dispatch(setResultados({ resultados: data }));
       dispatch(setBoleta({ boleta: convData }));
     } else {
+      console.log("Hubo un error en result__");
+      dispatch(setResultados({ resultados: null }));
+      dispatch(setBoleta({ boleta: false }));
     }
   };
 };

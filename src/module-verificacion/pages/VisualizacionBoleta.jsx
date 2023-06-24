@@ -2,6 +2,7 @@ import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import SearchIcon from '@mui/icons-material/Search';
 import ReactPaginate from 'react-paginate';
 
+import HelpIcon from '@mui/icons-material/Help';
 import {
   Box,
   Button, Grid, LinearProgress, TextField, Typography
@@ -10,14 +11,26 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import InputAdornment from '@mui/material/InputAdornment';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import { Container } from "@mui/system";
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { BotonBack } from "../components/botonback";
 import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
+import { BotonBack } from "../components/botonback";
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
 import '../styles/style.css';
-
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(20), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
   export const VisualizacionBoleta = () => {
     const navigate = useNavigate();
 
@@ -112,7 +125,28 @@ import '../styles/style.css';
                 },
               }}
             >
-              A CONTINUACIÓN SE MUESTRAN LAS BOLETAS DE {jornadaEncontrar.jornadaModel.nombreJornada}
+              A CONTINUACIÓN SE MUESTRAN LAS BOLETAS DE "{jornadaEncontrar.jornadaModel.nombreJornada}"
+
+              <HtmlTooltip 
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1.5rem",
+								xl: "1.5rem",
+							},
+						}}>Se muestran los datos recopilados de la jornada "{jornadaEncontrar.jornadaModel.nombreJornada}". </Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+            {/* {"En caso de no encontrar la deseada, intentelo más tarde."} */}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" fontSize="large"/>
+      </HtmlTooltip>
             </Typography>
             <Box 
               ml={{											

@@ -1,22 +1,19 @@
 import React from "react";
 
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import LoginIcon from "@mui/icons-material/Login";
-import { useNavigate } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import { onLogout } from "../../store/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 import { onLogoutThunk } from "../../store/auth/authThunks";
 
 const pages = ["Inicio", "Resultados", "Verificación", "Información"];
@@ -163,7 +160,7 @@ export const AppBarCustom = () => {
 							</MenuItem>
 							<MenuItem key={"verificacion"} onClick={goVerificacion} color="black">
 								<Typography textAlign="center" sx={{ color: "black" }}>
-									Verificacion
+									Verificación
 								</Typography>
 							</MenuItem>
 							<MenuItem key={"información"} onClick={goInformacion} color="black">
@@ -224,7 +221,7 @@ export const AppBarCustom = () => {
 							onClick={goVerificacion}
 							sx={{ my: 2, color: "black", display: "block" }}
 						>
-							Verificacion
+							Verificación
 						</Button>
 						<Button
 							key={"informacion"}

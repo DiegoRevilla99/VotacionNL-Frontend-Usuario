@@ -1,15 +1,34 @@
+import HelpIcon from '@mui/icons-material/Help';
 import ReplyIcon from '@mui/icons-material/Reply';
 import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import { Container } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { onError } from "../../store/verificacion-voto/verificacionSlice";
-import { onGetValidarVoto } from "../../store/verificacion-voto/verificacionThunks";
+import { onGetValidarVoto, onGetValidarVotoConsulta, onGetValidarVotoNFML } from "../../store/verificacion-voto/verificacionThunks";
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(16), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
+const TooltipContainer = styled('div')({
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+  });
 const validationSchema = object({
 	folio: string("").required("Este campo es requerido").matches(/^[a-zA-Z0-9-]+$/, "Solo se permiten números, letras y guiones")
 });
@@ -22,20 +41,62 @@ export const IndividualPage = () => {
 	const [ error, setError ] = useState();
 	useEffect(() => {
 		setError(errorMessage);
+		console.log("imprimimos el store",status)
 	  }, [errorMessage]);
+
+	  const onSubmit = (values) => {
+		console.log('valuessssss', values);
+		if (values.folio.startsWith('ELEC')) {
+		  dispatch(
+			onGetValidarVoto(values.folio, () => {
+			  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
+			})
+		  );
+		} else if (values.folio.startsWith('CONSULTA')) {
+		  console.log("ELECTORAL", values);
+		  dispatch(
+			onGetValidarVotoConsulta(values.folio, () => {
+			  navigate(`/verificacion/individual/${values.folio}/ConsultaFound`);
+			})
+		  );
+		} else if (values.folio.startsWith('NFML')) {
+		  // Agregar acción para el código "NFML"
+		  dispatch(
+			onGetValidarVotoNFML(values.folio, () => {
+			  navigate(`/verificacion/individual/${values.folio}/PopularesFound`);
+			})
+		  );
+		} else {
+		  dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro"));
+		}
+	  };
 	  
-	const onSubmit = (values) => {
-	  dispatch(onGetValidarVoto(
-		values.folio,
-		() => {
-		  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
-		},
-	  ));
-	};
+	  
+	// const onSubmit = (values) => {
+	// 	console.log('valuessssss', values);
+	// 	if (values.folio.startsWith('ELEC')) {
+	// 	  dispatch(
+	// 		onGetValidarVoto(values.folio, () => {
+	// 		  navigate(`/verificacion/individual/${values.folio}/FoundFolio`);
+	// 		})
+	// 	  );
+	// 	} else if (values.folio.startsWith('CONSULTA')) {
+	// 	  console.log("ELECTORAL", values);
+	// 	  dispatch(
+	// 		onGetValidarVotoConsulta(values.folio, () => {
+	// 		  navigate(`/verificacion/individual/${values.folio}/ConsultaFound`);
+	// 		})
+	// 	  );
+	// 	} else {
+	// 		dispatch(onError("No se encontró los resultados con ese folio. Por favor verifique el folio o intente con otro")); // Agregar dispatch de error en caso de texto no reconocido
+  	// 	}
+	//   };
+	  
+	  
 	// console.log(error);
 	const onCancel = () => {
 	  navigate("/verificacion");
-	  dispatch(onError());
+	//   dispatch(onError());
 	};
   
 	
@@ -67,7 +128,29 @@ export const IndividualPage = () => {
 						}}
 					>
 						INGRESE EL FOLIO DE SU BOLETA ELECTRÓNICA
+						<HtmlTooltip placement="right"
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1rem",
+								xl: "1rem",
+							},
+						}}>Ingrese en el cuadro de texto su folio para poder buscarlo, por favor.</Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" sx={{ ml: "1rem"}}/>
+      </HtmlTooltip>
 					</Typography>
+
+
+
                     <Formik
 						initialValues={{
 							folio: "",
@@ -113,7 +196,7 @@ export const IndividualPage = () => {
 									>
 								<Button
 									onClick={onCancel}
-									disabled={status === "checking" ? true : false}
+									disabled={status === "checking"}
 									startIcon={<ReplyIcon size="large" fontSize="inherit"/>}
 									color="inherit"
 									sx={{ mr: 1,
@@ -129,14 +212,14 @@ export const IndividualPage = () => {
 								<Box sx={{ flex: '1 1 auto' }} 
 									marginBottom={{xs: "1rem"}}/>
 									<Button 
-									disabled={status === "checking" ? true : false}
-									startIcon={
-										status === "checking" ? (
-											<CircularProgress color="base" />
-										) : (
-											""
-										)
-									}
+									disabled={status === "checking"}
+									// startIcon={
+									// 	status === "checking" ? (
+									// 		<CircularProgress color="base" />
+									// 	) : (
+									// 		""
+									// 	)
+									// }
 									type="submit"
 									endIcon={<SendIcon size="large" fontSize="inherit"/>}
 									sx={{
@@ -165,6 +248,7 @@ export const IndividualPage = () => {
 											transition: "all 0.5s ease",
 										},
 									}}>
+										{status === "checking" && <CircularProgress color="base" />}
 									verificar folio
 									</Button>
 								</Box>

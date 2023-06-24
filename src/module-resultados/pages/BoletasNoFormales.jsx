@@ -98,7 +98,7 @@ export const BoletasNoFormales = () => {
           },
           {
             //
-            name: "JORNADAS NO FORMALES",
+            name: "JORNADA ELECCIONES POPULARES",
             url: "/resultados/noformales/",
           },
         ]}

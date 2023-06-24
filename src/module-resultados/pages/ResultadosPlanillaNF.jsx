@@ -161,19 +161,24 @@ export const ResultadosPlanillaNF = ({}) => {
               >
                 PLANILLA GANADORA:
               </Typography>
-              {boleta.winers?.candidatos?.map((win, index) => {
-                return (
-                  <Typography
-                    color="initial"
-                    align="center"
-                    sx={{ fontWeight: "bold" }}
-                  >
-                    {win?.nombreCandidato}
-                    {win?.apellidoPCandidato}
-                    {win?.apellidoMCandidato}
-                  </Typography>
-                );
-              })}
+              {boleta.isEmpate ? (
+                <Typography>Hay empate</Typography>
+              ) : (
+                <>
+                  {boleta.winers?.candidatos?.map((win, index) => {
+                    return (
+                      <Typography
+                        color="initial"
+                        align="center"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        {win?.nombreCandidato} {win?.apellidoPCandidato}{" "}
+                        {win?.apellidoMCandidato}{" "}
+                      </Typography>
+                    );
+                  })}
+                </>
+              )}
 
               <Box
                 borderRight="1px solid"
