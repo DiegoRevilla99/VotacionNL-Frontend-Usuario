@@ -10,6 +10,7 @@ import {
   InputLabel,
   OutlinedInput,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -31,6 +32,8 @@ import { ModalVerificarCuenta } from "../components/ModalVerificarCuenta";
 import { ModalCamara } from "../components/ModalCamara";
 import { TemporizadorInicio } from "../components/TemporizadorInicio";
 import { TemporizadorFin } from "../components/TemporizadorFin";
+
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 export const InicioVotante = () => {
   const {
@@ -209,6 +212,16 @@ export const InicioVotante = () => {
 
   return (
     <Box display="flex" height="100%" sx={{ overflowY: "auto" }}>
+      <Box position="absolute">
+        <Tooltip
+          title="En esta página puedes ver las elecciones o consultas ciudadanas que tienes pendientes por contestar."
+          // placement="right"
+        >
+          <IconButton sx={{ color: "#323232" }}>
+            <HelpOutlineIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
         <ModalVerificarCuenta
           statusModalVerificar={statusModalVerificar}
@@ -242,7 +255,7 @@ export const InicioVotante = () => {
           {!jornadaFormal &&
           !jornadaNoFormal &&
           !consultaCiudadana &&
-          statusPeticion !== "checking" ? (
+          statusJornadas !== "checking" ? (
             <>
               <Grid item xs={12}>
                 <Box

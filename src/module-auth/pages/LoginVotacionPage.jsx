@@ -192,6 +192,7 @@ export const LoginVotacionPage = () => {
                   ) : (
                     <Button
                       color="error"
+                      onClick={() => navigate("/home")}
                       variant="outlined"
                       disabled={status === "checking" ? true : false}
                     >
