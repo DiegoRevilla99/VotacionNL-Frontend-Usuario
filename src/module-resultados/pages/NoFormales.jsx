@@ -107,7 +107,7 @@ export const NoFormales = () => {
             url: "/resultados/inicio/",
           },
         ]}
-        currentRoute="JORNADAS ELECTORALES NO FORMALES"
+        currentRoute="JORNADAS ELECTORALES POPULARES"
       />
 
       <Box
