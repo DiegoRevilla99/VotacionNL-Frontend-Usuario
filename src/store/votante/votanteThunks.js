@@ -66,7 +66,7 @@ export const onEmitirVoto = (values, idJornadaVotante, curp, navigate = () => {}
       const { ok2, data } = await emitirVoto(values);
       if (ok2) {
         console.log("Guardó bien el voto");
-        statusVotando(true, curp);
+        statusVotando(false, curp);
         dispatch(onFillFolios(data));
         dispatch(onNoVotando());
         dispatch(onDeleteJornadaFormal());
@@ -96,7 +96,7 @@ export const onEmitirVotoNoFormal = (values, idJornadaVotante, curp, navigate = 
       const { ok2, data } = await emitirVotoNoFormal(values);
       if (ok2) {
         console.log("Guardó bien el voto");
-        statusVotando(true, curp);
+        statusVotando(false, curp);
         dispatch(onFillFolios(data));
         dispatch(onNoVotando());
         dispatch(onDeleteJornadaFormal());
@@ -128,7 +128,7 @@ export const onEmitirRespuestaConsulta = (votos, idJornadaVotante, curp, navigat
       const { ok: ok2, data } = await emitirRespuestaConsulta(votos);
 
       if (ok2) {
-        statusVotando(true, curp);
+        statusVotando(false, curp);
         console.log("Guardó bien la respuesta");
         dispatch(onFillFolios(data));
         dispatch(onNoVotando());
