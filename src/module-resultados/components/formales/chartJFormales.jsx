@@ -265,7 +265,9 @@ export const ChartJFormales = ({ candidatos = [], totalV = 1 }) => {
                     // 	return data.datasetIndex === 0;
                     // },
                     formatter: function (value, context) {
-                      return ((value * 100) / totalS).toFixed(2) + "%";
+                      return totalS == 0
+                        ? 0
+                        : ((value * 100) / totalS).toFixed(2) + "%";
                     },
                     anchor: "end",
                     align: "top",

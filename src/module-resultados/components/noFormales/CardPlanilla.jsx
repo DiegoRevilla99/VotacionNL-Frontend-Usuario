@@ -76,7 +76,7 @@ export const CardPlanilla = ({ total, candidato }) => {
             <Box sx={skillPercent} width={porncentaje + "%"}></Box>
           </Box>
           <Box sx={{ marginLeft: "20px", fontSize: "16px" }}>
-            {porncentaje.toFixed(2)}%
+            {total == 0 ? 0 : porncentaje.toFixed(2)}%
           </Box>
         </Box>
 

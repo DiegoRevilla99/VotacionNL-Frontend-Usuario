@@ -520,8 +520,9 @@ const toPlanilla = (data) => {
 };
 
 export const toNoFormal = (data) => {
-  console.log(data);
-  const modalidad = data?.boletaCandidatos.modalidad.modalidad;
+  console.log("data toNoFORMAL::", data);
+  const modalidad = data?.boletaCandidatos?.modalidad.modalidad;
+  if (!modalidad) return false;
   if (modalidad === "REPRESENTANTE") {
     const info = toRep(data);
     return { ...info, modalidad };
