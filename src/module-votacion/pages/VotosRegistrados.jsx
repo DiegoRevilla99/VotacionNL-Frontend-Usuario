@@ -345,6 +345,10 @@ export const VotosRegistrados = () => {
           nuevos[index] = voto;
           return;
         }
+        if (voto.selecciones[0].idCandAso === "NULO") {
+          nuevos[index] = voto;
+          return;
+        }
         const idBoleta = voto.boletaModel.idEstructuraBoleta;
 
         const boletaCurrent = boletas.find((boleta) => boleta.idEstructuraBoleta === idBoleta);
