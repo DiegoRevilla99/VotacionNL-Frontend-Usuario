@@ -135,8 +135,8 @@ export const verificarFrenteDeCredencial = async ({ linkCredFrontalCrop }) => {
   const uriCredFrontalCrop = encodeURIComponent(linkCredFrontalCrop);
 
   try {
-    const url = `https://validcredenciales.herokuapp.com/api/credencial?nombreUser=${uriCredFrontalCrop}`;
-    // https://validcredenciales.herokuapp.com/api/credencial?nombreUser=https://imagesvotacion.s3.eu-north-1.amazonaws.com/1675827520926_fileName17079.jpeg
+    const url = `https://ms-biometrico-2.herokuapp.com/api/credencial?nombreUser=${uriCredFrontalCrop}`;
+    // const url = `https://validcredenciales.herokuapp.com/api/credencial?nombreUser=${uriCredFrontalCrop}`;
 
     let okResp = false;
     let verif = false;
