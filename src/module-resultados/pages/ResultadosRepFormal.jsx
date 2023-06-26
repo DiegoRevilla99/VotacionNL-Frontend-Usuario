@@ -140,7 +140,7 @@ export const ResultadosRepFormal = ({}) => {
               borderRadius: "20px",
             }}
           >
-            <Box display={"flex"} flexDirection="column" alignItems="center">
+            {/*  <Box display={"flex"} flexDirection="column" alignItems="center">
               <Typography
                 variant="body2"
                 mt={1}
@@ -160,27 +160,14 @@ export const ResultadosRepFormal = ({}) => {
               >
                 {boleta?.isEmpate ? (
                   <>
-                    <Typography sx={{ fontWeight: "bold" }}>Empate </Typography>
-                    {/*  {boleta.empatados.map((win, index) => {
-                      return <Typography>{win}</Typography>;
-                    })} */}
+                    
                   </>
                 ) : (
                   <>{boleta?.winner?.nombre}</>
                 )}
               </Typography>
 
-              {/* {resultados.ganadores?.map((gan, index) => {
-                return (
-                  <Typography
-                    sx={{ fontSize: { md: "15px", xs: "9px" } }}
-                    color="initial"
-                    fontWeight="bold"
-                  >
-                    {index + 1}.- {gan.question}
-                  </Typography>
-                );
-              })} */}
+              
 
               <Box
                 borderRight="1px solid"
@@ -188,7 +175,8 @@ export const ResultadosRepFormal = ({}) => {
                 display="flex"
                 flexDirection="column"
               ></Box>
-            </Box>
+            </Box> */}
+
             <Box></Box>
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />

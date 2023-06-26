@@ -147,12 +147,12 @@ export const ResultadosRepNF = ({}) => {
             sx={{
               p: 4,
               background: "#fff",
-              mt: 2,
+              mt: 1,
               boxShadow: 5,
               borderRadius: "20px",
             }}
           >
-            <Box display={"flex"} flexDirection="column" alignItems="center">
+            {/* <Box display={"flex"} flexDirection="column" alignItems="center">
               <Typography
                 variant="body2"
                 mt={1}
@@ -177,18 +177,7 @@ export const ResultadosRepNF = ({}) => {
               ) : (
                 <>
                   Hay empate
-                  {/* {boleta.empateCandidatos.map((cand, index) => {
-                    return (
-                      <Typography
-                        color="initial"
-                        align="center"
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        {cand?.nombreCandidato} {cand?.apellidoPCandidato}{" "}
-                        {cand?.apellidoMCandidato}
-                      </Typography>
-                    );
-                  })} */}
+                  
                 </>
               )}
 
@@ -198,7 +187,7 @@ export const ResultadosRepNF = ({}) => {
                 display="flex"
                 flexDirection="column"
               ></Box>
-            </Box>
+            </Box> */}
             <Box></Box>
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />

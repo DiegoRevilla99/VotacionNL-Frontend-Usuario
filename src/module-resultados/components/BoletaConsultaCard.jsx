@@ -65,7 +65,7 @@ export const BoletaConsultaCard = ({ disponible, papeleta }) => {
             color="inherit"
             variant="contained"
           >
-            Ver rresultados
+            Ver resultados
           </Button>
         </Box>
       </Box>

@@ -71,7 +71,7 @@ export const BoletasNoFormales = () => {
     setjornada(jornadaa);
   }, []);
 
-  /* useEffect(() => {
+  useEffect(() => {
     const now = new Date();
     const fin = new Date(configJornada?.configuracionModel?.finRecepVoto);
     console.log("FIN: ", fin);
@@ -80,7 +80,7 @@ export const BoletasNoFormales = () => {
     } else {
       setDisponible(false);
     }
-  }, [configJornada]); */
+  }, [configJornada]);
 
   return (
     <Box

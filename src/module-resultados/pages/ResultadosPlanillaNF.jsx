@@ -151,7 +151,7 @@ export const ResultadosPlanillaNF = ({}) => {
               borderRadius: "20px",
             }}
           >
-            <Box display={"flex"} flexDirection="column" alignItems="center">
+            {/* <Box display={"flex"} flexDirection="column" alignItems="center">
               <Typography
                 variant="body2"
                 mt={1}
@@ -186,7 +186,7 @@ export const ResultadosPlanillaNF = ({}) => {
                 display="flex"
                 flexDirection="column"
               ></Box>
-            </Box>
+            </Box> */}
             <Box></Box>
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />

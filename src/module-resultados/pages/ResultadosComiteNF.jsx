@@ -149,12 +149,12 @@ export const ResultadosComiteNF = ({}) => {
             sx={{
               p: 4,
               background: "#fff",
-              mt: 2,
+              mt: 1,
               boxShadow: 5,
               borderRadius: "20px",
             }}
           >
-            <Box display={"flex"} flexDirection="column" alignItems="center">
+            {/* <Box display={"flex"} flexDirection="column" alignItems="center">
               {boleta.isEmpate ? (
                 <>Hay empate</>
               ) : (
@@ -190,7 +190,7 @@ export const ResultadosComiteNF = ({}) => {
                 display="flex"
                 flexDirection="column"
               ></Box>
-            </Box>
+            </Box> */}
             <Box></Box>
 
             <Divider sx={{ mb: 2, paddingTop: "1.5rem" }} />
