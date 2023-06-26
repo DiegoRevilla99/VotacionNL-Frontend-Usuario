@@ -92,7 +92,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 							},
 						}}
 					>
-                        A CONTINUACIÓN SE MUESTRAN LAS JORNADAS ELECTORALES DISPONIBLES
+                        A CONTINUACIÓN SE MUESTRAN LAS CONSULTAS CIUDADANAS DISPONIBLES
                         <HtmlTooltip 
         title={
           <React.Fragment>
@@ -104,7 +104,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 								lg: "1.5rem",
 								xl: "1.5rem",
 							},
-						}}>Seleccione la jornada electoral que deseé. </Typography>
+						}}>Seleccione la consulta ciudadana que deseé. </Typography>
             {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
             {"It's very engaging. Right?"} */}
             {"En caso de no encontrar la deseada, intentelo más tarde."}
