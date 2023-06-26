@@ -253,14 +253,10 @@ export const ResultadosConsulta = ({
               <Box
                 display={"flex"}
                 justifyContent="center"
-                flexDirection={{ sm: "row", xs: "column" }}
+                flexDirection="column"
                 alignItems={"center"}
               >
-                <Box
-                  display={"flex"}
-                  alignItems="center"
-                  flexDirection="column"
-                >
+                <Box display={"flex"} alignItems="center">
                   <Typography
                     sx={{
                       fontWeight: "bold",
@@ -268,18 +264,11 @@ export const ResultadosConsulta = ({
                       fontSize: { lg: "22px", md: "18px", xs: "10px" },
                     }}
                   >
-                    VOTOS ACUMULADOS
-                  </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>
-                    {resultados?.acumulados}
+                    {resultados?.acumulados} VOTOS
                   </Typography>
                 </Box>
-                <Box sx={{ p: 3 }}>+</Box>
-                <Box
-                  display={"flex"}
-                  alignItems="center"
-                  flexDirection="column"
-                >
+
+                <Box display={"flex"} alignItems="center">
                   <Typography
                     sx={{
                       fontWeight: "bold",
@@ -287,29 +276,7 @@ export const ResultadosConsulta = ({
                       fontSize: { lg: "22px", md: "18px", xs: "10px" },
                     }}
                   >
-                    VOTOS NULOS
-                  </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>
-                    {resultados?.nulos}
-                  </Typography>
-                </Box>
-                <Box sx={{ p: 3 }}>=</Box>
-                <Box
-                  display={"flex"}
-                  alignItems="center"
-                  flexDirection="column"
-                >
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                      pb: 3,
-                      fontSize: { lg: "22px", md: "18px", xs: "10px" },
-                    }}
-                  >
-                    TOTAL
-                  </Typography>
-                  <Typography sx={{ pb: 3, fontSize: "1rem" }}>
-                    {resultados?.acumulados + resultados?.nulos}
+                    {resultados?.nulos} PERSONAS SIN VOTAR
                   </Typography>
                 </Box>
               </Box>
@@ -368,7 +335,9 @@ export const ResultadosConsulta = ({
                   >
                     <GridConsultas2
                       datos={{
-                        total: resultados?.acumulados + resultados?.nulos,
+                        total: resultados?.acumulados
+                          ? resultados?.acumulados
+                          : 0,
                         respuestas: resultados.pregunta.lista,
                         resultados: resultados.resultados.lista,
                       }}

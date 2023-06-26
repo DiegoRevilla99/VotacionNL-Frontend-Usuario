@@ -39,6 +39,10 @@ export const HomePage = () => {
     navigate("/verificacion");
   };
 
+  const goResultados = () => {
+    navigate("/resultados");
+  };
+
   return (
     <Box
       display={"flex"}
@@ -183,6 +187,7 @@ export const HomePage = () => {
 
         <Grid item xs={6} sm={6} md={6} lg={6} xl={6}>
           <Box
+            onClick={goResultados}
             boxShadow={shadow}
             display="flex"
             flexDirection={"column"}
