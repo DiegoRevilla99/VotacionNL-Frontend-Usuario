@@ -31,13 +31,13 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     border: '1px solid #dadde9',
   },
 }));
-  export const VisualizacionBoleta = () => {
+  export const VisualizacionPapeleta = () => {
     const navigate = useNavigate();
 
     const [searchBoleta, setSearchBoleta] = useState('');
     const params = useParams();
-    const { jornadasFolio } = useVerficacionStore();
-    const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
+    const { consultasFolio } = useVerficacionStore();
+    const jornadaEncontrar = consultasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
     
     const [currentPage, setCurrentPage] = useState(0);
     const itemsPerPage = 6;
@@ -46,10 +46,10 @@ const HtmlTooltip = styled(({ className, ...props }) => (
       setCurrentPage(selected);
     };
     
-    const [boletasFiltradas, setBoletasFiltradas] = useState(jornadaEncontrar.boletas);
+    const [boletasFiltradas, setBoletasFiltradas] = useState(jornadaEncontrar.selecciones);
     
     useEffect(() => {
-      const filtered = jornadaEncontrar.boletas.filter((boleta) =>
+      const filtered = jornadaEncontrar.selecciones.filter((boleta) =>
         boleta.idBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
       );
       console.log(filtered);
@@ -68,7 +68,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     };
     
   	const plantilla1 = (idBoleta) => {
-      navigate("/verificacion/visualizacion/boleta/"+params.id+"/group/"+idBoleta);
+      navigate("/verificacion/consultas/papeletas/"+params.id+"/group/"+idBoleta);
     };
 
     if (status === "checking")
@@ -103,14 +103,14 @@ const HtmlTooltip = styled(({ className, ...props }) => (
 								url: "/verificacion",
 							},
               {
-								name: "JORNADAS ELECTORALES",
-								url: "/verificacion/visualizacion",
+								name: "CONSULTAS CIUDADANAS",
+								url: "/verificacion/consultas",
 							},
 						]}
 						currentRoute="BOLETAS"
 					></BreadCrumbsCustom>
           {/* Bradcrumbs */}
-          {jornadaEncontrar.boletas.length > 0 ? (
+          {jornadaEncontrar.selecciones.length > 0 ? (
             <>
             <Typography
               color="initial"
@@ -126,7 +126,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
                 },
               }}
             >
-              A CONTINUACIÓN SE MUESTRAN LAS BOLETAS DE "{jornadaEncontrar.jornadaModel.nombreJornada}"
+              A CONTINUACIÓN SE MUESTRAN LAS PAPELETAS DE "{jornadaEncontrar.jornadaModel.nombreJornada}"
 
               <HtmlTooltip 
         title={
@@ -210,7 +210,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
                            {jornadaEncontrar.jornadaModel.nombreJornada}
                           </Typography>
                           <Typography variant="h7" component="div">
-                            ID DE LA BOLETA:
+                            ID DE LA PAPELETA:
                           </Typography>
                           <Typography variant="h6" component="div">
                             {boleta.idBoleta}

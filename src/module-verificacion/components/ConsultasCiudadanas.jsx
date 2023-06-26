@@ -7,32 +7,45 @@ import { Container } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { onGetFoliosJornadas } from '../../store/verificacion-voto/verificacionThunks';
+import { onGetFoliosConsultas } from '../../store/verificacion-voto/verificacionThunks';
 // import { onSetJornadaSelected } from '../../store/verificacion-voto/verificacionSlice';
+import HelpIcon from '@mui/icons-material/Help';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import { useVerficacionStore } from '../hooks/useVerificacionStore';
-// ----------- Bradcrumbs ----------
-// import { experimentalStyled as styled } from '@mui/material/styles';
-import { BotonBack } from './botonback';
 import { BreadCrumbsCustom } from './BreadCrumbsCustom';
+import { BotonBack } from './botonback';
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(20), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
 
-  export const Jornadas = () => {
+  export const ConsultasCiudadanas = () => {
       const navigate = useNavigate();
       const plantilla1 = (id) => {
-          navigate("/verificacion/visualizacion/boleta/"+id);
+          navigate("/verificacion/consultas/papeletas/"+id);
         };
         const [searchJornada, setSearchJornada] = useState('');
         const params = useParams();
         const dispatch = useDispatch();
         //asdasd
 
-        const { jornadasFolio } = useVerficacionStore();
+        const { consultasFolio } = useVerficacionStore();
       useEffect(() => {
-          dispatch(onGetFoliosJornadas());
+          dispatch(onGetFoliosConsultas());
       }, []);
-        const jornadasFiltradas = jornadasFolio.filter((jornada) =>
-    jornada.jornadaModel.nombreJornada.toLowerCase().includes(searchJornada.toLowerCase())
-    );
-    //   console.log(jornadasFolio);
+    //   console.log(consultasFolio);
+
+        const jornadasFiltradas = consultasFolio.filter((consulta) =>
+            consulta.jornadaModel.nombreJornada.toLowerCase().includes(searchJornada.toLowerCase())
+        );
     //   console.log(params);
 
       //
@@ -61,10 +74,10 @@ import { BreadCrumbsCustom } from './BreadCrumbsCustom';
 								url: "/verificacion",
 							},
 						]}
-						currentRoute="JORNADAS ELECTORALES"
+						currentRoute="CONSULTAS CIUDADANAS"
 					></BreadCrumbsCustom>
                 {/* end Bradcrumbs */}
-                {jornadasFolio.length > 0 ? (
+                {consultasFolio.length > 0 ? (
                     <>
 					<Typography
 						color="initial"
@@ -80,6 +93,26 @@ import { BreadCrumbsCustom } from './BreadCrumbsCustom';
 						}}
 					>
                         A CONTINUACIÓN SE MUESTRAN LAS JORNADAS ELECTORALES DISPONIBLES
+                        <HtmlTooltip 
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1.5rem",
+								xl: "1.5rem",
+							},
+						}}>Seleccione la jornada electoral que deseé. </Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+            {"En caso de no encontrar la deseada, intentelo más tarde."}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" fontSize="large"/>
+      </HtmlTooltip>
 					</Typography>
                     <Box 
                     ml={{											
@@ -198,12 +231,11 @@ import { BreadCrumbsCustom } from './BreadCrumbsCustom';
                 (
                         <>
                     <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
-                        No se encontraron jornadas por el momento, intente más tarde.
+                        No se encontraron Consultas por el momento, intente más tarde.
                     </Typography>
                     <BotonBack url='/verificacion'/>
                         </>
                 )}
-
 			</Container>
 		</Box>
 	);

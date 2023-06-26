@@ -12,6 +12,8 @@ import {
             statusPeticion, 
             claveVoto, 
             votos,
+            eleccionesFolio,
+            consultasFolio,
             jornadasFolio,
             votoSelected 
         } = useSelector((state) => state.verificacion);
@@ -36,6 +38,8 @@ import {
         votoSelected,
         jornadasFolio,
         checkingPeticion,
+        eleccionesFolio,
+        consultasFolio,
         okPeticion,
         failPeticion,
         offPeticion,

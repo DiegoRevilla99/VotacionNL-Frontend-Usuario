@@ -17,6 +17,9 @@ export const VerificacionPage = () => {
 	const rutaEleccionesPopulares = () => {
 		navigate("/verificacion/visualizacionnf");
 	};
+	const rutaConsultasCiudadanas = () => {
+		navigate("/verificacion/consultas");
+	};
     const [showModal, setShowModal] = useState(false);
 	return (
         <>
@@ -259,141 +262,187 @@ export const VerificacionPage = () => {
   ¿Qué deseas consultar?
 </Typography>
 
-                            <Stack 
-                    direction={{
-                        xl: "row",
-                        lg: "row",
-                        md: "row",
-                        sm: "column",
-                        xs: "column",
-                    }}
-                    spacing={{
-                        xl: 5,
-                        lg: 5,
-                        md: 3,
-                        sm: 2,
-                        xs: 1,
-                    }}
-                    justifyContent="center"
-                    alignItems="center"
-                    >	
-                        <Card 
-                        onClick={rutaJornadasElectorales}
-                        sx={{ 
-                            boxShadow: 4,
-                            "&:hover": {
-                                boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
-                                transform: "translate(-3px, -3px)",
-                                transition: "all 0.5s ease",
-                            },
-                             }}
-                        >
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                sx={{
-                                    height: {
-                                      xs: '150px',
-                                      sm: '250px',
-                                      md: '215px',
-                                      lg: '270px',
-                                      xl: '350px',
-                                    },
-                                    maxWidth: '100%',
-                                  }}
-                                    
-                                image="https://media.discordapp.net/attachments/1071287057491693608/1120555262646947960/jornada.jpg?width=437&height=480"
-                                alt="Team"
-                                />
-                                    <Typography variant="h5" component="div">
-                                        Jornadas electorales
-                                    </Typography>
+<Stack 
+    direction={{
+        xl: "row",
+        lg: "row",
+        md: "row",
+        sm: "column",
+        xs: "column",
+    }}
+    spacing={{
+        xl: 5,
+        lg: 5,
+        md: 3,
+        sm: 2,
+        xs: 1,
+    }}
+    justifyContent="center"
+    alignItems="center"
+>	
+    <Card 
+        onClick={rutaJornadasElectorales}
+        sx={{ 
+            maxWidth: '270px',
+            maxHeight: '300px',
+            boxShadow: 4,
+            "&:hover": {
+                boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
+                transform: "translate(-3px, -3px)",
+                transition: "all 0.5s ease",
+            },
+        }}
+    >
+        <CardActionArea>
+            <CardMedia
+                component="img"
+                sx={{
+                    height: '100%',
+                    width: '100%',
+                    backgroundColor: "#8ec2cd",
+                }}
+                image="https://media.discordapp.net/attachments/1071287057491693608/1122581611733590067/votacion-elecciones-2018-3745960371-removebg-preview.png"
+                alt="Team"
+            />
+            <Typography variant="h5" component="div">
+                Jornadas electorales
+            </Typography>
+        </CardActionArea>
+        <CardActions>
+            <Button 
+                onClick={rutaJornadasElectorales}
+                sx={{
+                    backgroundColor: "#511079",
+                    color: "#fff",
+                    fontSize: {
+                        xl: "0.9rem",
+                        lg: "0.9rem",
+                        sm: "0.9rem",
+                        xs: "0.9rem",
+                    },
+                    textAlign: "center",
+                    width: "100%",
+                    height: "100%",
+                    "&:hover": {
+                        background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
+                        color: "#FFFFFF",
+                    },
+                }}
+            >
+                Verificar 
+            </Button>
+        </CardActions>
+    </Card>
 
-                            </CardActionArea>
-                            <CardActions>
-                                <Button 
-                                    onClick={rutaJornadasElectorales}
-                                    sx={{
-                                        backgroundColor: "#511079",
-                                        color: "#fff",
-                                        fontSize: {
-                                            xl: "0.9rem",
-                                            lg: "0.9rem",
-                                            sm: "0.9rem",
-                                            xs: "0.9rem",
-                                        },
-                                        textAlign: "center",
-                                        width: "100%",
-                                        height: "100%",
-                                        "&:hover": {
-                                            background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
-                                            color: "#FFFFFF",
-                                        },
-                                    }}>
-                                    Verificar 
-                                </Button>
-                            </CardActions>
-                        </Card>
+    <Card 
+        onClick={rutaEleccionesPopulares}
+        sx={{ 
+            maxWidth: '270px',
+            maxHeight: '300px',
+            boxShadow: 4,
+            "&:hover": {
+                boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
+                transform: "translate(-3px, -3px)",
+                transition: "all 0.5s ease",
+            },
+        }}
+    >
+        <CardActionArea>
+            <CardMedia
+                component="img"
+                sx={{
+                    height: '100%',
+                    width: '100%',
+                    backgroundColor: "#8ec2cd",
+                }}
+                image="https://media.discordapp.net/attachments/1071287057491693608/1122585548779958332/final.jpg"
+                alt="Team"
+            />
+            <Typography variant="h5" component="div">
+                Elecciones populares
+            </Typography>
+        </CardActionArea>
+        <CardActions>
+            <Button 
+                onClick={rutaEleccionesPopulares}
+                sx={{
+                    backgroundColor: "#511079",
+                    color: "#fff",
+                    fontSize: {
+                        xl: "0.9rem",
+                        lg: "0.9rem",
+                        sm: "0.9rem",
+                        xs: "0.9rem",
+                    },
+                    textAlign: "center",
+                    width: "100%",
+                    height: "100%",
+                    "&:hover": {
+                        background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
+                        color: "#FFFFFF",
+                    },
+                }}
+            >
+                Verificar
+            </Button>
+        </CardActions>
+    </Card>
 
-                        <Card 
-                        onClick={rutaEleccionesPopulares}
-                        sx={{ 
-                            boxShadow: 4,
-                            "&:hover": {
-                                boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
-                                transform: "translate(-3px, -3px)",
-                                transition: "all 0.5s ease",
-                            },
-                             }}
-                        >
-                            <CardActionArea>
-                                <CardMedia
-                                component="img"
-                                sx={{
-                                    height: {
-                                      xs: '150px',
-                                      sm: '200px',
-                                      md: '250px',
-                                      lg: '300px',
-                                      xl: '350px',
-                                    },
-                                    maxWidth: '100%',
-                                  }}
-                                image="https://media.discordapp.net/attachments/1071287057491693608/1120555263007666276/Jornadaelectoral.jpg?width=660&height=480"
-                                alt="Team"
-                                />
-
-                                    <Typography variant="h5" component="div">
-                                        Elecciones populares
-                                    </Typography>
-
-                            </CardActionArea>
-                            <CardActions>
-                            <Button 
-                                onClick={rutaEleccionesPopulares}
-                                sx={{
-									backgroundColor: "#511079",
-									color: "#fff",
-									fontSize: {
-										xl: "0.9rem",
-										lg: "0.9rem",
-										sm: "0.9rem",
-										xs: "0.9rem",
-									},
-									textAlign: "center",
-                                    width: "100%",
-                                    height: "100%",
-									"&:hover": {
-										background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
-                                        color: "#FFFFFF",
-									},
-								}}>
-                                Verificar
-                                </Button>
-                            </CardActions>
-                        </Card>
-                        
-                    </Stack>    
+    <Card 
+    onClick={rutaConsultasCiudadanas}
+        sx={{ 
+            maxWidth: '270px',
+            maxHeight: '300px',
+            boxShadow: 4,
+            "&:hover": {
+                boxShadow: "9px 10px 4px rgba(0.37, 0.37, 0.37, 0.37)",
+                transform: "translate(-3px, -3px)",
+                transition: "all 0.5s ease",
+            },
+        }}
+    >
+        <CardActionArea>
+            <CardMedia
+                component="img"
+                sx={{
+                    height: '100%',
+                    width: '100%',
+                    backgroundColor: "#8ec2cd",
+                }}
+                image="https://media.discordapp.net/attachments/1071287057491693608/1122580837305688076/ballot-1294935_1280asd__1_-removebg-preview.png"
+                alt="Team"
+            />
+            <Typography variant="h5" component="div">
+                Consultas ciudadanas
+            </Typography>
+        </CardActionArea>
+        <CardActions>
+            <Button 
+            onClick={rutaConsultasCiudadanas}
+                sx={{
+                    backgroundColor: "#511079",
+                    color: "#fff",
+                    fontSize: {
+                        xl: "0.9rem",
+                        lg: "0.9rem",
+                        sm: "0.9rem",
+                        xs: "0.9rem",
+                    },
+                    textAlign: "center",
+                    width: "100%",
+                    height: "100%",
+                    "&:hover": {
+                        background: "linear-gradient(45deg, #7E328B 30%, #7E328B 90%)",
+                        color: "#FFFFFF",
+                    },
+                }}
+            >
+                Verificar
+            </Button>
+        </CardActions>
+    </Card>
+</Stack>
+  
                     <Box mt={{
                                       xs: 1,
                                       sm: 1,

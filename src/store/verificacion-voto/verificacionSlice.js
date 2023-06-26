@@ -9,6 +9,8 @@ export const verificacionSlice = createSlice({
         statusPeticion: "off", //checking, ok, fail, off
         claveVoto: "",
         jornadasFolio: [],
+        eleccionesFolio: [],
+        consultasFolio: [],
         jornadaSelected: {
 			id: "",
 			title: "",
@@ -66,6 +68,14 @@ export const verificacionSlice = createSlice({
             console.log("PAYLOAD", payload);
             state.jornadasFolio = payload;
         },
+        onFillConsultas: (state, { payload }) => {
+            console.log("PAYLOAD", payload);
+            state.consultasFolio = payload;
+        },
+        onFillEleccionesSentidos: (state, { payload }) => {
+            console.log("PAYLOAD", payload);
+            state.eleccionesFolio = payload;
+        },
         onSetJornadaSelected: (state, { payload }) => {
 			console.log(payload);
 			state.jornadaSelected.id = payload.id;
@@ -89,4 +99,6 @@ export const {
     onFillVoto,
     onValidarVoto,
     onFillJornadaSentidos,
+    onFillConsultas,
+    onFillEleccionesSentidos,
 } = verificacionSlice.actions;

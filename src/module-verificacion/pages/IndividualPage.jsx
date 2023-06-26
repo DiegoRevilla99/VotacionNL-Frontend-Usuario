@@ -145,7 +145,7 @@ export const IndividualPage = () => {
           </React.Fragment>
         }
       >
-		<HelpIcon color="primary" sx={{ ml: "1rem"}}/>
+		<HelpIcon color="primary" fontSize='large'/>
       </HtmlTooltip>
 					</Typography>
 

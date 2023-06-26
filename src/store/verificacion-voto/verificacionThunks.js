@@ -1,9 +1,11 @@
 import {
     getValidarVoto, getValidarVotoConsulta,
     getValidarVotoNFML,
-    getValidarVotosJornada, getVerificacionRespuesta, getVerificacionRespuestaFormal
+    getValidarVotosConsulta,
+    getValidarVotosElecciones,
+    getValidarVotosJornada
 } from '../../providers/Micro-Verificacion/providerVerificacion';
-import { OnClearError, onCheckingPeticion, onCheckingVerificacion, onError, onFillJornadaSentidos, onFillVoto, onNoVerificando, onOkPeticion, onVerificado } from './verificacionSlice';
+import { OnClearError, onCheckingPeticion, onCheckingVerificacion, onError, onFillConsultas, onFillEleccionesSentidos, onFillJornadaSentidos, onFillVoto, onNoVerificando, onVerificado } from './verificacionSlice';
 
 
 
@@ -94,32 +96,31 @@ export const onGetFoliosJornadas = () => {
         }
     };
 }
-
-
-
-    // SOLO OIBTENEMOS UN CANDIDATO
-export const onGetVerificacionRespuestaFormal = (uid) => {
+    // Obtenemos todas las elecciones con los sentidos con sus folios
+export const onGetFoliosEleccionesPopulares = () => {
     return async (dispatch) => {
         dispatch(onCheckingPeticion());
-        const { ok, data } = await getVerificacionRespuestaFormal(uid);
+        const { ok, data } = await getValidarVotosElecciones();
         if (ok) {
-            dispatch(onFillBoletas(data));
-            dispatch(onOkPeticion());
+            dispatch(onFillEleccionesSentidos(data));
+            // dispatch(onOkPeticion());
         } else {
             dispatch(onError("Error"));
         }
     };
 }
-    // OIBTENEMOS un/dos/tres CANDIDATO
-export const onGetVerificacionRespuesta = (uid) => {
+    // Obtenemos todas las consultas con los sentidos con sus folios
+export const onGetFoliosConsultas = () => {
     return async (dispatch) => {
         dispatch(onCheckingPeticion());
-        const { ok, data } = await getVerificacionRespuesta(uid);
+        const { ok, data } = await getValidarVotosConsulta();
         if (ok) {
-            dispatch(onFillBoletas(data));
-            dispatch(onOkPeticion());
+            dispatch(onFillConsultas(data));
+            // dispatch(onOkPeticion());
         } else {
             dispatch(onError("Error"));
         }
     };
 }
+
+

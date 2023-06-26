@@ -1,5 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -10,36 +10,27 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { Container } from "@mui/system";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
-import BallotIcon from '@mui/icons-material/Ballot';
-import Groups2Icon from '@mui/icons-material/Groups2';
-import HomeIcon from '@mui/icons-material/Home';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Chip from '@mui/material/Chip';
-import { emphasize, styled } from '@mui/material/styles';
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-    const backgroundColor =
-      theme.palette.mode === 'light'
-        ? theme.palette.grey[100]
-        : theme.palette.grey[800];
-    return {
-      backgroundColor,
-      height: theme.spacing(3),
-      color: theme.palette.text.primary,
-      fontWeight: theme.typography.fontWeightRegular,
-      '&:hover, &:focus': {
-        backgroundColor: emphasize(backgroundColor, 0.06),
-      },
-      '&:active': {
-        boxShadow: theme.shadows[1],
-        backgroundColor: emphasize(backgroundColor, 0.12),
-      },
-    };
-  }); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
-// ----------- Bradcrumbs ----------
+import HelpIcon from '@mui/icons-material/Help';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+// import { useParams } from "react-router-dom";
+import { ReplyAll } from '@mui/icons-material';
+import { BreadCrumbsCustom } from '../components/BreadCrumbsCustom';
+import { useVerficacionStore } from '../hooks/useVerificacionStore';
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(20), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
   
   const rows = [
     { id: 1, folio:'JE22-ORD-GHR41S', sentido: 'Matias Oropeza Oropeza '},
@@ -64,10 +55,39 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 
 export const GroupPageLogged = () => {
 	const navigate = useNavigate();
+  
+  const params = useParams();
   const [searchJornada, setSearchJornada] = useState('');
-	const onCancel = () => {
-		navigate("/verificacion/visualizacionnf/boletanf");
-	};
+
+  // console.log("imprimimos el store",params);
+  const { eleccionesFolio } = useVerficacionStore();
+  // console.log("imprimimos el stro",jornadasFolio);
+
+  const jornadaEncontrar = eleccionesFolio.find(jornada => jornada.jornadaModel.idEleccion === params.id);
+  // console.log("jornada en la que estamos",params);
+  const boletaEncontrar = jornadaEncontrar.selecciones.find(boleta => boleta.folioBoleta === params.idBoleta);
+  console.log("jornada en la que estamos",boletaEncontrar);
+  // const boletaEncontrar = jornadaEncontrar.selecciones.find(boleta => boleta.boleta.folioBoleta === params.idBoleta);
+  const plantilla1 = () => {
+    navigate("/verificacion/visualizacion/boleta/"+params.id);
+  };
+
+const [searchValue, setSearchValue] = useState('');
+
+const handleSearch = (value) => {
+  setSearchValue(value);
+}
+
+// Filtrar las selecciones según la búsqueda
+// const filteredSelections = boletaEncontrar.sentido.filter(seleccion => {
+//   if (seleccion.idSeleccion.toString().includes(searchValue)) {
+//     return true;
+//   }
+//   if (seleccion.nombreCandidato.toLowerCase().includes(searchValue.toLowerCase())) {
+//     return true;
+//   }
+//   return false;
+// });
 	return (
 		<Box pt="1.5rem" 
     align="center" display="flex" justifyContent="center" 
@@ -88,33 +108,27 @@ export const GroupPageLogged = () => {
 				}}
 			>
                 {/* Bradcrumbs */}
-                <Box align="center" display="flex" justifyContent="center" mb={2}>
-					            <Breadcrumbs aria-label="breadcrumb" maxItems={2}>
-                            <StyledBreadcrumb
-                            component="a"
-                            href="/verificacion"
-                            label="Verificación"
-                            icon={<HomeIcon fontSize="small" />}
-                            />
-                            <StyledBreadcrumb 
-                            component="a"
-                            href="/verificacion/visualizacionnf"
-                            icon={<AllInboxIcon fontSize="small" />}
-                            label="Jornadas" 
-                            />
-							              <StyledBreadcrumb 
-                            component="a"
-                            href="/verificacion/visualizacionnf/boletanf"
-                            icon={<BallotIcon fontSize="small" />}
-                            label="Boletas" 
-                            />
-                            <StyledBreadcrumb
-                            label="Folios"
-                            icon={<Groups2Icon fontSize="small" />}
-                            />
-                        </Breadcrumbs>
-                      </Box>
-                {/* Bradcrumbs */}
+                <BreadCrumbsCustom
+						routes={[
+							{
+								name: "VERIFICACIÓN",
+								url: "/verificacion",
+							},
+              {
+								name: "JORNADAS ELECTORALES",
+								url: "/verificacion/visualizacionnf",
+							},
+              {
+								name: "BOLETAS",
+								// url: "/verificacion/visualizacionnf/boletanf/",
+								url: "/verificacion/visualizacionnf/boletanf/"+params.id,
+							},
+						]}
+						currentRoute="FOLIOS"
+					></BreadCrumbsCustom>
+        {/* Bradcrumbs */}
+        {boletaEncontrar.sentido !== null ? (
+          <>
                 <Typography
                   color="initial"
                   mb="1rem"
@@ -129,7 +143,27 @@ export const GroupPageLogged = () => {
                       },
                       }}
                     >
-                       Folios y sus sentidos de acuerdo a la boleta *name de la boleta*
+                       Folios y sus sentidos de acuerdo a la boleta {boletaEncontrar.folioBoleta}
+                       <HtmlTooltip 
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1.5rem",
+								xl: "1.5rem",
+							},
+						}}>Se muestran los datos recopilados con el folio seleccionado anteriormente. </Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+            {/* {"En caso de no encontrar la deseada, intentelo más tarde."} */}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" fontSize="large"/>
+      </HtmlTooltip>
 					</Typography>
           <Box 
                     ml={{											
@@ -183,37 +217,79 @@ export const GroupPageLogged = () => {
 							            },
                           boxShadow: 5,
                           }}>
-          <TableContainer component={Paper} >
-            <Table aria-label="simple table">
-              <TableHead style={{background: "#783a9cad", color: "white"}}>
-                <TableRow >
-                  <TableCell 
-                  align="center" 
-                  style={{color: "#EEEBDF", 
-                    fontSize: "1.2rem",
-                                }} >FOLIOS</TableCell>
-                  <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
-                                }}>SENTIDOS</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody style={{background: "#d0afd3db"}}>
-              {rows.filter((jornada) => jornada.folio.toLowerCase().includes(searchJornada)
-                            || jornada.folio.toUpperCase().includes(searchJornada)
-                            || jornada.sentido.toLowerCase().includes(searchJornada)
-                            || jornada.sentido.toUpperCase().includes(searchJornada)
-                            ).map((jornada) => (
-                  <TableRow 
-                    key={jornada.folio}
-                  > 
-                    <TableCell  style={{ width: "30%", color:"BLACK", fontSize:"1.05rem"}}>
-                    {jornada.folio}</TableCell>
-                    <TableCell style={{ width: "60%", color:"BLACK", fontSize:"1.05rem"}}>{jornada.sentido}</TableCell>
+<TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead style={{background: "#783a9cad", color: "white"}}>
+                  <TableRow >
+                    <TableCell 
+                    align="center" 
+                    style={{color: "#EEEBDF", 
+                      fontSize: "1.2rem",
+                                  }} >FOLIOS</TableCell>
+                    <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
+                                  }}>SENTIDOS</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody style={{background: "#d0afd3db"}}>
+
+  {boletaEncontrar.sentido && (
+    <TableRow>
+      <TableCell style={{ width: "30%", color: "black", fontSize: "1.05rem" }}>
+        {boletaEncontrar.sentido.idSeleccion}
+      </TableCell>
+      <TableCell style={{ width: "60%", color: "black", fontSize: "1.05rem" }}>
+        {boletaEncontrar.sentido.nombreCandidato}
+      </TableCell>
+    </TableRow>
+  )}
+
+
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Box>
+          <Button
+              // type="submit"
+            //   className={styles.boton}
+            borderRadius="10px"
+              variant="contained"
+              color="primary"
+            //   style={styleButton}
+              onClick={plantilla1}
+              sx={{
+                mt: 2,
+                width: { sm: `150px`, xs: "150px" },
+              }}
+            >
+              <ReplyAllIcon />
+              Regresar
+            </Button>
+          </>
+        ):
+        (
+                <>
+            <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
+                No se encontraron folios pertenecientes a esta boleta por el momento, intente más tarde.
+            </Typography>
+
+            <Button
+              // type="submit"
+            //   className={styles.boton}
+            borderRadius="10px"
+              variant="contained"
+              color="primary"
+            //   style={styleButton}
+              onClick={plantilla1}
+              sx={{
+                mt: 2,
+                width: { sm: `150px`, xs: "150px" },
+              }}
+            >
+              <ReplyAll />
+              Regresar
+            </Button>
+                </>
+        )}
 			</Container>
 		</Box>
 	);

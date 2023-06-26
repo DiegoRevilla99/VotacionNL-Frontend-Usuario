@@ -1,65 +1,77 @@
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import SearchIcon from '@mui/icons-material/Search';
+import ReactPaginate from 'react-paginate';
+
+import HelpIcon from '@mui/icons-material/Help';
 import {
   Box,
-  Button, Grid, LinearProgress,
-  TextField,
-  Typography
+  Button, Grid, LinearProgress, TextField, Typography
 } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { Container } from "@mui/system";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-//   import { useJornadaStore } from "../hooks/useJornadaStore";
-//   import {
-//     onDeleteJornada,
-//     onGetjornadas,
-//     // onGetJornadasFormales,
-//   } from "../../store/module-preparacion/jornada/ThunksJornada";
-//   import { onSetJornadaSelected } from "../../store/module-preparacion/jornada/SliceJornada";
-import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
-// ----------- Bradcrumbs ----------
-// import { experimentalStyled as styled } from '@mui/material/styles';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import BallotIcon from '@mui/icons-material/Ballot';
-import HomeIcon from '@mui/icons-material/Home';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Chip from '@mui/material/Chip';
-import { emphasize, styled } from '@mui/material/styles';
-const StyledBreadcrumb = styled(Chip)(({ theme }) => {
-  const backgroundColor =
-    theme.palette.mode === 'light'
-      ? theme.palette.grey[100]
-      : theme.palette.grey[800];
-  return {
-    backgroundColor,
-    height: theme.spacing(3),
-    color: theme.palette.text.primary,
-    fontWeight: theme.typography.fontWeightRegular,
-    '&:hover, &:focus': {
-      backgroundColor: emphasize(backgroundColor, 0.06),
-    },
-    '&:active': {
-      boxShadow: theme.shadows[1],
-      backgroundColor: emphasize(backgroundColor, 0.12),
-    },
-  };
-}); // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
-// ----------- Bradcrumbs ----------
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import { Container } from "@mui/system";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { BreadCrumbsCustom } from "../components/BreadCrumbsCustom";
+import { BotonBack } from "../components/botonback";
+import { useVerficacionStore } from '../hooks/useVerificacionStore';
+import '../styles/style.css';
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(20), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
 
 export const VisualizacionBoletaNoFormal = () => {
   const navigate = useNavigate();
-  const plantilla1 = () => {
-    navigate("/verificacion/visualizacionnf/boletanf/groupnf");
-  };
-  const [searchJornada, setSearchJornada] = useState('');
-  // ToDo:AQUI OBTENGAN LAS VARIABLES STATUS Y DATA DE SUS ESTADOS GLOBALES
-  // const { jornadasData, status } = useJornadaStore();
-  // const { jornadasData, status } = useJornadaStore();
 
-  // const dispatch = useDispatch();
+  const [searchBoleta, setSearchBoleta] = useState('');
+  const params = useParams();
+  const { eleccionesFolio } = useVerficacionStore();
+  const jornadaEncontrar = eleccionesFolio.find(jornada => jornada.jornadaModel.idEleccion === params.id);
+  
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 6;
+  
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+  
+  const [boletasFiltradas, setBoletasFiltradas] = useState(jornadaEncontrar.selecciones);
+  
+  console.log(jornadaEncontrar)
+  useEffect(() => {
+    const filtered = jornadaEncontrar.selecciones.filter((boleta) =>
+      boleta.folioBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
+      );
+      console.log(filtered);
+    setBoletasFiltradas(filtered);
+    setCurrentPage(0);
+  }, [searchBoleta, jornadaEncontrar]);
+  
+  const paginatedBoletas = useMemo(() => {
+    const startIndex = currentPage * itemsPerPage;
+    return boletasFiltradas.slice(startIndex, startIndex + itemsPerPage);
+  }, [currentPage, boletasFiltradas]);
+  
+  const handleSearchChange = event => {
+    const value = event.target.value.toLowerCase();
+    setSearchBoleta(value);
+  };
+  
+  const plantilla1 = (folioBoleta) => {
+    navigate("/verificacion/visualizacionnf/boletanf/"+params.id+"/groupnf/"+folioBoleta);
+  };
   if (status === "checking")
     return (
       <Box sx={{ width: "100%" }}>
@@ -86,27 +98,22 @@ export const VisualizacionBoletaNoFormal = () => {
             }}
           >
             {/* Bradcrumbs */}
-            <Box align="center" display="flex" justifyContent="center" mb={2}>
-                <Breadcrumbs aria-label="breadcrumb" maxItems={2}>
-                    <StyledBreadcrumb
-                    component="a"
-                    href="/verificacion"
-                    label="Verificación"
-                    icon={<HomeIcon fontSize="small" />}
-                    />
-                    <StyledBreadcrumb 
-                    component="a"
-                    href="/verificacion/visualizacionnf"
-                    icon={<AllInboxIcon fontSize="small" />}
-                    label="Jornadas" 
-                    />
-                    <StyledBreadcrumb
-                    label="Boletas"
-                    icon={<BallotIcon fontSize="small" />}
-                    />
-                </Breadcrumbs>
-                </Box>
+            <BreadCrumbsCustom
+						routes={[
+							{
+								name: "VERIFICACIÓN",
+								url: "/verificacion",
+							},
+              {
+								name: "JORNADAS ELECTORALES",
+								url: "/verificacion/visualizacionnf",
+							},
+						]}
+						currentRoute="selecciones"
+					></BreadCrumbsCustom>
         {/* Bradcrumbs */}
+        {jornadaEncontrar.selecciones.length > 0 ? (
+            <>
        <Typography
          color="initial"
          mb="1rem"
@@ -121,9 +128,29 @@ export const VisualizacionBoletaNoFormal = () => {
            },
          }}
        >
-         A continuación se muestran las boletas de la jornadas *name jornada*
-       </Typography>
-       <Box 
+         A CONTINUACIÓN SE MUESTRAN LAS BOLETAS DE "{jornadaEncontrar.jornadaModel.nombreEleccion}"
+         <HtmlTooltip 
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1.5rem",
+								xl: "1.5rem",
+							},
+						}}>Presione cualquiera de los siguientes cuadros de color morado para ver los detalles. </Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+            {/* {"En caso de no encontrar la deseada, intentelo más tarde."} */}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" fontSize="large"/>
+    </HtmlTooltip>
+            </Typography>
+            <Box 
               ml={{											
                   xs: 2,
                   sm: 2,
@@ -152,8 +179,8 @@ export const VisualizacionBoletaNoFormal = () => {
                           xl: "40%",
                       } }}
                       size="normal"
-                      placeholder="Ejemplo: Jornada..."
-                      onChange={(e) => setSearchJornada(e.target.value)}
+                      placeholder="Ejemplo: Electoral..."
+                      onChange={(e) => setSearchBoleta(e.target.value)}
                       InputProps={{
                           endAdornment: (
                           <InputAdornment position="end">
@@ -164,62 +191,76 @@ export const VisualizacionBoletaNoFormal = () => {
                       variant="standard"
                   />
               </Box>
-       <Box ml={1} mr={1} mt={4} mb={1}>
+              <Box ml={1} mr={1} mt={4} mb={1}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
-                    || jornada.lastName.toUpperCase().includes(searchJornada)
-                    ).map((jornada) => (
-                    <Grid item xs={4} sm={4} md={6} key={jornada.id}>
-                        <Card 
-                        sx={{ minWidth: 247 }} 
-                        onClick={plantilla1}
-                        style={{ 
-                          // border: "1px solid #D0D0D0", 
-                          // background: "#373637"
-                          // backgroundColor: "#783A9C",
+                  {paginatedBoletas.map((boleta, index) => (
+                    <Grid item xs={4} sm={4} md={6} key={index}>
+                      <Card
+                        sx={{ minWidth: 247 }}
+                        onClick={() => plantilla1(boleta.folioBoleta)}
+                        style={{
                           backgroundColor: "#5438849e",
                           color: "#FFFFFF",
-                      }} >
-                          <CardContent>
-                            <Typography sx={{ fontSize: 14 }} color="text" gutterBottom>
-                              Boleta {jornada.id}
-                            </Typography>
-                              <Typography variant="h6" component="div">
-                              {jornada.lastName}
-                            </Typography>
-                          </CardContent>
-                          <CardActions>
-                            <Button 
-                            onClick={plantilla1}
-                            sx={{ 
-                              color: "#364691", 
-                              // color: "433A9C",543884
-                              // background: "#ffe8c6",
-                              "&:hover": {
-                                // background: "linear-gradient(45deg, #f0b91a8a 30%, #f0b91a8a 90%)",
-                                // color: "#FFFFFF",
-                              }, }}
-                            size="large" 
-                            endIcon = {<ArrowOutwardIcon/>} >Detalles</Button>
-                          </CardActions>
-                        </Card>
-
-                            </Grid>
-                            ))}
-                        </Grid>
+                        }}
+                      >
+                        <CardContent>
+                          <Typography sx={{ fontSize: 16, opacity: 1 }} color="text" gutterBottom>
+                          BOLETA PERTENECIENTE A LA JORNADA:
+                          </Typography>
+                          <Typography sx={{ fontSize: 14, opacity: 0.8 }} color="yellow" gutterBottom>
+                           {jornadaEncontrar.jornadaModel.nombreEleccion}
+                          </Typography>
+                          <Typography variant="h7" component="div">
+                            ID DE LA BOLETA:
+                          </Typography>
+                          <Typography variant="h6" component="div">
+                            {boleta.folioBoleta}
+                          </Typography>
+                        </CardContent>
+                        <CardActions>
+                          <Button
+                            onClick={() => plantilla1(boleta.folioBoleta)}
+                            sx={{
+                              color: "#364691",
+                              "&:hover": {},
+                            }}
+                            size="large"
+                            endIcon={<ArrowOutwardIcon />}
+                          >
+                            Detalles
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+                <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <ReactPaginate
+        previousLabel={"Anterior"}
+        nextLabel={"Siguiente"}
+        pageCount={Math.ceil(boletasFiltradas.length / itemsPerPage)}
+        onPageChange={handlePageChange}
+        containerClassName={"pagination"}
+        previousLinkClassName={"pagination__link"}
+        nextLinkClassName={"pagination__link"}
+        disabledClassName={"pagination__link--disabled"}
+        activeClassName={"pagination__link--active"}
+      />
+    </div>
                 </Box>
+                </>
+                ):
+                (
+                        <>
+                    <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
+                        No se encontraron sentidos en la boleta por el momento, intente más tarde.
+                    </Typography>
+
+                     <BotonBack url="/verificacion/visualizacion"/>
+                         </>
+                    
+                )}
     </Container>
 	</Box>
-    );
-};
-  const rows = [
-    { id: 1, lastName: 'BOLETA N F ELECTORAL 2021'},
-    { id: 2, lastName: 'BOLETA N F ELECTORAL 2022'},
-    { id: 3, lastName: 'BOLETA N F ELECTORAL 2023'},
-    { id: 4, lastName: 'BOLETA N F ESTUDIANTIL 2021'},
-    { id: 5, lastName: 'BOLETA N F ESTUDIANTIL 2022'},
-    { id: 6, lastName: 'BOLETA N F ESTUDIANTIL 2023'}, 
-    { id: 7, lastName: 'BOLETA N F GOBERNADOR ORDINARIA 2021'},
-    { id: 8, lastName: 'BOLETA N F GOBERNADOR ORDINARIA 2022'}, 
-    { id: 9, lastName: 'BOLETA N F GOBERNADOR ORDINARIA 2023'},
-  ];
+      );
+  };

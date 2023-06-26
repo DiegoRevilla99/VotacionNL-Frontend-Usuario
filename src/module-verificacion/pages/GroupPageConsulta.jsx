@@ -33,22 +33,22 @@ import { useParams } from "react-router-dom";
 
 
 
-export const GroupPage = () => {
+export const GroupPageConsulta = () => {
 	const navigate = useNavigate();
   
   const params = useParams();
   const [searchJornada, setSearchJornada] = useState('');
 
   // console.log("imprimimos el store",params);
-  const { jornadasFolio } = useVerficacionStore();
+  const { consultasFolio } = useVerficacionStore();
   // console.log("imprimimos el stro",jornadasFolio);
 
-  const jornadaEncontrar = jornadasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
+  const jornadaEncontrar = consultasFolio.find(jornada => jornada.jornadaModel.idJornada === params.id);
   // console.log("jornada en la que estamos",jornadaEncontrar);
-  const boletaEncontrar = jornadaEncontrar.boletas.find(boleta => boleta.idBoleta === params.idBoleta);
-  // console.log("boleta en la que estamos",boletaEncontrar);
+  const boletaEncontrar = jornadaEncontrar.selecciones.find(boleta => boleta.idBoleta === params.idBoleta);
+  console.log("boleta en la que estamos",boletaEncontrar);
   const plantilla1 = () => {
-    navigate("/verificacion/visualizacion/boleta/"+params.id);
+    navigate("/verificacion/consultas/papeletas/"+params.id);
   };
 
 const [searchValue, setSearchValue] = useState('');
@@ -58,19 +58,19 @@ const handleSearch = (value) => {
 }
 
 // Filtrar las selecciones según la búsqueda
-console.log(boletaEncontrar)
-const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
-  if (seleccion.idSeleccion.toString().includes(searchValue)) {
-    return true;
-  }
-  if (seleccion.nombrePartido.toLowerCase().includes(searchValue.toLowerCase())) {
-    return true;
-  }
-  if (seleccion.nombreCandidato.toLowerCase().includes(searchValue.toLowerCase())) {
-    return true;
-  }
-  return false;
-});
+// console.log(boletaEncontrar)
+// const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
+//   if (seleccion.idSeleccion.toString().includes(searchValue)) {
+//     return true;
+//   }
+//   if (seleccion.nombrePartido.toLowerCase().includes(searchValue.toLowerCase())) {
+//     return true;
+//   }
+//   if (seleccion.nombreCandidato.toLowerCase().includes(searchValue.toLowerCase())) {
+//     return true;
+//   }
+//   return false;
+// });
 
 	return (
 		<Box pt="1.5rem" align="center" display="flex" justifyContent="center"  
@@ -99,17 +99,17 @@ const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
 							},
               {
 								name: "JORNADAS ELECTORALES",
-								url: "/verificacion/visualizacion",
+								url: "/verificacion/consultas",
 							},
               {
 								name: "BOLETAS",
-								url: "/verificacion/visualizacion/boleta/"+params.id,
+								url: "/verificacion/consultas/papeletas/"+params.id,
 							},
 						]}
 						currentRoute="FOLIOS"
 					></BreadCrumbsCustom>
         {/* Bradcrumbs */}
-        {boletaEncontrar.selecciones.length > 0 ? (
+        {boletaEncontrar.selecciones !== null ? (
           <>
                 <Typography
                   color="initial"
@@ -201,7 +201,7 @@ const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
                 },
                 boxShadow: 5,
                 }}>
-            <TableContainer component={Paper}>
+<TableContainer component={Paper}>
               <Table aria-label="simple table">
                 <TableHead style={{background: "#783a9cad", color: "white"}}>
                   <TableRow >
@@ -211,22 +211,21 @@ const filteredSelections = boletaEncontrar.selecciones.filter(seleccion => {
                       fontSize: "1.2rem",
                                   }} >FOLIOS</TableCell>
                     <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
-                                  }}>PARTIDO</TableCell>
-                    <TableCell align="center" style={{color: "#EEEBDF", fontSize: "1.2rem",
                                   }}>SENTIDOS</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody style={{background: "#d0afd3db"}}>
-                {filteredSelections.map((seleccion, index) => (
-                    <TableRow 
-                      key={index}
-                    > 
-                      <TableCell  style={{ width: "30%", color:"BLACK", fontSize:"1.05rem"}}>
-                      {seleccion.idSeleccion}</TableCell>
-                      <TableCell style={{ width: "30%", color:"BLACK", fontSize:"1.05rem"}}>{seleccion.nombrePartido}</TableCell>
-                      <TableCell style={{ width: "60%", color:"BLACK", fontSize:"1.05rem"}}>{seleccion.nombreCandidato}</TableCell>
-                    </TableRow>
-                  ))}
+
+  {boletaEncontrar.selecciones && (
+    <TableRow>
+      <TableCell style={{ width: "30%", color: "black", fontSize: "1.05rem" }}>
+        {boletaEncontrar.selecciones.idSeleccion}
+      </TableCell>
+      <TableCell style={{ width: "60%", color: "black", fontSize: "1.05rem" }}>
+        {boletaEncontrar.selecciones.respuesta}
+      </TableCell>
+    </TableRow>
+  )}
                 </TableBody>
               </Table>
             </TableContainer>

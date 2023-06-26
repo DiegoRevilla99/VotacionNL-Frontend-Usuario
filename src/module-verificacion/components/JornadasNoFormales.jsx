@@ -3,42 +3,55 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Box, Button, Card, CardActions, CardContent, TextField, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
-import Paper from '@mui/material/Paper';
 import { Container } from "@mui/system";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { BreadCrumbsCustom } from './BreadCrumbsCustom';
 // ----------- Bradcrumbs ----------
 // import { experimentalStyled as styled } from '@mui/material/styles';
+import HelpIcon from '@mui/icons-material/Help';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import { onGetFoliosEleccionesPopulares } from '../../store/verificacion-voto/verificacionThunks';
+import { useVerficacionStore } from '../hooks/useVerificacionStore';
+import { BotonBack } from './botonback';
+const HtmlTooltip = styled(({ className, ...props }) => (
+	<Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#8A2BE2', // Color morado
+    color: 'white', // Texto en color blanco
+    maxWidth: 300, // Ancho máximo del Tooltip
+    fontSize: theme.typography.pxToRem(20), // Tamaño de fuente grande
+    border: '1px solid #dadde9',
+  },
+}));
 
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
-
-  const rows = [
-    { id: 1, lastName: 'JORNADA NO F ELECTORAL 2021'},
-    { id: 2, lastName: 'JORNADA NO F ELECTORAL 2022'},
-    { id: 3, lastName: 'JORNADA NO F ELECTORAL 2023'},
-    { id: 4, lastName: 'JORNADA NO F ELECTORAL 2024'},
-    { id: 5, lastName: 'JORNADA NO F ELECTORAL 2025'},
-    { id: 6, lastName: 'JORNADA NO F ELECTORAL 2026'}, 
-    { id: 7, lastName: 'JORNADA NO F ELECTORAL GOBERNADOR ORDINARIA 2021'},
-    { id: 8, lastName: 'JORNADA NO F ELECTORAL GOBERNADOR ORDINARIA 2022'}, 
-    { id: 9, lastName: 'JORNADA NO F ELECTORAL GOBERNADOR ORDINARIA 2023'},
-  ];
 
 export const JornadasNoFormales = () => {
 	const navigate = useNavigate();
-	const plantilla1 = () => {
-		navigate("/verificacion/visualizacionnf/boletanf");
-	};
-    const [searchJornada, setSearchJornada] = useState('');
+	// const plantilla1 = () => {
+	// 	navigate("/verificacion/visualizacionnf/boletanf");
+	// };
+    // const [searchJornada, setSearchJornada] = useState('');
+    const plantilla1 = (id) => {
+        navigate("/verificacion/visualizacionnf/boletanf/"+id);
+      };
+      const [searchJornada, setSearchJornada] = useState('');
+      const params = useParams();
+      const dispatch = useDispatch();
+      //asdasd
+
+      const { eleccionesFolio } = useVerficacionStore();
+    useEffect(() => {
+        dispatch(onGetFoliosEleccionesPopulares());
+    }, []);
+
+    // console.log(eleccionesFolio);
+      const jornadasFiltradas = eleccionesFolio.filter((eleccion) =>
+      eleccion.jornadaModel.nombreEleccion.toLowerCase().includes(searchJornada.toLowerCase())
+  );
 	return (
         // En este Box esta el espacio entre el AppBar y el contenido
 		<Box pt="1.5rem"     
@@ -71,6 +84,8 @@ export const JornadasNoFormales = () => {
 					></BreadCrumbsCustom>
                         </Box>
                 {/* Bradcrumbs */}
+                {eleccionesFolio.length > 0 ? (
+                    <>
 					<Typography
 						color="initial"
 						align="center"
@@ -85,6 +100,26 @@ export const JornadasNoFormales = () => {
 						}}
 					>
                         A continuación se muestran las elecciones populares activas
+                        <HtmlTooltip 
+        title={
+          <React.Fragment>
+            <Typography color="inherit" sx={{
+							fontSize: {
+								xs: "0.9rem",
+								sm: "0.9rem",
+								md: "0.9rem",
+								lg: "1.5rem",
+								xl: "1.5rem",
+							},
+						}}>Seleccione la jornada electoral que deseé. </Typography>
+            {/* <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+            {"It's very engaging. Right?"} */}
+            {"En caso de no encontrar la deseada, intentelo más tarde."}
+          </React.Fragment>
+        }
+      >
+		<HelpIcon color="primary" fontSize="large"/>
+      </HtmlTooltip>
 					</Typography>
                     <Box 
                     mt={1}
@@ -129,14 +164,12 @@ export const JornadasNoFormales = () => {
                         />
                     </Box>
                 <Box ml={1} mr={1} mt={4} mb={1} align="center" display="flex" justifyContent="center">
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    {rows.filter((jornada) => jornada.lastName.toLowerCase().includes(searchJornada)
-                    || jornada.lastName.toUpperCase().includes(searchJornada)
-                    ).map((jornada) => (
-                    <Grid item xs={4} sm={4} md={4} key={jornada.id}>
+                
+                {jornadasFiltradas.map((jornada) => (
+                    <Grid item xs={4} sm={4} md={4} key={jornada.jornadaModel.idEleccion}>
                         <Card 
                         sx={{ minWidth: 247 }} 
-                        onClick={plantilla1}
+                        onClick={() => plantilla1(jornada.jornadaModel.idEleccion)}
                         style={{ 
                           // border: "1px solid #D0D0D0", 
                           // background: "#373637"
@@ -145,13 +178,13 @@ export const JornadasNoFormales = () => {
                           <CardContent>
 
                             <Typography variant="h6" component="div" color="white">
-                            {jornada.lastName}	
+                            {jornada.jornadaModel.nombreEleccion}	
                             </Typography>
                           </CardContent>
                           <CardActions >
                             <Box  align="center" display="flex" justifyContent="center" width="100%" mb={1}>
                             <Button 
-                                onClick={plantilla1}
+                                onClick={() => plantilla1(jornada.jornadaModel.idEleccion)}
                                 startIcon = {<BallotIcon />}
                                 sx={{
 									// backgroundColor: "#eba302",
@@ -170,7 +203,7 @@ export const JornadasNoFormales = () => {
                                         lg: "#fff",
                                         xl: "#fff",
                                     },
-                                    fontSize: {
+									fontSize: {
                                         xs: "1rem",
                                         sm: "1rem",
                                         md: "1rem",
@@ -199,8 +232,17 @@ export const JornadasNoFormales = () => {
 
                             </Grid>
                             ))}
-                        </Grid>
                 </Box>
+                </>
+                ):
+                (
+                        <>
+                    <Typography style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, color: "#ff0000" }}>
+                        No se encontraron elecciones populares por el momento, intente más tarde.
+                    </Typography>
+                    <BotonBack url='/verificacion'/>
+                        </>
+                )}
 			</Container>
 		</Box>
 	);
