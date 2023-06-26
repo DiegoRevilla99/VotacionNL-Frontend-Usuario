@@ -398,8 +398,8 @@ export const ModalVerificarCuenta = ({
           {statusPeticion === "ok" && isSubmitted && !verificado ? (
             <Box pt={2}>
               <Alert severity="error">
-                Tu foto de credencial de lector no coincide con tu selfie. Intenta tomar fotos más
-                parecidas y con buena iluminación y vuelve a intentarlo.
+                La fotografía de la parte delantera de tu INE y tu selfie no son lo suficientemente
+                claras o nitidas. Intenta tomar fotos con buena iluminación y vuelve a intentarlo.
               </Alert>
             </Box>
           ) : (
