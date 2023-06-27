@@ -47,12 +47,22 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     };
     
     const [boletasFiltradas, setBoletasFiltradas] = useState(jornadaEncontrar.selecciones);
-    
+    console.log("boletasFiltradas", jornadaEncontrar);
+    // useEffect(() => {
+    //   const filtered = jornadaEncontrar.selecciones.filter((boleta) =>
+    //     boleta.idBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
+    //   );
+    //   console.log("filtered",filtered);
+    //   setBoletasFiltradas(filtered);
+    //   setCurrentPage(0);
+    // }, [searchBoleta, jornadaEncontrar]);
     useEffect(() => {
-      const filtered = jornadaEncontrar.selecciones.filter((boleta) =>
-        boleta.idBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
+      const filtered = jornadaEncontrar.selecciones.filter(
+        (boleta, index, self) =>
+          index === self.findIndex((b) => b.idBoleta === boleta.idBoleta) &&
+          boleta.idBoleta.toLowerCase().includes(searchBoleta.toLowerCase())
       );
-      console.log(filtered);
+      console.log("filtered", filtered);
       setBoletasFiltradas(filtered);
       setCurrentPage(0);
     }, [searchBoleta, jornadaEncontrar]);

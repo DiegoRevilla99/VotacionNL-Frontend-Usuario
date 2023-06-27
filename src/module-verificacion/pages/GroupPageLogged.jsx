@@ -69,7 +69,7 @@ export const GroupPageLogged = () => {
   console.log("jornada en la que estamos",boletaEncontrar);
   // const boletaEncontrar = jornadaEncontrar.selecciones.find(boleta => boleta.boleta.folioBoleta === params.idBoleta);
   const plantilla1 = () => {
-    navigate("/verificacion/visualizacion/boleta/"+params.id);
+    navigate("/verificacion/visualizacionnf/boletanf/"+params.id);
   };
 
 const [searchValue, setSearchValue] = useState('');
@@ -261,7 +261,7 @@ const handleSearch = (value) => {
                 width: { sm: `150px`, xs: "150px" },
               }}
             >
-              <ReplyAllIcon />
+              <ReplyAll />
               Regresar
             </Button>
           </>

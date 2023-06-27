@@ -28,10 +28,11 @@ export const getValidarVotoConsulta = async (claveVoto) => {
 export const getValidarVotoNFML = async (claveVoto) => {
     try{
         // console.log("claveVoto", claveVoto);
-        const { data } = await votosNoFormalAPI.get(`verificacion/boleta/${claveVoto}`);
+        const { data } = await votosNoFormalAPI.get(`verificar/boleta/${claveVoto}`);
         // votos/no/formal/verificar/boleta/NFML-YVTRSD-EVTAVB
+
         // https://ms-jornada-voto-seguro.herokuapp.com/votos_seguros/verificacion/ELECTORAL-NLGQX-AGAKJ
-        // console.log("data", data.seleccionesPorBoleta);
+        // https://ms-jornada-votos-no-formales-2.herokuapp.com/votos/no/formal/verificacion/boleta/NFML-WUKELM-YLAGXD
         console.log("data", data);
         return { ok: true, data: data };
     } catch (error) {

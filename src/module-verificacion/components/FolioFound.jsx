@@ -159,7 +159,7 @@ export const FolioFound = () => {
           // width="30%"
           // style={{ objectFit: 'cover' }}
           style={{ maxHeight: '100px', width: '100%', objectFit: 'contain', marginTop: '30px' }}
-          image={`${voto.urlPartido}`}
+          image={voto.urlPartido || 'https://media.discordapp.net/attachments/1071287057491693608/1123372689197891644/error_browser_404_not_found-512-1194458328.jpg?width=480&height=480'} // Ruta de la imagen por defecto o ícono
           alt={voto.urlPartido}
         />
         <CardContent>
@@ -172,7 +172,7 @@ export const FolioFound = () => {
           // width="30%"
           // style={{ objectFit: 'cover' }}
           style={{ maxHeight: '130px', width: '100%', objectFit: 'contain' }}
-          image={`${voto.urlFoto}`}
+          image={voto.urlFoto || 'https://media.discordapp.net/attachments/1071287057491693608/1123372374855794748/person-icon-svg-2.jpg?width=480&height=480'} // Ruta de la imagen por defecto o ícono
           alt={voto.urlFoto}
         />
           <Typography variant="subtitle1" gutterBottom>
